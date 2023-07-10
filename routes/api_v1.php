@@ -36,4 +36,6 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::get('entity',[UsersController::class,'index']);
     Route::get('entity/{id}',[UsersController::class,'show']);
     Route::post('entity',[UsersController::class,'create']);
+    Route::post('entity/{id}',[UsersController::class,'update']);
+    Route::delete('entity/{id}',[UsersController::class,'destroy']);
 });

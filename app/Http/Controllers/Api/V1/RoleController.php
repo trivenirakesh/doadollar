@@ -33,7 +33,7 @@ class RoleController extends Controller
         if($request->has('column')){
             $orderType = $request->type;
         }
-        $getRoleDetails = $getRoleDetails->orderBy($orderColumn,$orderType)->pagnate(10);
+        $getRoleDetails = $getRoleDetails->orderBy($orderColumn,$orderType)->paginate(10);
         return RoleResource::collection($getRoleDetails); 
     }
 
