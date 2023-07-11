@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\RoleResource;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Storage;
+use App\Helpers\CommonHelper;
 
 class RoleController extends Controller
 {
     use CommonTrait;
+    
     /**
      * Display a listing of the resource.
      *
@@ -77,9 +77,10 @@ class RoleController extends Controller
         $role = new Role;
         $role->name = $roleName;
         $role->status = 1;
+        $role->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails)) {
             $role->created_by = $getAdminDetails->id;
-            $role->created_ip = '123';
+            $role->created_ip = CommonHelper::getUserIp();
         }
         $role->save();
         $lastId = $role->id;
@@ -156,9 +157,10 @@ class RoleController extends Controller
         if($request->has('status')){
             $role->status = $request->status;
         }
+        $role->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
             $role->updated_by = $getAdminDetails->id;
-            $role->updated_ip = '';
+            $role->updated_ip = CommonHelper::getUserIp();
         }
         $role->update();
         $getRoleDetails = RoleResource::collection(Role::where('id',$id)->get());
@@ -180,8 +182,9 @@ class RoleController extends Controller
         // Delete entity
         $checkRoleData = Role::find($id);
         if (!empty($checkRoleData)) {
+            // $checkRoleData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkRoleData->deleted_by = $getAdminDetails->id;
-            $checkRoleData->deleted_ip = '';
+            $checkRoleData->deleted_ip = CommonHelper::getUserIp();
             $checkRoleData->update();
             $deleteRole = Role::find($id)->delete();
             if ($deleteRole) {
