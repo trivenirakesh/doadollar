@@ -20,6 +20,8 @@ class CampaignCategoryResource extends JsonResource
             'name' => $this->name,
             'description' => (!empty($this->description)) ? $this->description : "",
             'status' => ($this->status == 1 ? 'Active' : 'Deactive'),
+            'thumb_image' => (!empty($this->file_name)) ? CommonHelper::getImageUrl($this->file_name,$this->path,1) : "",
+            'image' => (!empty($this->file_name)) ? CommonHelper::getImageUrl($this->file_name,$this->path,0) : "",
             'created_at' => CommonHelper::getConvertedDateTime($this->created_at)
         ];
     }

@@ -106,6 +106,17 @@ class CampaignCategoryController extends Controller
         }
         $createCampaignCat->save();
         $lastId = $createCampaignCat->id;
+        // Update filename & path
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $data = CommonHelper::uploadImages($image, 'campaigncategory/' . $lastId.'/');
+            if (!empty($data)) {
+                $updateImageData = CampaignCategory::find($lastId);
+                $updateImageData->file_name = $data['filename'];
+                $updateImageData->path = $data['path'];
+                $updateImageData->update();
+            }
+        }
         $getEntityDetails = $this->getCampaignCatDetails($lastId, 0);
         $getUserDetails = CampaignCategoryResource::collection($getEntityDetails);
         return $this->successResponse($getUserDetails, 'Campaign category created successfully', 201);
@@ -164,6 +175,15 @@ class CampaignCategoryController extends Controller
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
             $updateCampaignCat->updated_by = $getAdminDetails->id;
             $updateCampaignCat->updated_ip = CommonHelper::getUserIp();
+        }
+        // Update filename & path
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $data = CommonHelper::uploadImages($image, 'campaigncategory/' . $id.'/');
+            if (!empty($data)) {
+                $updateCampaignCat->file_name = $data['filename'];
+                $updateCampaignCat->path = $data['path'];
+            }
         }
         $updateCampaignCat->update();
 

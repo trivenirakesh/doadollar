@@ -19,7 +19,8 @@ class CreateCampaignCategoriesTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('image')->nullable();
+            $table->string('file_name')->nullable();
+            $table->string('path')->nullable();
             $table->tinyInteger('status')->default('1')->comment("0 - Deactive, 1 - Active")->nullable();
             $this->timestampColumns($table);
         });

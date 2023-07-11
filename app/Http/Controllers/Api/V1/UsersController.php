@@ -341,7 +341,7 @@ class UsersController extends Controller
         }
 
         $updateUserPassword = $checkUser;
-        $updateUserPassword->password = Hash::make($request->password);
+        $updateUserPassword->password = Hash::make($request->new_password);
         $updateUserPassword->update();
         if($updateUserPassword){
             return $this->successResponse([], 'Password reset successfully', 200);
