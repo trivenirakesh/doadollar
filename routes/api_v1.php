@@ -28,7 +28,7 @@ Route::post('login', [AuthController::class, 'loginEntity']);
 Route::middleware('auth:sanctum')->group( function () {
 
     // Changed password & edit profile 
-    Route::post('entity/changedpassword',[UsersController::class,'changePassword']);
+    Route::post('changepassword',[UsersController::class,'changePassword']);
 
     // logout route
     Route::post('logout',[AuthController::class,'logout']);

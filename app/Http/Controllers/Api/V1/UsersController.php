@@ -82,8 +82,8 @@ class UsersController extends Controller
             'entity_type' => 'required|digits:1|lte:2',
             'first_name' => 'required',
             'last_name' => 'required',
-            'mobile' => 'required|numeric|digits:10|unique:entitymst,mobile,NULL,id,deleted_at,NULL',
             'email' => 'required|email|unique:entitymst,email,NULL,id,deleted_at,NULL',
+            'mobile' => 'required|numeric|digits:10|unique:entitymst,mobile,NULL,id,deleted_at,NULL',
             'password' => 'required'
         ];
 
@@ -180,8 +180,8 @@ class UsersController extends Controller
         $rules = [
             'first_name' => 'required',
             'last_name' => 'required',
-            'mobile' => 'required|numeric|digits:10|unique:entitymst,mobile,'.$id.',id,deleted_at,NULL',
             'email' => 'required|email|unique:entitymst,email,'.$id.',id,deleted_at,NULL',
+            'mobile' => 'required|numeric|digits:10|unique:entitymst,mobile,'.$id.',id,deleted_at,NULL',
         ];
 
         $messages = [
@@ -196,6 +196,12 @@ class UsersController extends Controller
             'mobile.unique' => 'Mobile number is already registered. Please, use a different mobile'
         ];
 
+        if ($request->has('status')) {
+            $rules['status'] = 'required|numeric|lte:1';
+            $messages['status.required'] = 'Please enter status';
+            $messages['status.numeric'] = 'Status value must be numeric';
+            $messages['status.lte'] = 'Status should be 0 or 1';
+        }
         if ($request->has('role_id') && $userType != 2) {
             $rules['role_id'] = 'required|numeric';
             $messages['role_id.required'] = 'Please enter role';
@@ -308,7 +314,7 @@ class UsersController extends Controller
         $messages = [
             'id.required' => 'Please enter id',
             'old_password.required' => 'Please enter old password',
-            'new_password.required' => 'Please enter password'
+            'new_password.required' => 'Please enter new password'
         ];
 
         $validateUser = Validator::make($request->all(), $rules, $messages);

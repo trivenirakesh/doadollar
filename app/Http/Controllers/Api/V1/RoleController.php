@@ -132,8 +132,10 @@ class RoleController extends Controller
             $messages['name.required'] = 'Please enter name';
         }
         if($request->has('status')){
-            $rules['status'] = 'required';
+            $rules['status'] = 'required|numeric|lte:1';
             $messages['status.required'] = 'Please enter status';
+            $messages['status.numeric'] = 'Status value must be numeric';
+            $messages['status.lte'] = 'Status should be 0 or 1';
         }
         $validateUser = Validator::make($request->all(),$rules,$messages);
 

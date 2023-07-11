@@ -40,9 +40,16 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $th)
     {
         Log::error($th->getMessage());
-        return response()->json([
-			'status'=>'error',
-			'message' => $th->getMessage(),
-		], 500);
+        if ($th instanceof \Illuminate\Auth\AuthenticationException) {
+            return response()->json([
+                'status'=>'error',
+                'message' => "Access denied. Please login and try again.",
+            ], 401);
+        }else{
+            return response()->json([
+                'status'=>'error',
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 }
