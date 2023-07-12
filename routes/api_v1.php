@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\AuthController;
 use App\Http\Controllers\Api\V1\CampaignCategoryController;
 use App\Http\Controllers\Api\V1\PaymentGatewaySettingController;
+use App\Http\Controllers\Api\V1\SocialPlatformSettingController;
 use App\Http\Controllers\Api\V1\UsersController;
+use App\Models\SocialPlatformSetting;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,4 +59,11 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('paymentgatewaysetting',[PaymentGatewaySettingController::class,'create']);
     Route::post('paymentgatewaysetting/{id}',[PaymentGatewaySettingController::class,'update']);
     Route::delete('paymentgatewaysetting/{id}',[PaymentGatewaySettingController::class,'destroy']);
+
+    // Manage social platform setting
+    Route::get('socialplatformsetting',[SocialPlatformSettingController::class,'index']);
+    Route::get('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'show']);
+    Route::post('socialplatformsetting',[SocialPlatformSettingController::class,'create']);
+    Route::post('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'update']);
+    Route::delete('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'destroy']);
 });
