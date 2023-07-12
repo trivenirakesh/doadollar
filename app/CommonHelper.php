@@ -67,13 +67,28 @@ class CommonHelper{
         return $imageUrl;
     }
 
-    // public static function removeUploadedImages($fileName,$path){
+    public static function unlinkFiles($baseFile,$thumbFile){
 
-    //     if(Storage::exists($fileName)){
-    //         Storage::delete($fileName);
-    //         return true;
-    //       }else{
-    //         return false;
-    //       }
-    // }
+        if(!empty($baseFile)){
+            if (Storage::exists($baseFile)) {
+                Storage::delete($baseFile);
+            }
+        }
+        
+        if(!empty($thumbFile)){
+            if (Storage::exists($thumbFile)) {
+                Storage::delete($thumbFile);
+            }
+        }
+        return true;
+    }
+
+    public static function removeUploadedImages($pathName,$fileName){
+
+        if(!empty($pathName) && $fileName){
+            $imagePath = str_replace('storage/','',$pathName).$fileName;
+            $thumbImagePath = str_replace('storage/','',$pathName).'thumb/'.$fileName;
+            self::unlinkFiles($imagePath,$thumbImagePath);
+        }
+    }
 }

@@ -22,9 +22,9 @@ class PaymentGatewaySettingController extends Controller
      */
     public function index(Request $request)
     {
-        $getRoleDetails = new PaymentGatewaySetting();
+        $getPaymentSettingDetails = new PaymentGatewaySetting();
         if(!empty($request->search)){
-            $getRoleDetails = $getRoleDetails->where('name','like', "%".$request->search."%");
+            $getPaymentSettingDetails = $getPaymentSettingDetails->where('name','like', "%".$request->search."%");
         }
         $orderColumn = 'id';
         $orderType = 'DESC';
@@ -34,8 +34,8 @@ class PaymentGatewaySettingController extends Controller
         if($request->has('column')){
             $orderType = $request->type;
         }
-        $getRoleDetails = $getRoleDetails->orderBy($orderColumn,$orderType)->paginate(10);
-        return PaymentGatewaySettingResource::collection($getRoleDetails); 
+        $getPaymentSettingDetails = $getPaymentSettingDetails->orderBy($orderColumn,$orderType)->paginate(10);
+        return PaymentGatewaySettingResource::collection($getPaymentSettingDetails); 
     }
 
     /**
@@ -46,7 +46,7 @@ class PaymentGatewaySettingController extends Controller
      */
     public function show($id)
     {
-        $getPaymentGatewayDetails = $this->getPaymentGatewatDetails($id, 0);
+        $getPaymentGatewayDetails = $this->getPaymentGatewayDetails($id, 0);
         if(count($$getPaymentGatewayDetails) > 0){
             return $this->successResponse(PaymentGatewaySettingResource::collection($$getPaymentGatewayDetails), 'Payment gateway setting details fetch successfully', 200);
         }else{
@@ -55,7 +55,7 @@ class PaymentGatewaySettingController extends Controller
     }
 
     /**
-     * Store a newly created entity in storage.
+     * Store a newly created payment gateway setting in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -64,7 +64,7 @@ class PaymentGatewaySettingController extends Controller
     {
 
         // Validation section
-        $validateUser = Validator::make(
+        $validateSetting = Validator::make(
             $request->all(),
             [
                 'name' => 'required',
@@ -82,17 +82,17 @@ class PaymentGatewaySettingController extends Controller
             ]
         );
 
-        if ($validateUser->fails()) {
-            return $this->errorResponse($validateUser->errors(), 401);
+        if ($validateSetting->fails()) {
+            return $this->errorResponse($validateSetting->errors(), 401);
         }
 
         // save details 
 
         // remove blank spaces from string 
-        $paymentGatwaySettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
+        $paymentGatewaySettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
 
         $createSetting = new PaymentGatewaySetting();
-        $createSetting->name = $paymentGatwaySettingName;
+        $createSetting->name = $paymentGatewaySettingName;
         $createSetting->api_key = $request->api_key;
         $createSetting->secret_key = $request->secret_key;
         
@@ -115,9 +115,9 @@ class PaymentGatewaySettingController extends Controller
                 $updateImageData->update();
             }
         }
-        $getEntityDetails = $this->getPaymentGatewatDetails($lastId, 0);
-        $getUserDetails = PaymentGatewaySettingResource::collection($getEntityDetails);
-        return $this->successResponse($getUserDetails, 'Payment gateway setting created successfully', 201);
+        $getPaymentSettingDetails = $this->getPaymentGatewayDetails($lastId, 0);
+        $getSettingDetails = PaymentGatewaySettingResource::collection($getPaymentSettingDetails);
+        return $this->successResponse($getSettingDetails, 'Payment gateway setting created successfully', 201);
     }
 
     /**
@@ -129,9 +129,9 @@ class PaymentGatewaySettingController extends Controller
      */
     public function update(Request $request,$id){
         
-        // check user exist or not 
-        $checkUser = $this->getPaymentGatewatDetails($id,1);
-        if(empty($checkUser)){
+        // check setting exist or not 
+        $checkSetting = $this->getPaymentGatewayDetails($id,1);
+        if(empty($checkSetting)){
             return $this->errorResponse('Campaign category not found', 400);
         }
 
@@ -158,42 +158,42 @@ class PaymentGatewaySettingController extends Controller
             $messages['image.mimes'] = 'Please select only jpg, png, jpeg files';
         }
 
-        $validateUser = Validator::make($request->all(), $rules, $messages);
+        $validateSetting = Validator::make($request->all(), $rules, $messages);
 
-        if ($validateUser->fails()) {
-            return $this->errorResponse($validateUser->errors(), 400);
+        if ($validateSetting->fails()) {
+            return $this->errorResponse($validateSetting->errors(), 400);
         }
 
         // remove blank spaces from string 
-        $campaignCatName = ucfirst(strtolower(str_replace(' ', '',$request->name)));
+        $paymentGatewaySettingName = ucfirst(strtolower(str_replace(' ', '',$request->name)));
 
         // update details 
-        $updateCampaignCat = $checkUser;
-        $updateCampaignCat->name = $campaignCatName;
-        $updateCampaignCat->api_key = $request->api_key;
-        $updateCampaignCat->secret_key = $request->secret_key;
-        $updateCampaignCat->status = $request->status;
-        $updateCampaignCat->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
+        $updatePaymentSetting = $checkSetting;
+        $updatePaymentSetting->name = $paymentGatewaySettingName;
+        $updatePaymentSetting->api_key = $request->api_key;
+        $updatePaymentSetting->secret_key = $request->secret_key;
+        $updatePaymentSetting->status = $request->status;
+        $updatePaymentSetting->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
-            $updateCampaignCat->updated_by = $getAdminDetails->id;
-            $updateCampaignCat->updated_ip = CommonHelper::getUserIp();
+            $updatePaymentSetting->updated_by = $getAdminDetails->id;
+            $updatePaymentSetting->updated_ip = CommonHelper::getUserIp();
         }
         // Update filename & path
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'campaigncategory/' . $id.'/');
+            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $id.'/');
             if (!empty($data)) {
-                $updateCampaignCat->file_name = $data['filename'];
-                $updateCampaignCat->path = $data['path'];
+                $updatePaymentSetting->file_name = $data['filename'];
+                $updatePaymentSetting->path = $data['path'];
             }
         }
-        $updateCampaignCat->update();
+        $updatePaymentSetting->update();
 
-        $getUserDetails = $this->getPaymentGatewatDetails($id,0);
-        $getUserDetails = PaymentGatewaySettingResource::collection($getUserDetails);
-        return $this->successResponse($getUserDetails, 'Campaign category updated successfully', 201);
+        $getPaymentSettingDetails = $this->getPaymentGatewayDetails($id,0);
+        $getSettingDetails = PaymentGatewaySettingResource::collection($getPaymentSettingDetails);
+        return $this->successResponse($getSettingDetails, 'Campaign category updated successfully', 201);
         
     }
 
@@ -205,30 +205,30 @@ class PaymentGatewaySettingController extends Controller
      */
     public function destroy($id){
 
-        // check user exist or not 
-        $checkUser = $this->getPaymentGatewatDetails($id,1);
-        if(empty($checkUser)){
+        // check setting exist or not 
+        $checkSetting = $this->getPaymentGatewayDetails($id,1);
+        if(empty($checkSetting)){
             return $this->errorResponse('Payment gateway setting not found', 400);
         }
 
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
 
-        // Delete entity
-        $checkUserData = $checkUser;
-        if (!empty($checkUserData)) {
-            $checkUserData->deleted_by = $getAdminDetails->id;
-            // $checkUserData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
-            $checkUserData->deleted_ip = CommonHelper::getUserIp();
-            $checkUserData->update();
-            $deleteEntity = PaymentGatewaySetting::find($id)->delete();
-            if ($deleteEntity) {
+        // Delete payment gateway setting
+        $checkSettingData = $checkSetting;
+        if (!empty($checkSettingData)) {
+            $checkSettingData->deleted_by = $getAdminDetails->id;
+            // $checkSettingData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
+            $checkSettingData->deleted_ip = CommonHelper::getUserIp();
+            $checkSettingData->update();
+            $deleteSetting = PaymentGatewaySetting::find($id)->delete();
+            if ($deleteSetting) {
                 return $this->successResponse([], 'Payment gateway setting deleted successfully', 200);
             }
         }
     }
 
-    public function getPaymentGatewatDetails($id,$type){
+    public function getPaymentGatewayDetails($id,$type){
         $getPaymentGatewaySettingData = PaymentGatewaySetting::where('id',$id);
         if($type == 1){
             $getPaymentGatewaySettingData = $getPaymentGatewaySettingData->first();

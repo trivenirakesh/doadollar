@@ -26,10 +26,10 @@ class CampaignCategoryController extends Controller
         $getAuthDetails = auth('sanctum')->user();
 
         // get super admin & managers list
-        $getEntityDetails = new CampaignCategory;
+        $getCampaignCatgoryDetails = new CampaignCategory;
 
         if (!empty($request->search)) {
-            $getEntityDetails = $getEntityDetails->where('name', 'like', "%" . $request->search . "%");
+            $getCampaignCatgoryDetails = $getCampaignCatgoryDetails->where('name', 'like', "%" . $request->search . "%");
         }
         $orderColumn = 'id';
         $orderType = 'DESC';
@@ -39,9 +39,9 @@ class CampaignCategoryController extends Controller
         if ($request->has('column')) {
             $orderType = $request->type;
         }
-        $getEntityDetails = $getEntityDetails->orderBy($orderColumn, $orderType)->paginate(10);
+        $getCampaignCatgoryDetails = $getCampaignCatgoryDetails->orderBy($orderColumn, $orderType)->paginate(10);
 
-        return CampaignCategoryResource::collection($getEntityDetails);
+        return CampaignCategoryResource::collection($getCampaignCatgoryDetails);
     }
 
     /**
@@ -52,16 +52,16 @@ class CampaignCategoryController extends Controller
      */
     public function show($id)
     {
-        $getEntityDetails = $this->getCampaignCatDetails($id, 0);
-        if (count($getEntityDetails) > 0) {
-            return CampaignCategoryResource::collection($getEntityDetails);
+        $getCampaignCategoryDetails = $this->getCampaignCatDetails($id, 0);
+        if (count($getCampaignCategoryDetails) > 0) {
+            return CampaignCategoryResource::collection($getCampaignCategoryDetails);
         } else {
             return $this->errorResponse('Campaign category not found', 404);
         }
     }
 
     /**
-     * Store a newly created entity in storage.
+     * Store a newly created category in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -117,9 +117,9 @@ class CampaignCategoryController extends Controller
                 $updateImageData->update();
             }
         }
-        $getEntityDetails = $this->getCampaignCatDetails($lastId, 0);
-        $getUserDetails = CampaignCategoryResource::collection($getEntityDetails);
-        return $this->successResponse($getUserDetails, 'Campaign category created successfully', 201);
+        $getCampaignCategoryDetails = $this->getCampaignCatDetails($lastId, 0);
+        $getCategoryDetails = CampaignCategoryResource::collection($getCampaignCategoryDetails);
+        return $this->successResponse($getCategoryDetails, 'Campaign category created successfully', 201);
     }
 
     /**
@@ -131,9 +131,9 @@ class CampaignCategoryController extends Controller
      */
     public function update(Request $request,$id){
         
-        // check user exist or not 
-        $checkUser = $this->getCampaignCatDetails($id,1);
-        if(empty($checkUser)){
+        // check category exist or not 
+        $checkCategory = $this->getCampaignCatDetails($id,1);
+        if(empty($checkCategory)){
             return $this->errorResponse('Campaign category not found', 400);
         }
 
@@ -167,7 +167,7 @@ class CampaignCategoryController extends Controller
         $campaignCatName = ucfirst(strtolower(str_replace(' ', '',$request->name)));
 
         // update details 
-        $updateCampaignCat = $checkUser;
+        $updateCampaignCat = $checkCategory;
         $updateCampaignCat->name = $campaignCatName;
         $updateCampaignCat->description = $request->description;
         $updateCampaignCat->status = $request->status;
@@ -180,6 +180,14 @@ class CampaignCategoryController extends Controller
         }
         // Update filename & path
         if ($request->hasFile('image')) {
+            // Unlink old image from storage 
+            $getSocialPlatformData = $this->getCampaignCatDetails($id,1);
+            if(!empty($getSocialPlatformData)){
+                $pathName = $getSocialPlatformData->path;
+                $fileName = $getSocialPlatformData->file_name;
+               CommonHelper::removeUploadedImages($pathName,$fileName);
+            }
+            // Unlink old image from storage 
             $image = $request->file('image');
             $data = CommonHelper::uploadImages($image, 'campaigncategory/' . $id.'/');
             if (!empty($data)) {
@@ -203,24 +211,24 @@ class CampaignCategoryController extends Controller
      */
     public function destroy($id){
 
-        // check user exist or not 
-        $checkUser = $this->getCampaignCatDetails($id,1);
-        if(empty($checkUser)){
+        // check category exist or not 
+        $checkCategory = $this->getCampaignCatDetails($id,1);
+        if(empty($checkCategory)){
             return $this->errorResponse('Campaign category not found', 400);
         }
 
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
 
-        // Delete entity
-        $checkUserData = $checkUser;
-        if (!empty($checkUserData)) {
-            $checkUserData->deleted_by = $getAdminDetails->id;
-            // $checkUserData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
-            $checkUserData->deleted_ip = CommonHelper::getUserIp();
-            $checkUserData->update();
-            $deleteEntity = CampaignCategory::find($id)->delete();
-            if ($deleteEntity) {
+        // Delete campaign category
+        $checkCategoryData = $checkCategory;
+        if (!empty($checkCategoryData)) {
+            $checkCategoryData->deleted_by = $getAdminDetails->id;
+            // $checkCategoryData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
+            $checkCategoryData->deleted_ip = CommonHelper::getUserIp();
+            $checkCategoryData->update();
+            $deleteCampaignCategory = CampaignCategory::find($id)->delete();
+            if ($deleteCampaignCategory) {
                 return $this->successResponse([], 'Campaign category deleted successfully', 200);
             }
         }

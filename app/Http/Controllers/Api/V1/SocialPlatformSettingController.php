@@ -21,9 +21,9 @@ class SocialPlatformSettingController extends Controller
      */
     public function index(Request $request)
     {
-        $getRoleDetails = new SocialPlatformSetting();
+        $getSocialPlatformDetails = new SocialPlatformSetting();
         if(!empty($request->search)){
-            $getRoleDetails = $getRoleDetails->where('name','like', "%".$request->search."%");
+            $getSocialPlatformDetails = $getSocialPlatformDetails->where('name','like', "%".$request->search."%");
         }
         $orderColumn = 'id';
         $orderType = 'DESC';
@@ -33,8 +33,8 @@ class SocialPlatformSettingController extends Controller
         if($request->has('column')){
             $orderType = $request->type;
         }
-        $getRoleDetails = $getRoleDetails->orderBy($orderColumn,$orderType)->paginate(10);
-        return SocialPlatformSettingResource::collection($getRoleDetails); 
+        $getSocialPlatformDetails = $getSocialPlatformDetails->orderBy($orderColumn,$orderType)->paginate(10);
+        return SocialPlatformSettingResource::collection($getSocialPlatformDetails); 
     }
 
     /**
@@ -45,16 +45,16 @@ class SocialPlatformSettingController extends Controller
      */
     public function show($id)
     {
-        $getPaymentGatewayDetails = $this->getSocialPlatformDetails($id, 0);
-        if(count($getPaymentGatewayDetails) > 0){
-            return $this->successResponse(SocialPlatformSettingResource::collection($$getPaymentGatewayDetails), 'Social platform setting details fetch successfully', 200);
+        $getSocialPlatformDetails = $this->getSocialPlatformDetails($id, 0);
+        if(count($getSocialPlatformDetails) > 0){
+            return $this->successResponse(SocialPlatformSettingResource::collection($getSocialPlatformDetails), 'Social platform setting details fetch successfully', 200);
         }else{
             return $this->errorResponse('Social platform setting not found', 404);
         }
     }
 
     /**
-     * Store a newly created entity in storage.
+     * Store a newly created social platform setting in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -63,7 +63,7 @@ class SocialPlatformSettingController extends Controller
     {
 
         // Validation section
-        $validateUser = Validator::make(
+        $validatePlatform = Validator::make(
             $request->all(),
             [
                 'name' => 'required',
@@ -81,28 +81,28 @@ class SocialPlatformSettingController extends Controller
             ]
         );
 
-        if ($validateUser->fails()) {
-            return $this->errorResponse($validateUser->errors(), 401);
+        if ($validatePlatform->fails()) {
+            return $this->errorResponse($validatePlatform->errors(), 401);
         }
 
         // save details 
 
         // remove blank spaces from string 
-        $paymentGatwaySettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
+        $socialPlatformName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
 
-        $createSetting = new SocialPlatformSetting();
-        $createSetting->name = $paymentGatwaySettingName;
-        $createSetting->api_key = $request->api_key;
-        $createSetting->secret_key = $request->secret_key;
+        $createPlatform = new SocialPlatformSetting();
+        $createPlatform->name = $socialPlatformName;
+        $createPlatform->api_key = $request->api_key;
+        $createPlatform->secret_key = $request->secret_key;
         
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
-            $createSetting->created_by = $getAdminDetails->id;
-            $createSetting->created_ip = CommonHelper::getUserIp();
+            $createPlatform->created_by = $getAdminDetails->id;
+            $createPlatform->created_ip = CommonHelper::getUserIp();
         }
-        $createSetting->save();
-        $lastId = $createSetting->id;
+        $createPlatform->save();
+        $lastId = $createPlatform->id;
         // Update filename & path
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -114,9 +114,9 @@ class SocialPlatformSettingController extends Controller
                 $updateImageData->update();
             }
         }
-        $getEntityDetails = $this->getSocialPlatformDetails($lastId, 0);
-        $getUserDetails = SocialPlatformSettingResource::collection($getEntityDetails);
-        return $this->successResponse($getUserDetails, 'Social platform setting created successfully', 201);
+        $getPlatformDetails = $this->getSocialPlatformDetails($lastId, 0);
+        $getSettingDetails = SocialPlatformSettingResource::collection($getPlatformDetails);
+        return $this->successResponse($getSettingDetails, 'Social platform setting created successfully', 201);
     }
 
     /**
@@ -129,8 +129,8 @@ class SocialPlatformSettingController extends Controller
     public function update(Request $request,$id){
         
         // check user exist or not 
-        $checkUser = $this->getSocialPlatformDetails($id,1);
-        if(empty($checkUser)){
+        $checkPlatform = $this->getSocialPlatformDetails($id,1);
+        if(empty($checkPlatform)){
             return $this->errorResponse('Campaign category not found', 400);
         }
 
@@ -157,42 +157,50 @@ class SocialPlatformSettingController extends Controller
             $messages['image.mimes'] = 'Please select only jpg, png, jpeg files';
         }
 
-        $validateUser = Validator::make($request->all(), $rules, $messages);
+        $validatePlatform = Validator::make($request->all(), $rules, $messages);
 
-        if ($validateUser->fails()) {
-            return $this->errorResponse($validateUser->errors(), 400);
+        if ($validatePlatform->fails()) {
+            return $this->errorResponse($validatePlatform->errors(), 400);
         }
 
         // remove blank spaces from string 
-        $campaignCatName = ucfirst(strtolower(str_replace(' ', '',$request->name)));
+        $socialPlatformName = ucfirst(strtolower(str_replace(' ', '',$request->name)));
 
         // update details 
-        $updateCampaignCat = $checkUser;
-        $updateCampaignCat->name = $campaignCatName;
-        $updateCampaignCat->api_key = $request->api_key;
-        $updateCampaignCat->secret_key = $request->secret_key;
-        $updateCampaignCat->status = $request->status;
-        $updateCampaignCat->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
+        $updatePlatformSetting = $checkPlatform;
+        $updatePlatformSetting->name = $socialPlatformName;
+        $updatePlatformSetting->api_key = $request->api_key;
+        $updatePlatformSetting->secret_key = $request->secret_key;
+        $updatePlatformSetting->status = $request->status;
+        $updatePlatformSetting->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
-            $updateCampaignCat->updated_by = $getAdminDetails->id;
-            $updateCampaignCat->updated_ip = CommonHelper::getUserIp();
+            $updatePlatformSetting->updated_by = $getAdminDetails->id;
+            $updatePlatformSetting->updated_ip = CommonHelper::getUserIp();
         }
         // Update filename & path
         if ($request->hasFile('image')) {
+            // Unlink old image from storage 
+            $getSocialPlatformData = $this->getSocialPlatformDetails($id,1);
+            if(!empty($getSocialPlatformData)){
+                $pathName = $getSocialPlatformData->path;
+                $fileName = $getSocialPlatformData->file_name;
+               CommonHelper::removeUploadedImages($pathName,$fileName);
+            }
+            // Unlink old image from storage 
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'campaigncategory/' . $id.'/');
+            $data = CommonHelper::uploadImages($image, 'socialplatform/' . $id.'/');
             if (!empty($data)) {
-                $updateCampaignCat->file_name = $data['filename'];
-                $updateCampaignCat->path = $data['path'];
+                $updatePlatformSetting->file_name = $data['filename'];
+                $updatePlatformSetting->path = $data['path'];
             }
         }
-        $updateCampaignCat->update();
+        $updatePlatformSetting->update();
 
-        $getUserDetails = $this->getSocialPlatformDetails($id,0);
-        $getUserDetails = SocialPlatformSettingResource::collection($getUserDetails);
-        return $this->successResponse($getUserDetails, 'Campaign category updated successfully', 201);
+        $getPlatformDetails = $this->getSocialPlatformDetails($id,0);
+        $getSettingDetails = SocialPlatformSettingResource::collection($getPlatformDetails);
+        return $this->successResponse($getSettingDetails, 'Campaign category updated successfully', 201);
         
     }
 
@@ -205,23 +213,23 @@ class SocialPlatformSettingController extends Controller
     public function destroy($id){
 
         // check user exist or not 
-        $checkUser = $this->getSocialPlatformDetails($id,1);
-        if(empty($checkUser)){
+        $checkPlatform = $this->getSocialPlatformDetails($id,1);
+        if(empty($checkPlatform)){
             return $this->errorResponse('Social platform setting not found', 400);
         }
 
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
 
-        // Delete entity
-        $checkUserData = $checkUser;
-        if (!empty($checkUserData)) {
-            $checkUserData->deleted_by = $getAdminDetails->id;
-            // $checkUserData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
-            $checkUserData->deleted_ip = CommonHelper::getUserIp();
-            $checkUserData->update();
-            $deleteEntity = SocialPlatformSetting::find($id)->delete();
-            if ($deleteEntity) {
+        // Delete social platform setting
+        $checkPlatformData = $checkPlatform;
+        if (!empty($checkPlatformData)) {
+            $checkPlatformData->deleted_by = $getAdminDetails->id;
+            // $checkPlatformData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
+            $checkPlatformData->deleted_ip = CommonHelper::getUserIp();
+            $checkPlatformData->update();
+            $deletePlatformSetting = SocialPlatformSetting::find($id)->delete();
+            if ($deletePlatformSetting) {
                 return $this->successResponse([], 'Social platform setting deleted successfully', 200);
             }
         }
