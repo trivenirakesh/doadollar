@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\PaymentGatewaySetting;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +17,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             EntitymstSeeder::class,
             RoleSeeder::class,
+            CampaignCategorySeeder::class,
+            PaymentGatewaySettingSeeder::class,
     	]);
     }
 }

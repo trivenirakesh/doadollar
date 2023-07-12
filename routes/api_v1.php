@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\AuthController;
 use App\Http\Controllers\Api\V1\CampaignCategoryController;
+use App\Http\Controllers\Api\V1\PaymentGatewaySettingController;
 use App\Http\Controllers\Api\V1\UsersController;
 
 /*
@@ -49,4 +50,11 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('campaigncategory',[CampaignCategoryController::class,'create']);
     Route::post('campaigncategory/{id}',[CampaignCategoryController::class,'update']);
     Route::delete('campaigncategory/{id}',[CampaignCategoryController::class,'destroy']);
+
+    // Manage payment gateway setting
+    Route::get('paymentgatewaysetting',[PaymentGatewaySettingController::class,'index']);
+    Route::get('paymentgatewaysetting/{id}',[PaymentGatewaySettingController::class,'show']);
+    Route::post('paymentgatewaysetting',[PaymentGatewaySettingController::class,'create']);
+    Route::post('paymentgatewaysetting/{id}',[PaymentGatewaySettingController::class,'update']);
+    Route::delete('paymentgatewaysetting/{id}',[PaymentGatewaySettingController::class,'destroy']);
 });
