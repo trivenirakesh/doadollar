@@ -1,6 +1,7 @@
 <?php 
 
 return [
+    'site_timezone' => 'CDT', // By default CDT timezone wise date will display 
     'status' => [
         'active' => 1,
         'deactive' => 0,

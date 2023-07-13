@@ -6,11 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Role extends Model
+class PaymentGatewaySetting extends Model
 {
     use HasFactory,SoftDeletes;
-
-    public function entitymst(){
-        return $this->hasOne(Entitymst::class);
-    }
 }
