@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             CampaignCategorySeeder::class,
             PaymentGatewaySettingSeeder::class,
+            SocialPlatformSettingSeeder::class,
+            UploadTypesSeeder::class,
     	]);
     }
 }
