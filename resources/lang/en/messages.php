@@ -28,6 +28,15 @@ return [
         'entity_type' => 'Please enter entity type',
         'entity_type_digits' => 'Entity type value must be numeric',
         'entity_type_lte' => 'Entity type value must between 0 and 2',
+        'type' => 'Please enter type',
+        'type_numeric' => 'Type value must be numeric',
+        'type_lte' => 'Type should be 0 or 1',
+        'old_password' => 'Please enter old password',
+        'new_password' => 'Please enter new password',
+        'id' => 'Please enter id',
+        'id_numeric' => 'Id must be numeric',
+        'email_password_wrong' => 'Email or password you entered did not match our records.',
+        'user_not_found' => 'User not found'
 
     ],
 
@@ -36,5 +45,9 @@ return [
         'create' => ' created successfully',
         'update' => ' created successfully',
         'delete' => ' created successfully',
+        'password_reset' => 'Password reset successfully',
+        'old_password_wrong' => "Old Password Doesn't match",
+        'user_logout' => 'User logout successfully',
+        'user_login' => 'User successfully logged in'
     ]
 ];

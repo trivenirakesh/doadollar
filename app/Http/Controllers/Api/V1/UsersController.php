@@ -314,9 +314,9 @@ class UsersController extends Controller
         ];
 
         $messages = [
-            'id.required' => 'Please enter id',
-            'old_password.required' => 'Please enter old password',
-            'new_password.required' => 'Please enter new password'
+            'id.required' => __('messages.validation.id'),
+            'old_password.required' => __('messages.validation.old_password'),
+            'new_password.required' => __('messages.validation.new_password') 
         ];
 
         $validateUser = Validator::make($request->all(), $rules, $messages);
@@ -332,7 +332,7 @@ class UsersController extends Controller
         //Match The Old Password
         $getAdminDetails = auth('sanctum')->user();
         if(!Hash::check($request->old_password, $getAdminDetails->password)){
-            return $this->errorResponse("Old Password Doesn't match", 400);
+            return $this->errorResponse(__('messages.success.old_password_wrong'), 400);
         }
 
         $password = $request->new_password;
@@ -349,7 +349,7 @@ class UsersController extends Controller
         $updateUserPassword->password = Hash::make($request->new_password);
         $updateUserPassword->update();
         if($updateUserPassword){
-            return $this->successResponse([], 'Password reset successfully', 200);
+            return $this->successResponse([], __('messages.success.password_reset'), 200);
         }
     }
 }

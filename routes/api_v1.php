@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\V1\CampaignCategoryController;
 use App\Http\Controllers\Api\V1\PaymentGatewaySettingController;
 use App\Http\Controllers\Api\V1\SocialPlatformSettingController;
 use App\Http\Controllers\Api\V1\UsersController;
-use App\Models\SocialPlatformSetting;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,4 +65,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('socialplatformsetting',[SocialPlatformSettingController::class,'create']);
     Route::post('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'update']);
     Route::delete('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'destroy']);
+
+    // Manage Upload types 
+    Route::resource('uploadtypes',UploadTypesController::class);
 });
