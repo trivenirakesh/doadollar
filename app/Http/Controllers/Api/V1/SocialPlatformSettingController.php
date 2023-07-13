@@ -13,7 +13,7 @@ use App\Helpers\CommonHelper;
 class SocialPlatformSettingController extends Controller
 {
     use CommonTrait;
-
+    const module = 'Social platform setting';
     /**
      * Display a listing of the resource.
      *
@@ -46,11 +46,7 @@ class SocialPlatformSettingController extends Controller
     public function show($id)
     {
         $getSocialPlatformDetails = $this->getSocialPlatformDetails($id, 0);
-        if(count($getSocialPlatformDetails) > 0){
-            return $this->successResponse(SocialPlatformSettingResource::collection($getSocialPlatformDetails), 'Social platform setting details fetch successfully', 200);
-        }else{
-            return $this->errorResponse('Social platform setting not found', 404);
-        }
+        return $this->successResponse(SocialPlatformSettingResource::collection($getSocialPlatformDetails), self::module.__('messages.success.details'), 200);
     }
 
     /**
@@ -72,12 +68,12 @@ class SocialPlatformSettingController extends Controller
                 'image' => 'required|max:2048|mimes:jpg,png,jpeg'
             ],
             [
-                'name.required' => 'Please enter name',
-                'api_key.required' => 'Please enter api key',
-                'secret_key.required' => 'Please enter secret key',
-                'image.required' => 'Please select image',
-                'image.max' => 'Please select below 2 MB images',
-                'image.mimes' => 'Please select only jpg, png, jpeg files',
+                'name.required' => __('messages.validation.name'),
+                'api_key.required' => __('messages.validation.api_key'),
+                'secret_key.required' => __('messages.validation.secret_key'),
+                'image.required' => __('messages.validation.image'),
+                'image.max' => __('messages.validation.image-max'),
+                'image.mimes' => __('messages.validation.image-mimes'),
             ]
         );
 
@@ -116,7 +112,7 @@ class SocialPlatformSettingController extends Controller
         }
         $getPlatformDetails = $this->getSocialPlatformDetails($lastId, 0);
         $getSettingDetails = SocialPlatformSettingResource::collection($getPlatformDetails);
-        return $this->successResponse($getSettingDetails, 'Social platform setting created successfully', 201);
+        return $this->successResponse($getSettingDetails, self::module.__('messages.success.create'), 201);
     }
 
     /**
@@ -130,31 +126,28 @@ class SocialPlatformSettingController extends Controller
         
         // check user exist or not 
         $checkPlatform = $this->getSocialPlatformDetails($id,1);
-        if(empty($checkPlatform)){
-            return $this->errorResponse('Campaign category not found', 400);
-        }
 
         // Validation section
         
         $rules['name'] = 'required';
         $rules['api_key'] = 'required';
         $rules['secret_key'] = 'required';
-        $messages['name.required'] = 'Please enter name';
-        $messages['api_key.required'] = 'Please enter api key';
-        $messages['secret_key.required'] = 'Please enter secret key';
+        $messages['name.required'] = __('messages.validation.name');
+        $messages['api_key.required'] = __('messages.validation.api_key');
+        $messages['secret_key.required'] = __('messages.validation.secret_key');
         
         if ($request->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
-            $messages['status.required'] = 'Please enter status';
-            $messages['status.numeric'] = 'Status value must be numeric';
-            $messages['status.lte'] = 'Status should be 0 or 1';
+            $messages['status.required'] = __('messages.validation.status');
+            $messages['status.numeric'] = __('messages.validation.status_numeric');
+            $messages['status.lte'] = __('messages.validation.status_lte');
         }
 
         if ($request->hasFile('image')) {
             $rules['image'] = 'required|max:2048|mimes:jpg,png,jpeg';
-            $messages['image.required'] = 'Please select image';
-            $messages['image.max'] = 'Please select below 2 MB images';
-            $messages['image.mimes'] = 'Please select only jpg, png, jpeg files';
+            $messages['image.required'] = __('messages.validation.image');
+            $messages['image.max'] = __('messages.validation.image-max');
+            $messages['image.mimes'] = __('messages.validation.image-mimes');
         }
 
         $validatePlatform = Validator::make($request->all(), $rules, $messages);
@@ -200,7 +193,7 @@ class SocialPlatformSettingController extends Controller
 
         $getPlatformDetails = $this->getSocialPlatformDetails($id,0);
         $getSettingDetails = SocialPlatformSettingResource::collection($getPlatformDetails);
-        return $this->successResponse($getSettingDetails, 'Campaign category updated successfully', 201);
+        return $this->successResponse($getSettingDetails,self::module.__('messages.success.update') , 200);
         
     }
 
@@ -214,9 +207,6 @@ class SocialPlatformSettingController extends Controller
 
         // check user exist or not 
         $checkPlatform = $this->getSocialPlatformDetails($id,1);
-        if(empty($checkPlatform)){
-            return $this->errorResponse('Social platform setting not found', 400);
-        }
 
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
@@ -230,7 +220,7 @@ class SocialPlatformSettingController extends Controller
             $checkPlatformData->update();
             $deletePlatformSetting = SocialPlatformSetting::find($id)->delete();
             if ($deletePlatformSetting) {
-                return $this->successResponse([], 'Social platform setting deleted successfully', 200);
+                return $this->successResponse([],self::module.__('messages.success.delete'), 200);
             }
         }
     }
@@ -239,9 +229,19 @@ class SocialPlatformSettingController extends Controller
         $getSocialPlatformSettingData = SocialPlatformSetting::where('id',$id);
         if($type == 1){
             $getSocialPlatformSettingData = $getSocialPlatformSettingData->first();
+            if(!empty($getSocialPlatformSettingData)){
+                return $getSocialPlatformSettingData;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
         }else{
             $getSocialPlatformSettingData = $getSocialPlatformSettingData->get();
+            if(count($getSocialPlatformSettingData) > 0){
+                return $getSocialPlatformSettingData;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
         }
-        return $getSocialPlatformSettingData;
+        
     }
 }

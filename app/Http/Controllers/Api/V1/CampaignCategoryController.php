@@ -13,6 +13,7 @@ use App\Helpers\CommonHelper;
 class CampaignCategoryController extends Controller
 {
     use CommonTrait;
+    const module = 'Campaign category';
 
     /**
      * Display a listing of the resource.
@@ -53,11 +54,7 @@ class CampaignCategoryController extends Controller
     public function show($id)
     {
         $getCampaignCategoryDetails = $this->getCampaignCatDetails($id, 0);
-        if (count($getCampaignCategoryDetails) > 0) {
-            return CampaignCategoryResource::collection($getCampaignCategoryDetails);
-        } else {
-            return $this->errorResponse('Campaign category not found', 404);
-        }
+        return $this->successResponse(CampaignCategoryResource::collection($getCampaignCategoryDetails),self::module.__('messages.success.details'), 200);
     }
 
     /**
@@ -77,10 +74,10 @@ class CampaignCategoryController extends Controller
                 'image' => 'required|max:2048|mimes:jpg,png,jpeg'
             ],
             [
-                'name.required' => 'Please enter name',
-                'image.required' => 'Please select image',
-                'image.max' => 'Please select below 2 MB images',
-                'image.mimes' => 'Please select only jpg, png, jpeg files',
+                'name.required' => __('messages.validation.name'),
+                'image.required' => __('messages.validation.image'),
+                'image.max' => __('messages.validation.image-max'),
+                'image.mimes' => __('messages.validation.image-mimes'),
             ]
         );
 
@@ -119,7 +116,7 @@ class CampaignCategoryController extends Controller
         }
         $getCampaignCategoryDetails = $this->getCampaignCatDetails($lastId, 0);
         $getCategoryDetails = CampaignCategoryResource::collection($getCampaignCategoryDetails);
-        return $this->successResponse($getCategoryDetails, 'Campaign category created successfully', 201);
+        return $this->successResponse($getCategoryDetails, self::module.__('messages.success.create'), 201);
     }
 
     /**
@@ -133,28 +130,25 @@ class CampaignCategoryController extends Controller
         
         // check category exist or not 
         $checkCategory = $this->getCampaignCatDetails($id,1);
-        if(empty($checkCategory)){
-            return $this->errorResponse('Campaign category not found', 400);
-        }
 
         // Validation section
         $rules = [];
         $messages = [];
         if ($request->has('name')) {
             $rules['name'] = 'required';
-            $messages['name.required'] = 'Please enter name';
+            $messages['name.required'] = __('messages.validation.name');
         }
         if ($request->hasFile('image')) {
             $rules['image'] = 'required|max:2048|mimes:jpg,png,jpeg';
-            $messages['image.required'] = 'Please select image';
-            $messages['image.max'] = 'Please select below 2 MB images';
-            $messages['image.mimes'] = 'Please select only jpg, png, jpeg files';
+            $messages['image.required'] = __('messages.validation.image');
+            $messages['image.max'] = __('messages.validation.image-max');
+            $messages['image.mimes'] = __('messages.validation.image-mimes');
         }
         if ($request->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
-            $messages['status.required'] = 'Please enter status';
-            $messages['status.numeric'] = 'Status value must be numeric';
-            $messages['status.lte'] = 'Status should be 0 or 1';
+            $messages['status.required'] = __('messages.validation.status');
+            $messages['status.numeric'] = __('messages.validation.status_numeric');
+            $messages['status.lte'] = __('messages.validation.status_lte');
         }
 
         $validateUser = Validator::make($request->all(), $rules, $messages);
@@ -199,7 +193,7 @@ class CampaignCategoryController extends Controller
 
         $getUserDetails = $this->getCampaignCatDetails($id,0);
         $getUserDetails = CampaignCategoryResource::collection($getUserDetails);
-        return $this->successResponse($getUserDetails, 'Campaign category updated successfully', 201);
+        return $this->successResponse($getUserDetails, self::module.__('messages.success.update'), 200);
         
     }
 
@@ -213,9 +207,6 @@ class CampaignCategoryController extends Controller
 
         // check category exist or not 
         $checkCategory = $this->getCampaignCatDetails($id,1);
-        if(empty($checkCategory)){
-            return $this->errorResponse('Campaign category not found', 400);
-        }
 
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
@@ -229,7 +220,7 @@ class CampaignCategoryController extends Controller
             $checkCategoryData->update();
             $deleteCampaignCategory = CampaignCategory::find($id)->delete();
             if ($deleteCampaignCategory) {
-                return $this->successResponse([], 'Campaign category deleted successfully', 200);
+                return $this->successResponse([], self::module.__('messages.success.delete'), 200);
             }
         }
     }
@@ -239,9 +230,18 @@ class CampaignCategoryController extends Controller
         $getCampaignCatData = CampaignCategory::where('id',$id);
         if($type == 1){
             $getCampaignCatData = $getCampaignCatData->first();
+            if(!empty($getCampaignCatData)){
+                return $getCampaignCatData;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
         }else{
             $getCampaignCatData = $getCampaignCatData->get();
+            if(count($getCampaignCatData) > 0){
+                return $getCampaignCatData;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
         }
-        return $getCampaignCatData;
     }
 }

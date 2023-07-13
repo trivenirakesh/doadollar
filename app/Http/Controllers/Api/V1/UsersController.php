@@ -15,6 +15,7 @@ use App\Helpers\CommonHelper;
 class UsersController extends Controller
 {
     use CommonTrait;
+    const module = 'User';
 
     /**
      * Display a listing of the resource.
@@ -59,11 +60,8 @@ class UsersController extends Controller
     public function show($id)
     {
         $getUserDetails = $this->getUserDetails($id,0);
-        if (count($getUserDetails) > 0) {
-            return EntityResource::collection($getUserDetails);
-        } else {
-            return $this->errorResponse('User not found', 404);
-        }
+        return $this->successResponse(EntityResource::collection($getUserDetails), self::module.__('messages.success.details'),200);
+        
     }
 
     /**
@@ -88,25 +86,25 @@ class UsersController extends Controller
         ];
 
         $messages = [
-            'entity_type.required' => 'Please enter entity type',
-            'entity_type.digits' => 'Entity type value must be numeric',
-            'entity_type.lte' => 'Entity type value must between 0 and 2',
-            'first_name.required' => 'Please enter first name',
-            'last_name.required' => 'Please enter last name',
-            'email.required' => 'Please enter email',
-            'email.email' => 'Invaild email address',
-            'email.unique' => 'Email address is already registered. Please, use a different email',
-            'mobile.required' => 'Please enter mobile',
-            'mobile.numeric' => 'Mobile must be numeric',
-            'mobile.digits' => 'Mobile should be 10 digit number',
-            'mobile.unique' => 'Mobile number is already registered. Please, use a different mobile',
-            'password.required' => 'Please enter password',
+            'entity_type.required' => __('messages.validation.entity_type'),
+            'entity_type.digits' => __('messages.validation.entity_type_digits'),
+            'entity_type.lte' => __('messages.validation.entity_type_lte'),
+            'first_name.required' => __('messages.validation.first_name'),
+            'last_name.required' => __('messages.validation.last_name'),
+            'email.required' => __('messages.validation.email'),
+            'email.email' => __('messages.validation.email_email'),
+            'email.unique' => __('messages.validation.email_unique'),
+            'mobile.required' => __('messages.validation.mobile'),
+            'mobile.numeric' => __('messages.validation.mobile_numeric'),
+            'mobile.digits' => __('messages.validation.mobile_digits'),
+            'mobile.unique' => __('messages.validation.mobile_unique'),
+            'password.required' => __('messages.validation.password'),
         ];
 
         if ($request->has('role_id') && $request->entity_type != 2) {
             $rules['role_id'] = 'required|numeric';
-            $messages['role_id.required'] = 'Please enter role';
-            $messages['role_id.numeric'] = 'Role value must be numeric';
+            $messages['role_id.required'] = __('messages.validation.role_id');
+            $messages['role_id.numeric'] = __('messages.validation.role_id_numeric');
         }
         $validateUser = Validator::make($request->all(), $rules, $messages);
 
@@ -121,7 +119,7 @@ class UsersController extends Controller
         $number    = preg_match('@[0-9]@', $password);
         $specialChars = preg_match('@[^\w]@', $password);
         if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($password) < 8) {
-            $errorMessage = 'Password should be at least 8 characters in length and should include at least one upper case letter, one number, and one special character.';
+            $errorMessage = __('messages.validation.strong_password');
             return $this->errorResponse($errorMessage, 400);
         }
         
@@ -155,7 +153,7 @@ class UsersController extends Controller
         $lastId = $createUser->id;
         $getUserDetails = $this->getUserDetails($lastId,0);
         $getUserDetails = EntityResource::collection($getUserDetails);
-        return $this->successResponse($getUserDetails, 'User created successfully', 201);
+        return $this->successResponse($getUserDetails, self::module.__('messages.success.create'), 201);
     }
 
     /**
@@ -169,9 +167,6 @@ class UsersController extends Controller
         
         // check user exist or not 
         $checkUser = $this->getUserDetails($id,1);
-        if(empty($checkUser)){
-            return $this->errorResponse('User not found', 400);
-        }
 
         $userType = $checkUser->entity_type;
         // Validation section
@@ -185,27 +180,27 @@ class UsersController extends Controller
         ];
 
         $messages = [
-            'first_name.required' => 'Please enter first name',
-            'last_name.required' => 'Please enter last name',
-            'email.required' => 'Please enter email',
-            'email.email' => 'Invaild email address',
-            'email.unique' => 'Email address is already registered. Please, use a different email',
-            'mobile.required' => 'Please enter mobile',
-            'mobile.numeric' => 'Mobile must be numeric',
-            'mobile.digits' => 'Mobile should be 10 digit number',
-            'mobile.unique' => 'Mobile number is already registered. Please, use a different mobile'
+            'first_name.required' => __('messages.validation.first_name'),
+            'last_name.required' => __('messages.validation.last_name'),
+            'email.required' => __('messages.validation.email'),
+            'email.email' => __('messages.validation.email_email'),
+            'email.unique' => __('messages.validation.email_unique'),
+            'mobile.required' => __('messages.validation.mobile'),
+            'mobile.numeric' => __('messages.validation.mobile_numeric'),
+            'mobile.digits' => __('messages.validation.mobile_digits'),
+            'mobile.unique' => __('messages.validation.mobile_unique'),
         ];
 
         if ($request->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
-            $messages['status.required'] = 'Please enter status';
-            $messages['status.numeric'] = 'Status value must be numeric';
-            $messages['status.lte'] = 'Status should be 0 or 1';
+            $messages['status.required'] = __('messages.validation.status');
+            $messages['status.numeric'] = __('messages.validation.status_numeric');
+            $messages['status.lte'] = __('messages.validation.status_lte');
         }
         if ($request->has('role_id') && $userType != 2) {
             $rules['role_id'] = 'required|numeric';
-            $messages['role_id.required'] = 'Please enter role';
-            $messages['role_id.numeric'] = 'Role value must be numeric';
+            $messages['role_id.required'] = __('messages.validation.role_id');
+            $messages['role_id.numeric'] = __('messages.validation.role_id_numeric');
         }
         $validateUser = Validator::make($request->all(), $rules, $messages);
 
@@ -245,7 +240,7 @@ class UsersController extends Controller
 
         $getUserDetails = $this->getUserDetails($id,0);
         $getUserDetails = EntityResource::collection($getUserDetails);
-        return $this->successResponse($getUserDetails, 'User updated successfully', 201);
+        return $this->successResponse($getUserDetails, self::module.__('messages.success.update'), 200);
         
     }
 
@@ -259,9 +254,6 @@ class UsersController extends Controller
 
         // check user exist or not 
         $checkUser = $this->getUserDetails($id,1);
-        if(empty($checkUser)){
-            return $this->errorResponse('User not found', 400);
-        }
 
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
@@ -275,7 +267,7 @@ class UsersController extends Controller
             $checkUserData->update();
             $deleteEntity = Entitymst::find($id)->delete();
             if ($deleteEntity) {
-                return $this->successResponse([], 'User deleted successfully', 200);
+                return $this->successResponse([], self::module.__('messages.success.delete'), 200);
             }
         }
     }
@@ -288,8 +280,18 @@ class UsersController extends Controller
         $getUserDetails = Entitymst::where('id',$id);
         if($type == 1){
             $getUserDetails = $getUserDetails->first();
+            if(!empty($getUserDetails)){
+                return $getUserDetails;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
         }else{
             $getUserDetails = $getUserDetails->get();
+            if(count($getUserDetails) > 0){
+                return $getUserDetails;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
         }
         return $getUserDetails;
     }
@@ -326,9 +328,6 @@ class UsersController extends Controller
         // check user exist or not 
         $userId = $request->id;
         $checkUser = $this->getUserDetails($userId,1);
-        if(empty($checkUser)){
-            return $this->errorResponse('User not found', 400);
-        }
 
         //Match The Old Password
         $getAdminDetails = auth('sanctum')->user();
@@ -342,7 +341,7 @@ class UsersController extends Controller
         $number    = preg_match('@[0-9]@', $password);
         $specialChars = preg_match('@[^\w]@', $password);
         if(!$uppercase || !$lowercase || !$number || !$specialChars || strlen($password) < 8) {
-            $errorMessage = 'Password should be at least 8 characters in length and should include at least one upper case letter, one number, and one special character.';
+            $errorMessage = __('messages.validation.strong_password');
             return $this->errorResponse($errorMessage, 400);
         }
 

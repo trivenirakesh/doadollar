@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Support\Facades\Log;
+use ErrorException;
 
 class Handler extends ExceptionHandler
 {
@@ -45,6 +46,11 @@ class Handler extends ExceptionHandler
                 'status'=>'error',
                 'message' => "Access denied. Please login and try again.",
             ], 401);
+        }elseif($th instanceof ErrorException){
+            return response()->json([
+                'status'=>'error',
+                'message' => $th->getMessage(),
+            ], 404);
         }else{
             return response()->json([
                 'status'=>'error',

@@ -13,6 +13,7 @@ use App\Helpers\CommonHelper;
 class RoleController extends Controller
 {
     use CommonTrait;
+    const module = 'Role';
     
     /**
      * Display a listing of the resource.
@@ -61,7 +62,7 @@ class RoleController extends Controller
                 'name' => 'required',
             ],
             [
-                'name.required' => 'Please enter name',
+                'name.required' => __('messages.validation.name'),
             ]
         );
 
@@ -84,8 +85,9 @@ class RoleController extends Controller
         }
         $role->save();
         $lastId = $role->id;
-        $getRoleDetails = RoleResource::collection(Role::where('id',$lastId)->get());
-        return $this->successResponse($getRoleDetails, 'Role created successfully', 201);
+        $getRoleData = $this->getRoleDetails($lastId,0);
+        $getRoleDetails = RoleResource::collection($getRoleData);
+        return $this->successResponse($getRoleDetails, self::module.__('messages.success.create'), 201);
     }
 
     /**
@@ -96,12 +98,8 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        $getRoleDetails = Role::where('id', $id)->get();
-        if(count($getRoleDetails) > 0){
-            return $this->successResponse(RoleResource::collection($getRoleDetails), 'Role details fetch successfully', 200);
-        }else{
-            return $this->errorResponse('Role not found', 404);
-        }
+        $getRoleDetails = $this->getRoleDetails($id,0);
+        return $this->successResponse(RoleResource::collection($getRoleDetails), self::module.__('messages.success.details'), 200);
     }
 
     /**
@@ -124,18 +122,21 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // check role exist or not 
+        $checkRole = $this->getRoleDetails($id,1);
+
         // Validation section
         $rules = [];
         $messages = [];
         if($request->has('name')){
             $rules['name'] = 'required';
-            $messages['name.required'] = 'Please enter name';
+            $messages['name.required'] = __('messages.validation.name');
         }
         if($request->has('status')){
             $rules['status'] = 'required|numeric|lte:1';
-            $messages['status.required'] = 'Please enter status';
-            $messages['status.numeric'] = 'Status value must be numeric';
-            $messages['status.lte'] = 'Status should be 0 or 1';
+            $messages['status.required'] = __('messages.validation.status');
+            $messages['status.numeric'] = __('messages.validation.status_numeric');
+            $messages['status.lte'] = __('messages.validation.status_lte');
         }
         $validateUser = Validator::make($request->all(),$rules,$messages);
 
@@ -147,11 +148,7 @@ class RoleController extends Controller
         $getAdminDetails = auth('sanctum')->user();
 
         // Save entity section
-        $role = Role::where('id',$id)->first();
-        
-        if(empty($role)){
-            return $this->errorResponse('Role not found', 404);
-        }
+        $role = $checkRole;
         if($request->has('name')){
             $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
             $role->name = $roleName;
@@ -165,8 +162,9 @@ class RoleController extends Controller
             $role->updated_ip = CommonHelper::getUserIp();
         }
         $role->update();
-        $getRoleDetails = RoleResource::collection(Role::where('id',$id)->get());
-        return $this->successResponse($getRoleDetails, 'Role updated successfully', 200);
+        $getRoleData = $this->getRoleDetails($id,0);
+        $getRoleDetails = RoleResource::collection($getRoleData);
+        return $this->successResponse($getRoleDetails, self::module.__('messages.success.update'), 200);
         
     }
 
@@ -178,11 +176,14 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        // check role exist or not 
+        $checkRole = $this->getRoleDetails($id,1);
+
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
 
         // Delete entity
-        $checkRoleData = Role::find($id);
+        $checkRoleData = $checkRole;
         if (!empty($checkRoleData)) {
             // $checkRoleData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkRoleData->deleted_by = $getAdminDetails->id;
@@ -190,10 +191,28 @@ class RoleController extends Controller
             $checkRoleData->update();
             $deleteRole = Role::find($id)->delete();
             if ($deleteRole) {
-                return $this->successResponse([], 'Role deleted successfully', 200);
+                return $this->successResponse([], self::module.__('messages.success.delete'), 200);
             }
-        } else {
-            return $this->errorResponse('Role not found', 404);
         }
+    }
+
+    public function getRoleDetails($id,$type){
+        $getRoleData = Role::where('id',$id);
+        if($type == 1){
+            $getRoleData = $getRoleData->first();
+            if(!empty($getRoleData)){
+                return $getRoleData;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
+        }else{
+            $getRoleData = $getRoleData->get();
+            if(count($getRoleData) > 0){
+                return $getRoleData;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
+        }
+        
     }
 }

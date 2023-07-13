@@ -14,6 +14,7 @@ use App\Helpers\CommonHelper;
 class PaymentGatewaySettingController extends Controller
 {
     use CommonTrait;
+    const module = 'Payment gateway setting';
     
     /**
      * Display a listing of the resource.
@@ -47,11 +48,7 @@ class PaymentGatewaySettingController extends Controller
     public function show($id)
     {
         $getPaymentGatewayDetails = $this->getPaymentGatewayDetails($id, 0);
-        if(count($$getPaymentGatewayDetails) > 0){
-            return $this->successResponse(PaymentGatewaySettingResource::collection($$getPaymentGatewayDetails), 'Payment gateway setting details fetch successfully', 200);
-        }else{
-            return $this->errorResponse('Payment gateway setting not found', 404);
-        }
+        return $this->successResponse(PaymentGatewaySettingResource::collection($getPaymentGatewayDetails), self::module.__('messages.success.details'), 200);
     }
 
     /**
@@ -73,12 +70,12 @@ class PaymentGatewaySettingController extends Controller
                 'image' => 'required|max:2048|mimes:jpg,png,jpeg'
             ],
             [
-                'name.required' => 'Please enter name',
-                'api_key.required' => 'Please enter api key',
-                'secret_key.required' => 'Please enter secret key',
-                'image.required' => 'Please select image',
-                'image.max' => 'Please select below 2 MB images',
-                'image.mimes' => 'Please select only jpg, png, jpeg files',
+                'name.required' => __('messages.validation.name'),
+                'api_key.required' => __('messages.validation.api_key'),
+                'secret_key.required' => __('messages.validation.secret_key'),
+                'image.required' => __('messages.validation.image'),
+                'image.max' => __('messages.validation.image-max'),
+                'image.mimes' => __('messages.validation.image-mimes'),
             ]
         );
 
@@ -117,7 +114,7 @@ class PaymentGatewaySettingController extends Controller
         }
         $getPaymentSettingDetails = $this->getPaymentGatewayDetails($lastId, 0);
         $getSettingDetails = PaymentGatewaySettingResource::collection($getPaymentSettingDetails);
-        return $this->successResponse($getSettingDetails, 'Payment gateway setting created successfully', 201);
+        return $this->successResponse($getSettingDetails, self::module.__('messages.success.create'), 201);
     }
 
     /**
@@ -131,31 +128,28 @@ class PaymentGatewaySettingController extends Controller
         
         // check setting exist or not 
         $checkSetting = $this->getPaymentGatewayDetails($id,1);
-        if(empty($checkSetting)){
-            return $this->errorResponse('Campaign category not found', 400);
-        }
 
         // Validation section
         
         $rules['name'] = 'required';
         $rules['api_key'] = 'required';
         $rules['secret_key'] = 'required';
-        $messages['name.required'] = 'Please enter name';
-        $messages['api_key.required'] = 'Please enter api key';
-        $messages['secret_key.required'] = 'Please enter secret key';
+        $messages['name.required'] = __('messages.validation.name');
+        $messages['api_key.required'] = __('messages.validation.api_key');
+        $messages['secret_key.required'] = __('messages.validation.secret_key');
         
         if ($request->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
-            $messages['status.required'] = 'Please enter status';
-            $messages['status.numeric'] = 'Status value must be numeric';
-            $messages['status.lte'] = 'Status should be 0 or 1';
+            $messages['status.required'] = __('messages.validation.status');
+            $messages['status.numeric'] = __('messages.validation.status_numeric');
+            $messages['status.lte'] = __('messages.validation.status_lte');
         }
 
         if ($request->hasFile('image')) {
             $rules['image'] = 'required|max:2048|mimes:jpg,png,jpeg';
-            $messages['image.required'] = 'Please select image';
-            $messages['image.max'] = 'Please select below 2 MB images';
-            $messages['image.mimes'] = 'Please select only jpg, png, jpeg files';
+            $messages['image.required'] = __('messages.validation.image');
+            $messages['image.max'] = __('messages.validation.image-max');
+            $messages['image.mimes'] = __('messages.validation.image-mimes');
         }
 
         $validateSetting = Validator::make($request->all(), $rules, $messages);
@@ -193,7 +187,7 @@ class PaymentGatewaySettingController extends Controller
 
         $getPaymentSettingDetails = $this->getPaymentGatewayDetails($id,0);
         $getSettingDetails = PaymentGatewaySettingResource::collection($getPaymentSettingDetails);
-        return $this->successResponse($getSettingDetails, 'Campaign category updated successfully', 201);
+        return $this->successResponse($getSettingDetails,self::module.__('messages.success.update') , 200);
         
     }
 
@@ -207,9 +201,6 @@ class PaymentGatewaySettingController extends Controller
 
         // check setting exist or not 
         $checkSetting = $this->getPaymentGatewayDetails($id,1);
-        if(empty($checkSetting)){
-            return $this->errorResponse('Payment gateway setting not found', 400);
-        }
 
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
@@ -223,7 +214,7 @@ class PaymentGatewaySettingController extends Controller
             $checkSettingData->update();
             $deleteSetting = PaymentGatewaySetting::find($id)->delete();
             if ($deleteSetting) {
-                return $this->successResponse([], 'Payment gateway setting deleted successfully', 200);
+                return $this->successResponse([], self::module.__('messages.success.delete'), 200);
             }
         }
     }
@@ -232,9 +223,18 @@ class PaymentGatewaySettingController extends Controller
         $getPaymentGatewaySettingData = PaymentGatewaySetting::where('id',$id);
         if($type == 1){
             $getPaymentGatewaySettingData = $getPaymentGatewaySettingData->first();
+            if(!empty($getPaymentGatewaySettingData)){
+                return $getPaymentGatewaySettingData;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
         }else{
             $getPaymentGatewaySettingData = $getPaymentGatewaySettingData->get();
+            if(count($getPaymentGatewaySettingData) > 0){
+                return $getPaymentGatewaySettingData;
+            }else{
+                throw new \ErrorException(self::module.__('messages.validation.not_found'));
+            }
         }
-        return $getPaymentGatewaySettingData;
     }
 }
