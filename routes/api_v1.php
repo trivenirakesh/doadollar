@@ -71,7 +71,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('uploadtypes',UploadTypesController::class);
 
     //Manage campaign
-    Route::get('campaign',[CampaignController::class,'index']);
+    Route::post('campaignslist',[CampaignController::class,'index']);
     Route::post('campaign',[CampaignController::class,'store']);
     Route::delete('campaign/{id}',[CampaignController::class,'destroy']);
 });

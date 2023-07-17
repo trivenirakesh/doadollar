@@ -1,6 +1,7 @@
 <?php 
 
 return [
+    'per_page' => 5,
     'site_timezone' => 'CDT', // By default CDT timezone wise date will display 
     'status' => [
         'active' => 1,

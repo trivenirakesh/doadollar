@@ -9,21 +9,47 @@ use App\Helpers\CommonHelper;
 use App\Traits\CommonTrait;
 use App\Models\Campaign;
 use App\Models\CampaignUploads;
-use App\Models\CampaignCategory;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\V1\CampaignResource;
+use DB;
 
 class CampaignController extends Controller
 {
     use CommonTrait;
     const module = 'Campaign';
 
-    public function index(){
-       // get super admin & managers list
-       $getCampaignDetails = new Campaign();
-       $getCampaignDetails = $getCampaignDetails->orderBy('id','DESC')->paginate(10);
+    public function index(Request $request){
 
-       return CampaignResource::collection($getCampaignDetails);
+    $perPageData = CommonHelper::getConfigValue('per_page');
+    $campaignId = 0;
+    $searchValue = '';
+    $orderColumn = 'cam.id';
+    $orderBy = 'DESC';
+    $offset = 0;
+    if(!empty($request->campaign_id)){
+        $campaignId = $request->campaign_id;
+    }
+    if(!empty($request->search)){
+        $searchValue = $request->search;
+    }
+    if(!empty($request->order_column)){
+        $orderColumn = $request->order_column;
+    }
+    if(!empty($request->order_by)){
+        $orderBy = $request->order_by;
+    }
+    if(!empty($request->offset)){
+        $offset = $request->offset;
+    }
+    $campaignListQuery = "CALL sp_get_campaigns_list('$perPageData','$offset','$searchValue','$orderColumn','$orderBy','$campaignId')";
+    $campaignListData = DB::select($campaignListQuery);
+    $getCampaignList =  CampaignResource::collection($campaignListData);
+    $totalRecordsData = DB::select("CALL sp_get_campaigns_list('0','0','','','','0')");
+    $total = count($totalRecordsData);
+    $responseArr['totalRecords'] = $total;
+    $responseArr['getCampaignList'] = $getCampaignList;
+
+    return $this->successResponse($responseArr,'Campaign List ' , 200);
     }
 
     public function store(Request $request)
@@ -99,6 +125,45 @@ class CampaignController extends Controller
             $updateImageData->update();
         }
 
+        // save uploads & links 
+        if($request->has('upload_types')){
+            $uploadTypes = $request->upload_types;
+            if(count($uploadTypes) > 0){
+                for ($i=0; $i < count($uploadTypes); $i++) { 
+                    $saveUploadArr = new CampaignUploads();
+                    $saveUploadArr->campaign_id = $lastId;
+                    $saveUploadArr->upload_type_id = $request->upload_types[$i];
+                    $saveUploadArr->title = $request->upload_title[$i];
+                    $saveUploadArr->description = $request->upload_description[$i];
+                    $uploadPath = 'campaign/'.$lastId.'/';
+                    
+                    $uploadImage = $request->file('upload_file')[$i];
+                    if(!empty($uploadImage)){
+                        $data = CommonHelper::uploadImages($uploadImage, $uploadPath,$i);
+                        if (!empty($data)) {
+                            $saveUploadArr->file_name = $data['filename'];
+                            $saveUploadArr->path = $data['path'];
+                        }
+                    }
+                    $saveUploadArr->save();
+                }
+            }
+        }
+
+        if($request->has('link_type')){
+            $linkTypes = $request->link_type;
+            if(count($linkTypes) > 0){
+                for ($i=0; $i < count($linkTypes); $i++) { 
+                    $saveLinksArr = new CampaignUploads();
+                    $saveLinksArr->campaign_id = $lastId;
+                    $saveLinksArr->upload_type_id = $request->link_type[$i];
+                    $saveLinksArr->title = $request->link_title[$i];
+                    $saveLinksArr->description = $request->link_description[$i];
+                    $saveLinksArr->link = $request->link[$i];
+                    $saveLinksArr->save();
+                }
+            }
+        }
         
         $getCampaignCategoryDetails = $this->getCampaignDetails($lastId, 0);
         $getCategoryDetails = CampaignResource::collection($getCampaignCategoryDetails);
@@ -120,14 +185,15 @@ class CampaignController extends Controller
         $getAdminDetails = auth('sanctum')->user();
 
         // Delete campaign category
-        $checkCategoryData = $checkCategory;
-        if (!empty($checkCategoryData)) {
-            $checkCategoryData->deleted_by = $getAdminDetails->id;
-            // $checkCategoryData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
-            $checkCategoryData->deleted_ip = CommonHelper::getUserIp();
-            $checkCategoryData->update();
-            $deleteCampaignCategory = Campaign::find($id)->delete();
-            if ($deleteCampaignCategory) {
+        $checkCampaignData = $checkCategory;
+        if (!empty($checkCampaignData)) {
+            $checkCampaignData->deleted_by = $getAdminDetails->id;
+            // $checkCampaignData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
+            $checkCampaignData->deleted_ip = CommonHelper::getUserIp();
+            $checkCampaignData->update();
+            $deleteCampaign = Campaign::find($id)->delete();
+            $deleteCampaignUploads = CampaignUploads::where('campaign_id',$id)->delete();
+            if ($deleteCampaign || $deleteCampaignUploads) {
                 return $this->successResponse([], self::module.__('messages.success.delete'), 200);
             }
         }
