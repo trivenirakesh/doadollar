@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,8 @@ Route::get('/', function () {
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('dashboard',[HomeController::class, 'index'])->name('admin.dashboard');
+Route::get('adminlogin',[HomeController::class,'login']);
+Route::get('form',[HomeController::class,'form']);
+Route::get('datatablelist',[HomeController::class,'list']);
