@@ -66,7 +66,7 @@ class AuthController extends Controller
             ],
             [
              'id.required'    => __('messages.validation.id') ,
-             'id.numeric'    => __('messages.validation.id_numeric') ,
+             'id.numeric'    => 'Id'.__('messages.validation.must_numeric') ,
             ]);
 
             if($validateUser->fails()){

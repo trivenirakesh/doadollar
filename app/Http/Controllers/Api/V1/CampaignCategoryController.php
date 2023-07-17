@@ -147,7 +147,7 @@ class CampaignCategoryController extends Controller
         if ($request->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
             $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = __('messages.validation.status_numeric');
+            $messages['status.numeric'] = 'Status'.__('messages.validation.must_numeric');
             $messages['status.lte'] = __('messages.validation.status_lte');
         }
 
