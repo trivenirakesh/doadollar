@@ -9,6 +9,7 @@ use App\Models\UploadType;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\UploadTypesResources;
 use App\Helpers\CommonHelper;
+use Illuminate\Support\Facades\Cache;
 
 class UploadTypesController extends Controller
 {
@@ -19,22 +20,11 @@ class UploadTypesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $getUploadTypesDetails = new UploadType();
-        if(!empty($request->search)){
-            $getUploadTypesDetails = $getUploadTypesDetails->where('name','like', "%".$request->search."%");
-        }
-        $orderColumn = 'id';
-        $orderType = 'DESC';
-        if($request->has('column')){
-            $orderColumn = $request->column;
-        }
-        if($request->has('column')){
-            $orderType = $request->type;
-        }
-        $getUploadTypesDetails = $getUploadTypesDetails->orderBy($orderColumn,$orderType)->paginate(10);
-        return UploadTypesResources::collection($getUploadTypesDetails); 
+        return UploadTypesResources::collection(Cache::remember('uploadTypes',60*60*24,function(){
+            return UploadType::latest('id')->get();
+        }));
     }
 
     /**

@@ -68,4 +68,10 @@ Route::middleware('auth:sanctum')->group( function () {
 
     // Manage Upload types 
     Route::resource('uploadtypes',UploadTypesController::class);
+    
+    // Manage Email template 
+    Route::resource('emailtemplates',EmailTemplatesController::class);
+
+    // Manage Pages
+    Route::resource('staticpages',StaticPageController::class);
 });

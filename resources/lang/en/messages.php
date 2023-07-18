@@ -36,7 +36,11 @@ return [
         'id' => 'Please enter id',
         'id_numeric' => 'Id must be numeric',
         'email_password_wrong' => 'Email or password you entered did not match our records.',
-        'user_not_found' => 'User not found'
+        'user_not_found' => 'User not found',
+        'title' => 'Please enter title',
+        'subject' => 'Please enter subject',
+        'message' => 'Please enter message',
+        'alpha_num' => ' only contain letters and numbers',
 
     ],
 

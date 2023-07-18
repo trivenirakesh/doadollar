@@ -9,6 +9,7 @@ use App\Models\CampaignCategory;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\CampaignCategoryResource;
 use App\Helpers\CommonHelper;
+use Illuminate\Support\Facades\Cache;
 
 class CampaignCategoryController extends Controller
 {
@@ -20,29 +21,11 @@ class CampaignCategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-
-        // get logged in user details 
-        $getAuthDetails = auth('sanctum')->user();
-
-        // get super admin & managers list
-        $getCampaignCatgoryDetails = new CampaignCategory;
-
-        if (!empty($request->search)) {
-            $getCampaignCatgoryDetails = $getCampaignCatgoryDetails->where('name', 'like', "%" . $request->search . "%");
-        }
-        $orderColumn = 'id';
-        $orderType = 'DESC';
-        if ($request->has('column')) {
-            $orderColumn = $request->column;
-        }
-        if ($request->has('column')) {
-            $orderType = $request->type;
-        }
-        $getCampaignCatgoryDetails = $getCampaignCatgoryDetails->orderBy($orderColumn, $orderType)->paginate(10);
-
-        return CampaignCategoryResource::collection($getCampaignCatgoryDetails);
+        return CampaignCategoryResource::collection(Cache::remember('campaignCategory',60*60*24,function(){
+            return CampaignCategory::latest('id')->get();
+        })); 
     }
 
     /**

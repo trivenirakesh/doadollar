@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\RoleResource;
 use App\Helpers\CommonHelper;
+use Illuminate\Support\Facades\Cache;
 
 class RoleController extends Controller
 {
@@ -20,22 +21,11 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $getRoleDetails = new Role;
-        if(!empty($request->search)){
-            $getRoleDetails = $getRoleDetails->where('name','like', "%".$request->search."%");
-        }
-        $orderColumn = 'id';
-        $orderType = 'DESC';
-        if($request->has('column')){
-            $orderColumn = $request->column;
-        }
-        if($request->has('column')){
-            $orderType = $request->type;
-        }
-        $getRoleDetails = $getRoleDetails->orderBy($orderColumn,$orderType)->paginate(10);
-        return RoleResource::collection($getRoleDetails); 
+        return RoleResource::collection(Cache::remember('roles',60*60*24,function(){
+            return Role::latest('id')->get();
+        })); 
     }
 
     /**

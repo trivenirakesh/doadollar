@@ -9,7 +9,7 @@ use App\Models\PaymentGatewaySetting;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\PaymentGatewaySettingResource;
 use App\Helpers\CommonHelper;
-
+use Illuminate\Support\Facades\Cache;
 
 class PaymentGatewaySettingController extends Controller
 {
@@ -21,22 +21,11 @@ class PaymentGatewaySettingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $getPaymentSettingDetails = new PaymentGatewaySetting();
-        if(!empty($request->search)){
-            $getPaymentSettingDetails = $getPaymentSettingDetails->where('name','like', "%".$request->search."%");
-        }
-        $orderColumn = 'id';
-        $orderType = 'DESC';
-        if($request->has('column')){
-            $orderColumn = $request->column;
-        }
-        if($request->has('column')){
-            $orderType = $request->type;
-        }
-        $getPaymentSettingDetails = $getPaymentSettingDetails->orderBy($orderColumn,$orderType)->paginate(10);
-        return PaymentGatewaySettingResource::collection($getPaymentSettingDetails); 
+        return PaymentGatewaySettingResource::collection(Cache::remember('paymentGatewaySetting',60*60*24,function(){
+            return PaymentGatewaySetting::latest('id')->get();
+        }));
     }
 
     /**
@@ -65,14 +54,16 @@ class PaymentGatewaySettingController extends Controller
             $request->all(),
             [
                 'name' => 'required',
-                'api_key' => 'required',
-                'secret_key' => 'required',
+                'api_key' => 'required|alpha_num',
+                'secret_key' => 'required|alpha_num',
                 'image' => 'required|max:2048|mimes:jpg,png,jpeg'
             ],
             [
                 'name.required' => __('messages.validation.name'),
                 'api_key.required' => __('messages.validation.api_key'),
+                'api_key.alpha_num' => 'Api key'.__('messages.validation.alpha_num'),
                 'secret_key.required' => __('messages.validation.secret_key'),
+                'secret_key.alpha_num' => 'Secret key'.__('messages.validation.alpha_num'),
                 'image.required' => __('messages.validation.image'),
                 'image.max' => __('messages.validation.image-max'),
                 'image.mimes' => __('messages.validation.image-mimes'),
@@ -132,11 +123,13 @@ class PaymentGatewaySettingController extends Controller
         // Validation section
         
         $rules['name'] = 'required';
-        $rules['api_key'] = 'required';
-        $rules['secret_key'] = 'required';
+        $rules['api_key'] = 'required|alpha_num';
+        $rules['secret_key'] = 'required|alpha_num';
         $messages['name.required'] = __('messages.validation.name');
         $messages['api_key.required'] = __('messages.validation.api_key');
+        $messages['api_key.alpha_num'] = 'Api key'.__('messages.validation.alpha_num');
         $messages['secret_key.required'] = __('messages.validation.secret_key');
+        $messages['secret_key.alpha_num'] = 'Secret key'.__('messages.validation.alpha_num');
         
         if ($request->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
