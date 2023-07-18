@@ -32,16 +32,21 @@ class CommonHelper{
         return $dateTimeUTC;
     }
 
-    public static function uploadImages($file,$path){
+    public static function uploadImages($file,$path,$number = null){
         $public = 'public/';
         $uploadPath = $path;
         $thumbUploadPath = $path.'thumb/';
-        $fileName = date('YmdHis') . '.' . $file->extension();
+        if(!empty($number)){
+            $fileName = $number.date('YmdHis') . '.' . $file->extension();
+        }else{
+            $fileName = date('YmdHis') . '.' . $file->extension();
+        }
       
         // start base image
         $path = Storage::putFileAs($public.$uploadPath, $file, $fileName);
         // start base image
       
+        if($number == null){
         // start thumb image
         $img = Image::make($file->getRealPath());
         $img->resize(120, 120, function ($constraint) {
@@ -50,6 +55,7 @@ class CommonHelper{
         $img->stream();
         Storage::disk('local')->put($public.$thumbUploadPath.$fileName, $img, 'public');
         // start thumb image
+        }
       
         $responseArr['filename'] = $fileName;
         $responseArr['path'] = $public.'storage/'.$uploadPath;
@@ -89,6 +95,15 @@ class CommonHelper{
             $imagePath = str_replace('storage/','',$pathName).$fileName;
             $thumbImagePath = str_replace('storage/','',$pathName).'thumb/'.$fileName;
             self::unlinkFiles($imagePath,$thumbImagePath);
+        }
+    }
+
+    public static function getConfigValue($key){
+        $configValue = Config::get('constants.'.$key);
+        if(!empty($configValue)){
+            return $configValue;
+        }else{
+            return '';
         }
     }
 }

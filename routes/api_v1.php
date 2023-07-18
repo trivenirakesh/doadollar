@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\AuthController;
 use App\Http\Controllers\Api\V1\CampaignCategoryController;
+use App\Http\Controllers\Api\V1\CampaignController;
 use App\Http\Controllers\Api\V1\PaymentGatewaySettingController;
 use App\Http\Controllers\Api\V1\SocialPlatformSettingController;
 use App\Http\Controllers\Api\V1\UsersController;
@@ -68,6 +69,11 @@ Route::middleware('auth:sanctum')->group( function () {
 
     // Manage Upload types 
     Route::resource('uploadtypes',UploadTypesController::class);
+
+    //Manage campaign
+    Route::post('campaignslist',[CampaignController::class,'index']);
+    Route::post('campaign',[CampaignController::class,'store']);
+    Route::delete('campaign/{id}',[CampaignController::class,'destroy']);
     
     // Manage Email template 
     Route::resource('emailtemplates',EmailTemplatesController::class);
