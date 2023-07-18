@@ -9,6 +9,7 @@ use App\Models\SocialPlatformSetting;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\SocialPlatformSettingResource;
 use App\Helpers\CommonHelper;
+use Illuminate\Support\Facades\Cache;
 
 class SocialPlatformSettingController extends Controller
 {
@@ -19,22 +20,11 @@ class SocialPlatformSettingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $getSocialPlatformDetails = new SocialPlatformSetting();
-        if(!empty($request->search)){
-            $getSocialPlatformDetails = $getSocialPlatformDetails->where('name','like', "%".$request->search."%");
-        }
-        $orderColumn = 'id';
-        $orderType = 'DESC';
-        if($request->has('column')){
-            $orderColumn = $request->column;
-        }
-        if($request->has('column')){
-            $orderType = $request->type;
-        }
-        $getSocialPlatformDetails = $getSocialPlatformDetails->orderBy($orderColumn,$orderType)->paginate(10);
-        return SocialPlatformSettingResource::collection($getSocialPlatformDetails); 
+        return SocialPlatformSettingResource::collection(Cache::remember('socialPlatformSetting',60*60*24,function(){
+            return SocialPlatformSetting::latest('id')->get();
+        }));
     }
 
     /**

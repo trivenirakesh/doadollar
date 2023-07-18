@@ -9,7 +9,7 @@ use App\Models\PaymentGatewaySetting;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\PaymentGatewaySettingResource;
 use App\Helpers\CommonHelper;
-
+use Illuminate\Support\Facades\Cache;
 
 class PaymentGatewaySettingController extends Controller
 {
@@ -21,22 +21,11 @@ class PaymentGatewaySettingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $getPaymentSettingDetails = new PaymentGatewaySetting();
-        if(!empty($request->search)){
-            $getPaymentSettingDetails = $getPaymentSettingDetails->where('name','like', "%".$request->search."%");
-        }
-        $orderColumn = 'id';
-        $orderType = 'DESC';
-        if($request->has('column')){
-            $orderColumn = $request->column;
-        }
-        if($request->has('column')){
-            $orderType = $request->type;
-        }
-        $getPaymentSettingDetails = $getPaymentSettingDetails->orderBy($orderColumn,$orderType)->paginate(10);
-        return PaymentGatewaySettingResource::collection($getPaymentSettingDetails); 
+        return PaymentGatewaySettingResource::collection(Cache::remember('paymentGatewaySetting',60*60*24,function(){
+            return PaymentGatewaySetting::latest('id')->get();
+        }));
     }
 
     /**

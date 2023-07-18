@@ -9,6 +9,7 @@ use App\Models\StaticPage;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\StaticPageResource;
 use App\Helpers\CommonHelper;
+use Illuminate\Support\Facades\Cache;
 
 class StaticPageController extends Controller
 {
@@ -21,8 +22,9 @@ class StaticPageController extends Controller
      */
     public function index()
     {
-        $getPagesDetails = StaticPage::all();
-        return StaticPageResource::collection($getPagesDetails); 
+        return StaticPageResource::collection(Cache::remember('staticPages',60*60*24,function(){
+            return StaticPage::latest('id')->get();
+        }));
     }
 
     /**

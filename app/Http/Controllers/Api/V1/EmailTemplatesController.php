@@ -9,7 +9,7 @@ use App\Models\EmailTemplate;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\EmailTemplateResource;
 use App\Helpers\CommonHelper;
-
+use Illuminate\Support\Facades\Cache;
 
 class EmailTemplatesController extends Controller
 {
@@ -22,9 +22,9 @@ class EmailTemplatesController extends Controller
      */
     public function index()
     {
-        $getEmailTemplateDetails = new EmailTemplate();
-        $getEmailTemplateDetails = $getEmailTemplateDetails->orderBy('id','DESC')->paginate(10);
-        return EmailTemplateResource::collection($getEmailTemplateDetails); 
+        return EmailTemplateResource::collection(Cache::remember('emailTemplates',60*60*24,function(){
+            return EmailTemplate::latest('id')->get();
+        }));
     }
 
     /**
