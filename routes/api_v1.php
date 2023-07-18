@@ -71,4 +71,7 @@ Route::middleware('auth:sanctum')->group( function () {
     
     // Manage Email template 
     Route::resource('emailtemplates',EmailTemplatesController::class);
+
+    // Manage Pages
+    Route::resource('staticpages',StaticPageController::class);
 });

@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Role;
+use App\Models\EmailTemplate;
 use App\Helpers\CommonHelper;
 
-class RoleSeeder extends Seeder
+class EmailTemplateSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,8 +15,10 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        Role::create([
-            'name' => 'Manager',
+        EmailTemplate::create([
+            'title' => 'Forgot password',
+            'subject' => 'Forgot password',
+            'message' => 'Forgot password',
             'status' => 1,
             'created_at' => CommonHelper::getUTCDateTime(date('Y-m-d H:i:s')),
         ]);
