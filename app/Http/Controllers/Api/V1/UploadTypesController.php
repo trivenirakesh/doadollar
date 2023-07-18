@@ -22,9 +22,11 @@ class UploadTypesController extends Controller
      */
     public function index()
     {
-        return UploadTypesResources::collection(Cache::remember('uploadTypes',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getUploadTypesList =  UploadTypesResources::collection(Cache::remember('uploadTypes',$expiry,function(){
             return UploadType::latest('id')->get();
         }));
+        return $this->successResponse($getUploadTypesList, self::module.__('messages.success.list'), 200);
     }
 
     /**

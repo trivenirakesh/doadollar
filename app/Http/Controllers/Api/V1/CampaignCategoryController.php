@@ -23,9 +23,11 @@ class CampaignCategoryController extends Controller
      */
     public function index()
     {
-        return CampaignCategoryResource::collection(Cache::remember('campaignCategory',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getCampaignCategoryList =  CampaignCategoryResource::collection(Cache::remember('campaignCategory',$expiry,function(){
             return CampaignCategory::latest('id')->get();
         })); 
+        return $this->successResponse($getCampaignCategoryList, self::module.__('messages.success.list'), 200);
     }
 
     /**

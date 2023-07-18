@@ -54,6 +54,7 @@ return [
         'password_reset' => 'Password reset successfully',
         'old_password_wrong' => "Old Password Doesn't match",
         'user_logout' => 'User logout successfully',
-        'user_login' => 'User successfully logged in'
+        'user_login' => 'User successfully logged in',
+        'list' => ' list fetch successfully',
     ]
 ];

@@ -22,9 +22,11 @@ class EmailTemplatesController extends Controller
      */
     public function index()
     {
-        return EmailTemplateResource::collection(Cache::remember('emailTemplates',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getEmailTemplateList =  EmailTemplateResource::collection(Cache::remember('emailTemplates',$expiry,function(){
             return EmailTemplate::latest('id')->get();
         }));
+        return $this->successResponse($getEmailTemplateList, self::module.__('messages.success.list'), 200);
     }
 
     /**

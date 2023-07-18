@@ -23,9 +23,11 @@ class PaymentGatewaySettingController extends Controller
      */
     public function index()
     {
-        return PaymentGatewaySettingResource::collection(Cache::remember('paymentGatewaySetting',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getPaymentGatewayList =  PaymentGatewaySettingResource::collection(Cache::remember('paymentGatewaySetting',$expiry,function(){
             return PaymentGatewaySetting::latest('id')->get();
         }));
+        return $this->successResponse($getPaymentGatewayList, self::module.__('messages.success.list'), 200);
     }
 
     /**

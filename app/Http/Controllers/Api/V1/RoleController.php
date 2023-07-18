@@ -23,9 +23,11 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return RoleResource::collection(Cache::remember('roles',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getRoleList = RoleResource::collection(Cache::remember('roles',$expiry,function(){
             return Role::latest('id')->get();
         })); 
+        return $this->successResponse($getRoleList, self::module.__('messages.success.list'), 200);
     }
 
     /**

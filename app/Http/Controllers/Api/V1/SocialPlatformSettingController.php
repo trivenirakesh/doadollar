@@ -22,9 +22,11 @@ class SocialPlatformSettingController extends Controller
      */
     public function index()
     {
-        return SocialPlatformSettingResource::collection(Cache::remember('socialPlatformSetting',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getSocialPlatformSettingList =  SocialPlatformSettingResource::collection(Cache::remember('socialPlatformSetting',$expiry,function(){
             return SocialPlatformSetting::latest('id')->get();
         }));
+        return $this->successResponse($getSocialPlatformSettingList, self::module.__('messages.success.list'), 200);
     }
 
     /**
