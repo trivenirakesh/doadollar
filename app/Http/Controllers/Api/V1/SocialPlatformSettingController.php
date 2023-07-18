@@ -63,14 +63,16 @@ class SocialPlatformSettingController extends Controller
             $request->all(),
             [
                 'name' => 'required',
-                'api_key' => 'required',
-                'secret_key' => 'required',
+                'api_key' => 'required|alpha_num',
+                'secret_key' => 'required|alpha_num',
                 'image' => 'required|max:2048|mimes:jpg,png,jpeg'
             ],
             [
                 'name.required' => __('messages.validation.name'),
                 'api_key.required' => __('messages.validation.api_key'),
+                'api_key.alpha_num' => 'Api key'.__('messages.validation.alpha_num'),
                 'secret_key.required' => __('messages.validation.secret_key'),
+                'secret_key.alpha_num' => 'Secret key'.__('messages.validation.alpha_num'),
                 'image.required' => __('messages.validation.image'),
                 'image.max' => __('messages.validation.image-max'),
                 'image.mimes' => __('messages.validation.image-mimes'),
@@ -130,11 +132,13 @@ class SocialPlatformSettingController extends Controller
         // Validation section
         
         $rules['name'] = 'required';
-        $rules['api_key'] = 'required';
-        $rules['secret_key'] = 'required';
+        $rules['api_key'] = 'required|alpha_num';
+        $rules['secret_key'] = 'required|alpha_num';
         $messages['name.required'] = __('messages.validation.name');
         $messages['api_key.required'] = __('messages.validation.api_key');
+        $messages['api_key.alpha_num'] = 'Api key'.__('messages.validation.alpha_num');
         $messages['secret_key.required'] = __('messages.validation.secret_key');
+        $messages['secret_key.alpha_num'] = 'Secret key'.__('messages.validation.alpha_num');
         
         if ($request->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
