@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Role;
+use App\Helpers\CommonHelper;
 
 class RoleSeeder extends Seeder
 {
@@ -16,7 +17,8 @@ class RoleSeeder extends Seeder
     {
         Role::create([
             'name' => 'Manager',
-            'status' => 1
+            'status' => 1,
+            'created_at' => CommonHelper::getUTCDateTime(date('Y-m-d H:i:s')),
         ]);
     }
 }

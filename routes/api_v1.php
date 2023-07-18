@@ -74,4 +74,10 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('campaignslist',[CampaignController::class,'index']);
     Route::post('campaign',[CampaignController::class,'store']);
     Route::delete('campaign/{id}',[CampaignController::class,'destroy']);
+    
+    // Manage Email template 
+    Route::resource('emailtemplates',EmailTemplatesController::class);
+
+    // Manage Pages
+    Route::resource('staticpages',StaticPageController::class);
 });

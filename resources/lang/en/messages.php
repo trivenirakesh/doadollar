@@ -39,6 +39,11 @@ return [
         'end_datetime' => 'Please enter campaign end datetime',
         'donation_target' => 'Please enter donation target',
         'must_numeric' => ' must be numeric',
+        'title' => 'Please enter title',
+        'subject' => 'Please enter subject',
+        'message' => 'Please enter message',
+        'alpha_num' => ' only contain letters and numbers',
+
     ],
 
     'success' => [
