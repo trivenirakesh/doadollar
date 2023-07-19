@@ -14,5 +14,13 @@ return [
         'manager'       => 1,
         'user'          => 2,
         'guest'         => 3
-    ]
+    ],
+    'campaign_status' => [
+        'pending' => 0,
+        'ongoing' => 1,
+        'completed' => 2,
+        'cancelled' => 3,
+        'rejected' => 4,
+        'approved' => 5,
+    ],
 ];

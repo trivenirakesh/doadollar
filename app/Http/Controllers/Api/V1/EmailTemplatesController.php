@@ -69,10 +69,11 @@ class EmailTemplatesController extends Controller
         $getAdminDetails = auth('sanctum')->user();
 
         // Save entity section
-        $emailTemplateTitle = preg_replace('/\s+/', ' ', ucwords(strtolower($request->title)));
+        $emailTemplateTitle = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->title)));
+        $emailTemplateSubject = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->subject)));
         $emailTemplate = new EmailTemplate();
         $emailTemplate->title = $emailTemplateTitle;
-        $emailTemplate->subject = $request->subject;
+        $emailTemplate->subject = $emailTemplateSubject;
         $emailTemplate->message = $request->message;
         $emailTemplate->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails)) {
@@ -154,11 +155,12 @@ class EmailTemplatesController extends Controller
         // Save entity section
         $emailTemplate = $checkEmailTemplate;
         if($request->has('title')){
-            $emailTemplateName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->title)));
+            $emailTemplateName = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->title)));
             $emailTemplate->title = $emailTemplateName;
         }
         if($request->has('subject')){
-            $emailTemplate->subject = $request->subject;
+            $emailTemplateSubject = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->subject)));
+            $emailTemplate->subject = $emailTemplateSubject;
         }
         if($request->has('message')){
             $emailTemplate->message = $request->message;

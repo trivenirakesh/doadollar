@@ -36,7 +36,7 @@ class CommonHelper{
         $public = 'public/';
         $uploadPath = $path;
         $thumbUploadPath = $path.'thumb/';
-        if(!empty($number)){
+        if(!empty($number) || $number == 0){
             $fileName = $number.date('YmdHis') . '.' . $file->extension();
         }else{
             $fileName = date('YmdHis') . '.' . $file->extension();
@@ -46,7 +46,7 @@ class CommonHelper{
         $path = Storage::putFileAs($public.$uploadPath, $file, $fileName);
         // start base image
       
-        if($number == null){
+        if(!isset($number)){
         // start thumb image
         $img = Image::make($file->getRealPath());
         $img->resize(120, 120, function ($constraint) {

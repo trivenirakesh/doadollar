@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\AuthController;
 use App\Http\Controllers\Api\V1\CampaignCategoryController;
 use App\Http\Controllers\Api\V1\CampaignController;
+use App\Http\Controllers\Api\V1\InquiryController;
 use App\Http\Controllers\Api\V1\PaymentGatewaySettingController;
 use App\Http\Controllers\Api\V1\SocialPlatformSettingController;
 use App\Http\Controllers\Api\V1\UsersController;
@@ -26,7 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('login', [AuthController::class, 'loginEntity']);
-
+Route::post('inquiry',[InquiryController::class,'store']);
 
 Route::middleware('auth:sanctum')->group( function () {
 
@@ -73,6 +74,7 @@ Route::middleware('auth:sanctum')->group( function () {
     //Manage campaign
     Route::post('campaignslist',[CampaignController::class,'index']);
     Route::post('campaign',[CampaignController::class,'store']);
+    Route::post('campaign/{id}',[CampaignController::class,'update']);
     Route::delete('campaign/{id}',[CampaignController::class,'destroy']);
     
     // Manage Email template 
@@ -80,4 +82,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
     // Manage Pages
     Route::resource('staticpages',StaticPageController::class);
+
+    // Inquiry list
+    Route::get('inquiry',[InquiryController::class,'index']);
 });
