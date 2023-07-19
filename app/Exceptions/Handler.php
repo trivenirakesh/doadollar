@@ -42,10 +42,14 @@ class Handler extends ExceptionHandler
     {
         Log::error($th->getMessage());
         if ($th instanceof \Illuminate\Auth\AuthenticationException) {
-            return response()->json([
-                'status'=>'error',
-                'message' => "Access denied. Please login and try again.",
-            ], 401);
+            if( $request->is('api/*')){
+                return response()->json([
+                    'status'=>'error',
+                    'message' => "Access denied. Please login and try again.",
+                ], 401);
+            }else{
+                return redirect('adminlogin')->with('error','Access denied. Please login and try again.');
+            }
         }elseif($th instanceof ErrorException){
             return response()->json([
                 'status'=>'error',
