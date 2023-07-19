@@ -22,7 +22,7 @@ class CreateCampaignUploadsTable extends Migration
             $table->unsignedBigInteger('upload_type_id');
             $table->foreign('upload_type_id')->references('id')->on('upload_types');
             $table->string('title')->nullable();
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('file_name')->nullable();
             $table->string('path')->nullable();
             $table->string('link')->nullable();

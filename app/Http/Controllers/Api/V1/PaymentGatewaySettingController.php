@@ -23,9 +23,11 @@ class PaymentGatewaySettingController extends Controller
      */
     public function index()
     {
-        return PaymentGatewaySettingResource::collection(Cache::remember('paymentGatewaySetting',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getPaymentGatewayList =  PaymentGatewaySettingResource::collection(Cache::remember('paymentGatewaySetting',$expiry,function(){
             return PaymentGatewaySetting::latest('id')->get();
         }));
+        return $this->successResponse($getPaymentGatewayList, self::module.__('messages.success.list'), 200);
     }
 
     /**
@@ -53,13 +55,14 @@ class PaymentGatewaySettingController extends Controller
         $validateSetting = Validator::make(
             $request->all(),
             [
-                'name' => 'required',
+                'name' => 'required|max:200',
                 'api_key' => 'required|alpha_num',
                 'secret_key' => 'required|alpha_num',
                 'image' => 'required|max:2048|mimes:jpg,png,jpeg'
             ],
             [
                 'name.required' => __('messages.validation.name'),
+                'name.max' => __('messages.validation.max'),
                 'api_key.required' => __('messages.validation.api_key'),
                 'api_key.alpha_num' => 'Api key'.__('messages.validation.alpha_num'),
                 'secret_key.required' => __('messages.validation.secret_key'),
@@ -122,10 +125,11 @@ class PaymentGatewaySettingController extends Controller
 
         // Validation section
         
-        $rules['name'] = 'required';
+        $rules['name'] = 'required|max:200';
         $rules['api_key'] = 'required|alpha_num';
         $rules['secret_key'] = 'required|alpha_num';
         $messages['name.required'] = __('messages.validation.name');
+        $messages['name.max'] = __('messages.validation.max');
         $messages['api_key.required'] = __('messages.validation.api_key');
         $messages['api_key.alpha_num'] = 'Api key'.__('messages.validation.alpha_num');
         $messages['secret_key.required'] = __('messages.validation.secret_key');
@@ -160,7 +164,6 @@ class PaymentGatewaySettingController extends Controller
         $updatePaymentSetting->api_key = $request->api_key;
         $updatePaymentSetting->secret_key = $request->secret_key;
         $updatePaymentSetting->status = $request->status;
-        $updatePaymentSetting->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
@@ -202,7 +205,6 @@ class PaymentGatewaySettingController extends Controller
         $checkSettingData = $checkSetting;
         if (!empty($checkSettingData)) {
             $checkSettingData->deleted_by = $getAdminDetails->id;
-            // $checkSettingData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkSettingData->deleted_ip = CommonHelper::getUserIp();
             $checkSettingData->update();
             $deleteSetting = PaymentGatewaySetting::find($id)->delete();

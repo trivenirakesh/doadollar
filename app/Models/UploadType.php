@@ -9,4 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class UploadType extends Model
 {
     use HasFactory,SoftDeletes;
+
+    public function campaignUploads(){
+        return $this->hasOne(CampaignUploads::class);
+    }
 }

@@ -23,9 +23,11 @@ class CampaignCategoryController extends Controller
      */
     public function index()
     {
-        return CampaignCategoryResource::collection(Cache::remember('campaignCategory',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getCampaignCategoryList =  CampaignCategoryResource::collection(Cache::remember('campaignCategory',$expiry,function(){
             return CampaignCategory::latest('id')->get();
         })); 
+        return $this->successResponse($getCampaignCategoryList, self::module.__('messages.success.list'), 200);
     }
 
     /**
@@ -148,7 +150,6 @@ class CampaignCategoryController extends Controller
         $updateCampaignCat->name = $campaignCatName;
         $updateCampaignCat->description = $request->description;
         $updateCampaignCat->status = $request->status;
-        $updateCampaignCat->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
@@ -198,7 +199,6 @@ class CampaignCategoryController extends Controller
         $checkCategoryData = $checkCategory;
         if (!empty($checkCategoryData)) {
             $checkCategoryData->deleted_by = $getAdminDetails->id;
-            // $checkCategoryData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkCategoryData->deleted_ip = CommonHelper::getUserIp();
             $checkCategoryData->update();
             $deleteCampaignCategory = CampaignCategory::find($id)->delete();

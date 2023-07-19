@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Traits\CommonTrait;
 
-class CreateCampaignCategoriesTable extends Migration
+class CreateInquiriesTable extends Migration
 {
     use CommonTrait;
     /**
@@ -15,13 +15,13 @@ class CreateCampaignCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('campaign_categories', function (Blueprint $table) {
+        Schema::create('inquiries', function (Blueprint $table) {
             $table->id();
-            $table->string('name',200);
-            $table->text('description')->nullable();
-            $table->string('file_name')->nullable();
-            $table->string('path')->nullable();
-            $table->tinyInteger('status')->default('1')->comment("0 - Deactive, 1 - Active")->nullable();
+            $table->string('first_name',200);
+            $table->string('last_name',200);
+            $table->string('email');
+            $table->string('mobile');
+            $table->text('message');
             $this->timestampColumns($table);
         });
     }
@@ -33,6 +33,6 @@ class CreateCampaignCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campaign_categories');
+        Schema::dropIfExists('inquiries');
     }
 }

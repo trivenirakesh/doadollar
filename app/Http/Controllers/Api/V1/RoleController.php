@@ -23,9 +23,11 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return RoleResource::collection(Cache::remember('roles',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getRoleList = RoleResource::collection(Cache::remember('roles',$expiry,function(){
             return Role::latest('id')->get();
         })); 
+        return $this->successResponse($getRoleList, self::module.__('messages.success.list'), 200);
     }
 
     /**
@@ -49,10 +51,11 @@ class RoleController extends Controller
         // Validation section
         $validateUser = Validator::make($request->all(),
             [
-                'name' => 'required',
+                'name' => 'required|max:200',
             ],
             [
                 'name.required' => __('messages.validation.name'),
+                'name.max' => __('messages.validation.max'),
             ]
         );
 
@@ -64,11 +67,10 @@ class RoleController extends Controller
         $getAdminDetails = auth('sanctum')->user();
 
         // Save entity section
-        $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
+        $roleName = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->name)));
         $role = new Role;
         $role->name = $roleName;
         $role->status = 1;
-        $role->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails)) {
             $role->created_by = $getAdminDetails->id;
             $role->created_ip = CommonHelper::getUserIp();
@@ -119,8 +121,9 @@ class RoleController extends Controller
         $rules = [];
         $messages = [];
         if($request->has('name')){
-            $rules['name'] = 'required';
+            $rules['name'] = 'required|max:200';
             $messages['name.required'] = __('messages.validation.name');
+            $messages['name.max'] = __('messages.validation.max');
         }
         if($request->has('status')){
             $rules['status'] = 'required|numeric|lte:1';
@@ -140,13 +143,12 @@ class RoleController extends Controller
         // Save entity section
         $role = $checkRole;
         if($request->has('name')){
-            $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
+            $roleName = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->name)));
             $role->name = $roleName;
         }
         if($request->has('status')){
             $role->status = $request->status;
         }
-        $role->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
             $role->updated_by = $getAdminDetails->id;
             $role->updated_ip = CommonHelper::getUserIp();
@@ -175,7 +177,6 @@ class RoleController extends Controller
         // Delete entity
         $checkRoleData = $checkRole;
         if (!empty($checkRoleData)) {
-            // $checkRoleData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkRoleData->deleted_by = $getAdminDetails->id;
             $checkRoleData->deleted_ip = CommonHelper::getUserIp();
             $checkRoleData->update();

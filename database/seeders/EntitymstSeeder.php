@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Entitymst;
 use Illuminate\Support\Facades\Hash;
-use App\Helpers\CommonHelper;
 
 class EntitymstSeeder extends Seeder
 {
@@ -24,7 +23,6 @@ class EntitymstSeeder extends Seeder
             'password' => Hash::make('123456789'),
             'entity_type' => 0,
             'status' => 1,
-            'created_at' => CommonHelper::getUTCDateTime(date('Y-m-d H:i:s')),
         ]);
     }
 }

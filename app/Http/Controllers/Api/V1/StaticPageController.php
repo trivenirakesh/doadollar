@@ -22,9 +22,11 @@ class StaticPageController extends Controller
      */
     public function index()
     {
-        return StaticPageResource::collection(Cache::remember('staticPages',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getStaticPagesList =  StaticPageResource::collection(Cache::remember('staticPages',$expiry,function(){
             return StaticPage::latest('id')->get();
         }));
+        return $this->successResponse($getStaticPagesList, self::module.__('messages.success.list'), 200);
     }
 
     /**
@@ -70,7 +72,6 @@ class StaticPageController extends Controller
         $updatePage = $checkPageData;
         $updatePage->title = $request->title;
         $updatePage->content = $request->content;
-        $updatePage->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails)) {
             $updatePage->updated_by = $getAdminDetails->id;
             $updatePage->updated_ip = CommonHelper::getUserIp();

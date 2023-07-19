@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\EmailTemplate;
-use App\Helpers\CommonHelper;
 
 class EmailTemplateSeeder extends Seeder
 {
@@ -20,7 +19,6 @@ class EmailTemplateSeeder extends Seeder
             'subject' => 'Forgot password',
             'message' => 'Forgot password',
             'status' => 1,
-            'created_at' => CommonHelper::getUTCDateTime(date('Y-m-d H:i:s')),
         ]);
     }
 }

@@ -17,7 +17,7 @@ class CreatePaymentGatewaySettingsTable extends Migration
     {
         Schema::create('payment_gateway_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name',200);
             $table->text('api_key');
             $table->text('secret_key');
             $table->string('file_name')->nullable();
