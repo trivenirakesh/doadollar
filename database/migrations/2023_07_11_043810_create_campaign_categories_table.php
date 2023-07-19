@@ -17,7 +17,7 @@ class CreateCampaignCategoriesTable extends Migration
     {
         Schema::create('campaign_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name',200);
             $table->text('description')->nullable();
             $table->string('file_name')->nullable();
             $table->string('path')->nullable();

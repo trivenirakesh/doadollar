@@ -17,7 +17,7 @@ class CreateRolesTable extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name',200);
             $table->tinyInteger('status')->default('1')->comment("0 - Deactive, 1 - Active")->nullable();
             $this->timestampColumns($table);
         });

@@ -72,7 +72,6 @@ class StaticPageController extends Controller
         $updatePage = $checkPageData;
         $updatePage->title = $request->title;
         $updatePage->content = $request->content;
-        $updatePage->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails)) {
             $updatePage->updated_by = $getAdminDetails->id;
             $updatePage->updated_ip = CommonHelper::getUserIp();

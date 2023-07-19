@@ -150,7 +150,6 @@ class CampaignCategoryController extends Controller
         $updateCampaignCat->name = $campaignCatName;
         $updateCampaignCat->description = $request->description;
         $updateCampaignCat->status = $request->status;
-        $updateCampaignCat->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
@@ -200,7 +199,6 @@ class CampaignCategoryController extends Controller
         $checkCategoryData = $checkCategory;
         if (!empty($checkCategoryData)) {
             $checkCategoryData->deleted_by = $getAdminDetails->id;
-            // $checkCategoryData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkCategoryData->deleted_ip = CommonHelper::getUserIp();
             $checkCategoryData->update();
             $deleteCampaignCategory = CampaignCategory::find($id)->delete();

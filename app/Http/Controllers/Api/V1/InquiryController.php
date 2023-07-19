@@ -59,7 +59,6 @@ class InquiryController extends Controller
         $saveInquiry->email = str_replace(' ', '',$request->email);
         $saveInquiry->mobile = $request->mobile;
         $saveInquiry->message = $request->message;
-        $saveInquiry->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         $saveInquiry->save();
 
         $lastId = $saveInquiry->id;

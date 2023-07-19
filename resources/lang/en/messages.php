@@ -43,6 +43,7 @@ return [
         'subject' => 'Please enter subject',
         'message' => 'Please enter message',
         'alpha_num' => ' only contain letters and numbers',
+        'max' => 'Max 200 characters allow',
 
     ],
 

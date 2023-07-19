@@ -50,13 +50,15 @@ class EmailTemplatesController extends Controller
         // Validation section
         $validateUser = Validator::make($request->all(),
             [
-                'title' => 'required',
-                'subject' => 'required',
+                'title' => 'required|max:200',
+                'subject' => 'required|max:200',
                 'message' => 'required',
             ],
             [
                 'title.required' => __('messages.validation.title'),
+                'title.max' => __('messages.validation.max'),
                 'subject.required' => __('messages.validation.subject'),
+                'subject.max' => __('messages.validation.max'),
                 'message.required' => __('messages.validation.message'),
             ]
         );
@@ -75,7 +77,6 @@ class EmailTemplatesController extends Controller
         $emailTemplate->title = $emailTemplateTitle;
         $emailTemplate->subject = $emailTemplateSubject;
         $emailTemplate->message = $request->message;
-        $emailTemplate->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails)) {
             $emailTemplate->created_by = $getAdminDetails->id;
             $emailTemplate->created_ip = CommonHelper::getUserIp();
@@ -168,7 +169,6 @@ class EmailTemplatesController extends Controller
         if($request->has('status')){
             $emailTemplate->status = $request->status;
         }
-        $emailTemplate->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
             $emailTemplate->updated_by = $getAdminDetails->id;
             $emailTemplate->updated_ip = CommonHelper::getUserIp();
@@ -196,7 +196,6 @@ class EmailTemplatesController extends Controller
         // Delete entity
         $checkEmailTemplateData = $checkEmailTemplate;
         if (!empty($checkEmailTemplateData)) {
-            // $checkEmailTemplateData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkEmailTemplateData->deleted_by = $getAdminDetails->id;
             $checkEmailTemplateData->deleted_ip = CommonHelper::getUserIp();
             $checkEmailTemplateData->update();

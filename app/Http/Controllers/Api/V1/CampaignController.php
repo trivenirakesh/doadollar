@@ -386,10 +386,10 @@ class CampaignController extends Controller
         $checkCampaignData = $checkCategory;
         if (!empty($checkCampaignData)) {
             $checkCampaignData->deleted_by = $getAdminDetails->id;
-            // $checkCampaignData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkCampaignData->deleted_ip = CommonHelper::getUserIp();
             $checkCampaignData->update();
             $deleteCampaign = Campaign::find($id)->delete();
+            $updateCampaignUploads = CampaignUploads::where('campaign_id',$id)->update(['deleted_by' => $getAdminDetails->id,'deleted_ip' => CommonHelper::getUserIp()]);
             $deleteCampaignUploads = CampaignUploads::where('campaign_id',$id)->delete();
             if ($deleteCampaign || $deleteCampaignUploads) {
                 return $this->successResponse([], self::module.__('messages.success.delete'), 200);
