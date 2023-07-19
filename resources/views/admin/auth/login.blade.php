@@ -61,9 +61,12 @@
                                     </div>
                                 </div>
                                 <a class="cm-forgot-password" href="#">Forgot password?</a>
-                                <button type="submit" class="btn btn-primary cm-login-btn">
+                                <button type="submit" class="btn btn-primary cm-login-btn submit-btn">
                                     {{ __('Login') }}
                                 </button>
+                                <span class="btn btn-primary cm-login-btn loading-btn">
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </span>
                             </form>
                         </div>
                     </div>
