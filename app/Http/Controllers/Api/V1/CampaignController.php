@@ -11,6 +11,7 @@ use App\Models\Campaign;
 use App\Models\CampaignUploads;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\V1\CampaignResource;
+use App\Http\Resources\V1\CampaignDetailResource;
 use DB;
 
 class CampaignController extends Controller
@@ -28,6 +29,11 @@ class CampaignController extends Controller
         $responseArr['getCampaignList'] = $getCampaignList;
 
         return $this->successResponse($responseArr,'Campaign List ' , 200);
+    }
+
+    public function show($id){
+        $getCampaignDetails = $this->getCampaignDetails($id,0);
+        return $this->successResponse(CampaignDetailResource::collection($getCampaignDetails),self::module.__('messages.success.details') , 200);
     }
 
     public function store(Request $request)
@@ -167,28 +173,33 @@ class CampaignController extends Controller
 
         $checkCampaignData = $this->getCampaignDetails($id,1);
         // Validation section
-        $validateUser = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required',
-                'unique_code' => 'required|unique:campaigns,unique_code,'.$id.',id,deleted_at,NULL',
-                'campaign_category_id' => 'required',
-                'start_datetime' => 'required',
-                'end_datetime' => 'required',
-                'donation_target' => 'required|numeric',
-            ],
-            [
-                'name.required' => __('messages.validation.name'),
-                'unique_code.required' => __('messages.validation.unique_code'),
-                'unique_code.unique' => __('messages.validation.unique_code_unique'),
-                'campaign_category_id.required' => __('messages.validation.campaign_category_id'),
-                'start_datetime.required' => __('messages.validation.start_datetime'),
-                'end_datetime.required' => __('messages.validation.end_datetime'),
-                'donation_target.required' => __('messages.validation.donation_target'),
-                'donation_target.numeric' => 'Donation target'.__('messages.validation.must_numeric'),
-            ]
-        );
+        $rules = [
+            'name' => 'required',
+            'unique_code' => 'required|unique:campaigns,unique_code,'.$id.',id,deleted_at,NULL',
+            'campaign_category_id' => 'required',
+            'start_datetime' => 'required',
+            'end_datetime' => 'required',
+            'donation_target' => 'required|numeric',
+        ];
 
+        $messages = [
+            'name.required' => __('messages.validation.name'),
+            'unique_code.required' => __('messages.validation.unique_code'),
+            'unique_code.unique' => __('messages.validation.unique_code_unique'),
+            'campaign_category_id.required' => __('messages.validation.campaign_category_id'),
+            'start_datetime.required' => __('messages.validation.start_datetime'),
+            'end_datetime.required' => __('messages.validation.end_datetime'),
+            'donation_target.required' => __('messages.validation.donation_target'),
+            'donation_target.numeric' => 'Donation target'.__('messages.validation.must_numeric'),
+        ];
+
+        if ($request->hasFile('image')) {
+            $rules['image'] = 'required|max:2048|mimes:jpg,png,jpeg';
+            $messages['image.required'] = __('messages.validation.image');
+            $messages['image.max'] = __('messages.validation.image-max');
+            $messages['image.mimes'] = __('messages.validation.image-mimes');
+        }
+        $validateUser = Validator::make($request->all(), $rules, $messages);
         if ($validateUser->fails()) {
             return $this->errorResponse($validateUser->errors(), 401);
         }
@@ -220,7 +231,6 @@ class CampaignController extends Controller
             }
             // Unlink old image from storage 
 
-            
             $image = $request->file('image');
             $data = CommonHelper::uploadImages($image, $uploadPath);
             if (!empty($data)) {
@@ -297,13 +307,14 @@ class CampaignController extends Controller
                         $saveUploadArr->upload_type_id = $request->upload_types[$i];
                         $saveUploadArr->title = $request->upload_title[$i];
                         $saveUploadArr->description = $request->upload_description[$i];
-                        
-                        $uploadImage = $request->file('upload_file')[$i];
-                        if(!empty($uploadImage)){
-                            $data = CommonHelper::uploadImages($uploadImage, $uploadPath,$i);
-                            if (!empty($data)) {
-                                $saveUploadArr->file_name = $data['filename'];
-                                $saveUploadArr->path = $data['path'];
+                        if(isset($request->file('upload_file')[$i])){
+                            $uploadImage = $request->file('upload_file')[$i];
+                            if(!empty($uploadImage)){
+                                $data = CommonHelper::uploadImages($uploadImage, $uploadPath,$i);
+                                if (!empty($data)) {
+                                    $saveUploadArr->file_name = $data['filename'];
+                                    $saveUploadArr->path = $data['path'];
+                                }
                             }
                         }
                         if (!empty($getAdminDetails)) {

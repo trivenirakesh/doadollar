@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Helpers\CommonHelper;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Campaign extends Model
 {
@@ -44,6 +45,11 @@ class Campaign extends Model
     public function getCampaignsListCount(){
         $totalRecordsData = DB::select("CALL sp_get_campaigns_list('0','0','','','','0')");
         return count($totalRecordsData);
+    }
+
+    public function uploads(): HasMany
+    {
+        return $this->hasMany(CampaignUploads::class);
     }
     
 }

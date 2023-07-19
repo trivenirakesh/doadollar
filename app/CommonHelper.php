@@ -22,13 +22,17 @@ class CommonHelper{
         return $dateTimeUTC;
     }
 
-    public static function getConvertedDateTime($dateTime){
+    public static function getConvertedDateTime($dateTime,$format = ''){
 
         $siteTimeZone = Config::get('constants.site_timezone');
         $dateTime = date("Y-m-d H:i:s",strtotime($dateTime)); 
         $newDateTime = new DateTime($dateTime); 
         $newDateTime->setTimezone(new DateTimeZone($siteTimeZone)); 
-        $dateTimeUTC = $newDateTime->format("Y-m-d H:i A");
+        if(!empty($format)){
+            $dateTimeUTC = $newDateTime->format($format);
+        }else{
+            $dateTimeUTC = $newDateTime->format("Y-m-d H:i A");
+        }
         return $dateTimeUTC;
     }
 
@@ -105,5 +109,10 @@ class CommonHelper{
         }else{
             return '';
         }
+    }
+
+    public static function shortString($string,$len = 50){
+        $out = strlen($string) > $len ? mb_substr($string,0,$len)."..." : $string;
+        return $out;
     }
 }

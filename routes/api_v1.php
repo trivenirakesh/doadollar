@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
     //Manage campaign
     Route::post('campaignslist',[CampaignController::class,'index']);
+    Route::get('campaign/{id}',[CampaignController::class,'show']);
     Route::post('campaign',[CampaignController::class,'store']);
     Route::post('campaign/{id}',[CampaignController::class,'update']);
     Route::delete('campaign/{id}',[CampaignController::class,'destroy']);
