@@ -17,7 +17,7 @@ class CreateUploadTypesTable extends Migration
     {
         Schema::create('upload_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name',200);
             $table->tinyInteger('type')->comment("0 - Upload, 1 - Links");
             $table->tinyInteger('status')->default('1')->comment("0 - Deactive, 1 - Active")->nullable();
             $this->timestampColumns($table);

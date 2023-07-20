@@ -22,26 +22,35 @@ class CommonHelper{
         return $dateTimeUTC;
     }
 
-    public static function getConvertedDateTime($dateTime){
+    public static function getConvertedDateTime($dateTime,$format = ''){
 
         $siteTimeZone = Config::get('constants.site_timezone');
         $dateTime = date("Y-m-d H:i:s",strtotime($dateTime)); 
         $newDateTime = new DateTime($dateTime); 
         $newDateTime->setTimezone(new DateTimeZone($siteTimeZone)); 
-        $dateTimeUTC = $newDateTime->format("Y-m-d H:i A");
+        if(!empty($format)){
+            $dateTimeUTC = $newDateTime->format($format);
+        }else{
+            $dateTimeUTC = $newDateTime->format("Y-m-d H:i A");
+        }
         return $dateTimeUTC;
     }
 
-    public static function uploadImages($file,$path){
+    public static function uploadImages($file,$path,$number = null){
         $public = 'public/';
         $uploadPath = $path;
         $thumbUploadPath = $path.'thumb/';
-        $fileName = date('YmdHis') . '.' . $file->extension();
+        if(!empty($number) || $number == 0){
+            $fileName = $number.date('YmdHis') . '.' . $file->extension();
+        }else{
+            $fileName = date('YmdHis') . '.' . $file->extension();
+        }
       
         // start base image
         $path = Storage::putFileAs($public.$uploadPath, $file, $fileName);
         // start base image
       
+        if(!isset($number)){
         // start thumb image
         $img = Image::make($file->getRealPath());
         $img->resize(120, 120, function ($constraint) {
@@ -50,6 +59,7 @@ class CommonHelper{
         $img->stream();
         Storage::disk('local')->put($public.$thumbUploadPath.$fileName, $img, 'public');
         // start thumb image
+        }
       
         $responseArr['filename'] = $fileName;
         $responseArr['path'] = $public.'storage/'.$uploadPath;
@@ -90,5 +100,19 @@ class CommonHelper{
             $thumbImagePath = str_replace('storage/','',$pathName).'thumb/'.$fileName;
             self::unlinkFiles($imagePath,$thumbImagePath);
         }
+    }
+
+    public static function getConfigValue($key){
+        $configValue = Config::get('constants.'.$key);
+        if(!empty($configValue)){
+            return $configValue;
+        }else{
+            return '';
+        }
+    }
+
+    public static function shortString($string,$len = 50){
+        $out = strlen($string) > $len ? mb_substr($string,0,$len)."..." : $string;
+        return $out;
     }
 }

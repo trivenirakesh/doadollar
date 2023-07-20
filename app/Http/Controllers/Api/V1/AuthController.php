@@ -43,7 +43,7 @@ class AuthController extends Controller
                 return $this->errorResponse( __('messages.validation.email_password_wrong') ,401);
             }
             $user = Entitymst::where('email', $request->email)->first();
-            $user->tokens()->delete();
+            // $user->tokens()->delete();
             $getUserDetails['id'] = $user->id;
             $getUserDetails['username'] = $user->first_name.' '.$user->last_name;
             $getUserDetails['email'] = $user->email;
@@ -66,7 +66,7 @@ class AuthController extends Controller
             ],
             [
              'id.required'    => __('messages.validation.id') ,
-             'id.numeric'    => __('messages.validation.id_numeric') ,
+             'id.numeric'    => 'Id'.__('messages.validation.must_numeric') ,
             ]);
 
             if($validateUser->fails()){

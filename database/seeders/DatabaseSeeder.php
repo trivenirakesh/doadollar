@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             PaymentGatewaySettingSeeder::class,
             SocialPlatformSettingSeeder::class,
             UploadTypesSeeder::class,
+            EmailTemplateSeeder::class,
+            StaticPagesSeeder::class,
     	]);
     }
 }

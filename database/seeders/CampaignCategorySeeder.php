@@ -16,7 +16,7 @@ class CampaignCategorySeeder extends Seeder
         CampaignCategory::create([
             'name' => 'Medical',
             'description' => 'Medical',
-            'status' => 1
+            'status' => 1,
         ]);
     }
 }

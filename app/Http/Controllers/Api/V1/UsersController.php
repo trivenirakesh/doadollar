@@ -95,7 +95,7 @@ class UsersController extends Controller
             'email.email' => __('messages.validation.email_email'),
             'email.unique' => __('messages.validation.email_unique'),
             'mobile.required' => __('messages.validation.mobile'),
-            'mobile.numeric' => __('messages.validation.mobile_numeric'),
+            'mobile.numeric' => 'Mobile'.__('messages.validation.must_numeric'),
             'mobile.digits' => __('messages.validation.mobile_digits'),
             'mobile.unique' => __('messages.validation.mobile_unique'),
             'password.required' => __('messages.validation.password'),
@@ -104,7 +104,7 @@ class UsersController extends Controller
         if ($request->has('role_id') && $request->entity_type != 2) {
             $rules['role_id'] = 'required|numeric';
             $messages['role_id.required'] = __('messages.validation.role_id');
-            $messages['role_id.numeric'] = __('messages.validation.role_id_numeric');
+            $messages['role_id.numeric'] = 'Role id'.__('messages.validation.must_numeric');
         }
         $validateUser = Validator::make($request->all(), $rules, $messages);
 
@@ -134,7 +134,6 @@ class UsersController extends Controller
         $createUser->mobile = $request->mobile;
         $createUser->entity_type = $request->entity_type;
         $createUser->password = Hash::make($request->password);
-        $createUser->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (isset($request->role_id) && $request->entity_type != 2) {
             $checkRoleExist = Role::find($request->role_id );
             if (!$checkRoleExist) {
@@ -186,7 +185,7 @@ class UsersController extends Controller
             'email.email' => __('messages.validation.email_email'),
             'email.unique' => __('messages.validation.email_unique'),
             'mobile.required' => __('messages.validation.mobile'),
-            'mobile.numeric' => __('messages.validation.mobile_numeric'),
+            'mobile.numeric' => 'Mobile'.__('messages.validation.must_numeric'),
             'mobile.digits' => __('messages.validation.mobile_digits'),
             'mobile.unique' => __('messages.validation.mobile_unique'),
         ];
@@ -194,13 +193,13 @@ class UsersController extends Controller
         if ($request->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
             $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = __('messages.validation.status_numeric');
+            $messages['status.numeric'] = 'Status'.__('messages.validation.must_numeric');
             $messages['status.lte'] = __('messages.validation.status_lte');
         }
         if ($request->has('role_id') && $userType != 2) {
             $rules['role_id'] = 'required|numeric';
             $messages['role_id.required'] = __('messages.validation.role_id');
-            $messages['role_id.numeric'] = __('messages.validation.role_id_numeric');
+            $messages['role_id.numeric'] = 'Role id'.__('messages.validation.must_numeric');
         }
         $validateUser = Validator::make($request->all(), $rules, $messages);
 
@@ -221,7 +220,6 @@ class UsersController extends Controller
         $updateUser->entity_type = $request->entity_type;
         $updateUser->status = $request->status;
         $updateUser->password = Hash::make($request->password);
-        $updateUser->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (isset($request->role_id) && $request->entity_type != 2) {
             $checkRoleExist = Role::find($request->role_id );
             if (!$checkRoleExist) {

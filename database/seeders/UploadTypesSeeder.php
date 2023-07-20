@@ -17,7 +17,7 @@ class UploadTypesSeeder extends Seeder
         UploadType::create([
             'name' => 'Image',
             'type' => 0,
-            'status' => 1
+            'status' => 1,
         ]);
     }
 }

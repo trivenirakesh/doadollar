@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
     {
         Role::create([
             'name' => 'Manager',
-            'status' => 1
+            'status' => 1,
         ]);
     }
 }

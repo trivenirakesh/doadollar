@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\AuthController;
 use App\Http\Controllers\Api\V1\CampaignCategoryController;
+use App\Http\Controllers\Api\V1\CampaignController;
+use App\Http\Controllers\Api\V1\InquiryController;
 use App\Http\Controllers\Api\V1\PaymentGatewaySettingController;
 use App\Http\Controllers\Api\V1\SocialPlatformSettingController;
 use App\Http\Controllers\Api\V1\UsersController;
@@ -25,7 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::post('login', [AuthController::class, 'loginEntity']);
-
+Route::post('inquiry',[InquiryController::class,'store']);
 
 Route::middleware('auth:sanctum')->group( function () {
 
@@ -36,7 +38,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('logout',[AuthController::class,'logout']);
 
     // Manage Role 
-    Route::resource('roles',RoleController::class);
+    Route::resource('roles',RoleController::class)->except(['create','edit']);
 
     // Manage Entity
     Route::get('entity',[UsersController::class,'index']);
@@ -68,4 +70,20 @@ Route::middleware('auth:sanctum')->group( function () {
 
     // Manage Upload types 
     Route::resource('uploadtypes',UploadTypesController::class);
+
+    //Manage campaign
+    Route::post('campaignslist',[CampaignController::class,'index']);
+    Route::get('campaign/{id}',[CampaignController::class,'show']);
+    Route::post('campaign',[CampaignController::class,'store']);
+    Route::post('campaign/{id}',[CampaignController::class,'update']);
+    Route::delete('campaign/{id}',[CampaignController::class,'destroy']);
+    
+    // Manage Email template 
+    Route::resource('emailtemplates',EmailTemplatesController::class);
+
+    // Manage Pages
+    Route::resource('staticpages',StaticPageController::class);
+
+    // Inquiry list
+    Route::get('inquiry',[InquiryController::class,'index']);
 });
