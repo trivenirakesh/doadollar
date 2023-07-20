@@ -25,11 +25,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($data as $item )
+                            @foreach ($roles as $role )
                             <tr>
-                                <td>{{$item->id}}</td>
-                                <td>{{$item->name}}</td>
-                                <td>{{$item->created_at}}</td>
+                                <td>{{$role->id}}</td>
+                                <td>{{$role->name}}</td>
+                                <td>{{$role->created_at}}</td>
                             </tr>
                             @endforeach
                         </tbody>

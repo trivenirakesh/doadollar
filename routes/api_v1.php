@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('logout',[AuthController::class,'logout']);
 
     // Manage Role 
-    Route::resource('roles',RoleController::class);
+    Route::resource('roles',RoleController::class)->except(['create','edit']);
 
     // Manage Entity
     Route::get('entity',[UsersController::class,'index']);
