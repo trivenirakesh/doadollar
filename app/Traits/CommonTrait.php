@@ -7,7 +7,6 @@ trait CommonTrait
 
 	public function successResponse($data, $message = null, $code = 200)
 	{
-
 		return response()->json([
 			'status' => true,
 			'message' => $message,
@@ -23,6 +22,25 @@ trait CommonTrait
 			'data' => []
 		], $code);
 	}
+
+	public function successResponseArr($message = 'success', $data = [])
+	{
+		return [
+			'status' => true,
+			'message' => $message,
+			'data' => $data,
+		];
+	}
+
+	public function errorResponseArr($message = 'somethig went wrong!!', $errors = [])
+	{
+		return [
+			'status' => false,
+			'message' => $message,
+			'data' => $errors
+		];
+	}
+
 
 	public function timestampColumns($table)
 	{
