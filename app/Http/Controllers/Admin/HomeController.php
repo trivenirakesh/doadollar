@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('admin/home');
+        return view('home');
     }
 
     public function login()
@@ -17,11 +18,20 @@ class HomeController extends Controller
         return view('admin/auth/login');
     }
 
-    public function form(){
+    public function form()
+    {
         return view('admin/sampleform');
     }
 
-    public function list(){
+    public function list()
+    {
         return view('admin/samplelist');
+    }
+
+    public function Logout()
+    {
+        Auth::logout();
+        return \Redirect::to("admin/login")
+            ->with('message', array('type' => 'success', 'text' => 'You have successfully logged out'));
     }
 }
