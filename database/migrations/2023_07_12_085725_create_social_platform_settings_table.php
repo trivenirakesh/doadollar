@@ -17,7 +17,7 @@ class CreateSocialPlatformSettingsTable extends Migration
     {
         Schema::create('social_platform_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name',200);
             $table->text('api_key');
             $table->text('secret_key');
             $table->string('file_name')->nullable();

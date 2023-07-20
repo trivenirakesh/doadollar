@@ -22,9 +22,11 @@ class SocialPlatformSettingController extends Controller
      */
     public function index()
     {
-        return SocialPlatformSettingResource::collection(Cache::remember('socialPlatformSetting',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getSocialPlatformSettingList =  SocialPlatformSettingResource::collection(Cache::remember('socialPlatformSetting',$expiry,function(){
             return SocialPlatformSetting::latest('id')->get();
         }));
+        return $this->successResponse($getSocialPlatformSettingList, self::module.__('messages.success.list'), 200);
     }
 
     /**
@@ -52,13 +54,14 @@ class SocialPlatformSettingController extends Controller
         $validatePlatform = Validator::make(
             $request->all(),
             [
-                'name' => 'required',
+                'name' => 'required|max:200',
                 'api_key' => 'required|alpha_num',
                 'secret_key' => 'required|alpha_num',
                 'image' => 'required|max:2048|mimes:jpg,png,jpeg'
             ],
             [
                 'name.required' => __('messages.validation.name'),
+                'name.max' => __('messages.validation.max'),
                 'api_key.required' => __('messages.validation.api_key'),
                 'api_key.alpha_num' => 'Api key'.__('messages.validation.alpha_num'),
                 'secret_key.required' => __('messages.validation.secret_key'),
@@ -121,10 +124,11 @@ class SocialPlatformSettingController extends Controller
 
         // Validation section
         
-        $rules['name'] = 'required';
+        $rules['name'] = 'required|max:200';
         $rules['api_key'] = 'required|alpha_num';
         $rules['secret_key'] = 'required|alpha_num';
         $messages['name.required'] = __('messages.validation.name');
+        $messages['name.max'] = __('messages.validation.max');
         $messages['api_key.required'] = __('messages.validation.api_key');
         $messages['api_key.alpha_num'] = 'Api key'.__('messages.validation.alpha_num');
         $messages['secret_key.required'] = __('messages.validation.secret_key');
@@ -159,7 +163,6 @@ class SocialPlatformSettingController extends Controller
         $updatePlatformSetting->api_key = $request->api_key;
         $updatePlatformSetting->secret_key = $request->secret_key;
         $updatePlatformSetting->status = $request->status;
-        $updatePlatformSetting->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         // get logged in user details 
         $getAdminDetails = auth('sanctum')->user();
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
@@ -209,7 +212,6 @@ class SocialPlatformSettingController extends Controller
         $checkPlatformData = $checkPlatform;
         if (!empty($checkPlatformData)) {
             $checkPlatformData->deleted_by = $getAdminDetails->id;
-            // $checkPlatformData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkPlatformData->deleted_ip = CommonHelper::getUserIp();
             $checkPlatformData->update();
             $deletePlatformSetting = SocialPlatformSetting::find($id)->delete();

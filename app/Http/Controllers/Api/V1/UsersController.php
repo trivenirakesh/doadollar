@@ -134,7 +134,6 @@ class UsersController extends Controller
         $createUser->mobile = $request->mobile;
         $createUser->entity_type = $request->entity_type;
         $createUser->password = Hash::make($request->password);
-        $createUser->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (isset($request->role_id) && $request->entity_type != 2) {
             $checkRoleExist = Role::find($request->role_id );
             if (!$checkRoleExist) {
@@ -221,7 +220,6 @@ class UsersController extends Controller
         $updateUser->entity_type = $request->entity_type;
         $updateUser->status = $request->status;
         $updateUser->password = Hash::make($request->password);
-        $updateUser->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (isset($request->role_id) && $request->entity_type != 2) {
             $checkRoleExist = Role::find($request->role_id );
             if (!$checkRoleExist) {

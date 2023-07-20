@@ -22,9 +22,11 @@ class UploadTypesController extends Controller
      */
     public function index()
     {
-        return UploadTypesResources::collection(Cache::remember('uploadTypes',60*60*24,function(){
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $getUploadTypesList =  UploadTypesResources::collection(Cache::remember('uploadTypes',$expiry,function(){
             return UploadType::latest('id')->get();
         }));
+        return $this->successResponse($getUploadTypesList, self::module.__('messages.success.list'), 200);
     }
 
     /**
@@ -48,11 +50,12 @@ class UploadTypesController extends Controller
         // Validation section
         $validateUploadType = Validator::make($request->all(),
             [
-                'name' => 'required',
+                'name' => 'required|max:200',
                 'type' => 'required|numeric|lte:1'
             ],
             [
                 'name.required' => __('messages.validation.name'),
+                'name.max' => __('messages.validation.max'),
                 'type.required' => __('messages.validation.type'),
                 'type.numeric' => 'Type'.__('messages.validation.must_numeric'),
                 'type.lte' => __('messages.validation.type_lte'),
@@ -67,11 +70,10 @@ class UploadTypesController extends Controller
         $getAdminDetails = auth('sanctum')->user();
 
         // Save upload type section
-        $uploadTypeName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
+        $uploadTypeName = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->name)));
         $uploadType = new UploadType();
         $uploadType->name = $uploadTypeName;
         $uploadType->type = $request->type;
-        $uploadType->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails)) {
             $uploadType->created_by = $getAdminDetails->id;
             $uploadType->created_ip = CommonHelper::getUserIp();
@@ -122,8 +124,9 @@ class UploadTypesController extends Controller
         $rules = [];
         $messages = [];
         if($request->has('name')){
-            $rules['name'] = 'required';
+            $rules['name'] = 'required|max:200';
             $messages['name.required'] = __('messages.validation.name');
+            $messages['name.max'] = __('messages.validation.max');
         }
         if($request->has('type')){
             $rules['type'] = 'required|numeric|lte:1';
@@ -149,7 +152,7 @@ class UploadTypesController extends Controller
         // Save upload type section
         $uploadType = $checkRole;
         if($request->has('name')){
-            $uploadTypeName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
+            $uploadTypeName = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->name)));
             $uploadType->name = $uploadTypeName;
         }
         if($request->has('type')){
@@ -158,7 +161,6 @@ class UploadTypesController extends Controller
         if($request->has('status')){
             $uploadType->status = $request->status;
         }
-        $uploadType->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
         if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
             $uploadType->updated_by = $getAdminDetails->id;
             $uploadType->updated_ip = CommonHelper::getUserIp();
@@ -186,7 +188,6 @@ class UploadTypesController extends Controller
         // Delete upload type
         $checkUploadTypeData = $checkRole;
         if (!empty($checkUploadTypeData)) {
-            // $checkUploadTypeData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
             $checkUploadTypeData->deleted_by = $getAdminDetails->id;
             $checkUploadTypeData->deleted_ip = CommonHelper::getUserIp();
             $checkUploadTypeData->update();

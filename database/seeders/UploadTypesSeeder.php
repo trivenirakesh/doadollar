@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\UploadType;
-use App\Helpers\CommonHelper;
 
 class UploadTypesSeeder extends Seeder
 {
@@ -19,7 +18,6 @@ class UploadTypesSeeder extends Seeder
             'name' => 'Image',
             'type' => 0,
             'status' => 1,
-            'created_at' => CommonHelper::getUTCDateTime(date('Y-m-d H:i:s')),
         ]);
     }
 }
