@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return [
     'validation' => [
@@ -6,6 +6,7 @@ return [
         'first_name' => 'Please enter first name',
         'last_name' => 'Please enter last name',
         'name' => 'Please enter name',
+        'max_name' => 'Name can not be more than 255 characters',
         'email' => 'Please enter email',
         'email_email' => 'Invalid email address',
         'email_unique' => 'Email address is already registered. Please, use a different email',

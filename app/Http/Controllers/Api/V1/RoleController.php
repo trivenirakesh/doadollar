@@ -4,14 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Role;
 use App\Traits\CommonTrait;
-use App\Http\Resources\V1\RoleResource;
-use App\Helpers\CommonHelper;
 use App\Http\Requests\RoleCreateUpdateRequest;
 use App\Services\RoleService;
-use Illuminate\Support\Facades\Cache;
 
 class RoleController extends Controller
 {
@@ -25,21 +20,14 @@ class RoleController extends Controller
         $this->roleService = $roleService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function index()
-    // {
-    //     return RoleResource::collection(Cache::remember('roles',60*60*24,function(){
-    //         return Role::latest('id')->get();
-    //     })); 
-    // }
+
     public function index()
     {
         $roles =  $this->roleService->index() ?? [];
-        return $roles;
+        if ($roles['status'] == false) {
+            return response()->json($roles, 401);
+        }
+        return response()->json($roles, 200);
     }
 
     /**
@@ -51,46 +39,13 @@ class RoleController extends Controller
 
     public function store(RoleCreateUpdateRequest $request)
     {
-        $getRoleDetails  = $this->roleService->store($request);
-        return $getRoleDetails;
+        $role  = $this->roleService->store($request);
+        if ($role['status'] == false) {
+            return response()->json($role, 401);
+        }
+        return response()->json($role, 200);
     }
 
-    // public function store(Request $request)
-    // {
-    //     // Validation section
-    //     $validateUser = Validator::make(
-    //         $request->all(),
-    //         [
-    //             'name' => 'required',
-    //         ],
-    //         [
-    //             'name.required' => __('messages.validation.name'),
-    //         ]
-    //     );
-
-    //     if ($validateUser->fails()) {
-    //         return $this->errorResponse($validateUser->errors(), 401);
-    //     }
-
-    //     // get logged in user details 
-    //     $getAdminDetails = auth('sanctum')->user();
-
-    //     // Save entity section
-    //     $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
-    //     $role = new Role;
-    //     $role->name = $roleName;
-    //     $role->status = 1;
-    //     $role->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
-    //     if (!empty($getAdminDetails)) {
-    //         $role->created_by = $getAdminDetails->id;
-    //         $role->created_ip = CommonHelper::getUserIp();
-    //     }
-    //     $role->save();
-    //     $lastId = $role->id;
-    //     $getRoleData = $this->getRoleDetails($lastId, 0);
-    //     $getRoleDetails = RoleResource::collection($getRoleData);
-    //     return $this->successResponse($getRoleDetails, self::module . __('messages.success.create'), 201);
-    // }
 
     /**
      * Display the specified resource.
@@ -100,8 +55,11 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        $getRoleDetails = $this->roleService->show($id);
-        return $this->successResponse(new RoleResource($getRoleDetails['data']), self::module . __('messages.success.details'), 200);
+        $role = $this->roleService->show($id);
+        if ($role['status'] == false) {
+            return response()->json($role, 401);
+        }
+        return response()->json($role, 200);
     }
 
     /**
@@ -111,10 +69,13 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoleCreateUpdateRequest $request, $id)
     {
-        $getRoleDetails = $this->roleService->update($request, $id);
-        return $this->successResponse($getRoleDetails['data'], self::module . __('messages.success.update'), 200);
+        $role = $this->roleService->update($request, $id);
+        if ($role['status'] == false) {
+            return response()->json($role, 401);
+        }
+        return response()->json($role, 200);
     }
 
     /**
@@ -125,29 +86,10 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $result = $this->roleService->destroy($id);
-        if ($result['status'] == true) {
-            return $this->successResponse([], $result['message'], 200);
+        $role = $this->roleService->destroy($id);
+        if ($role['status'] == false) {
+            return response()->json($role, 401);
         }
-    }
-
-    public function getRoleDetails($id, $type)
-    {
-        $getRoleData = Role::where('id', $id);
-        if ($type == 1) {
-            $getRoleData = $getRoleData->first();
-            if (!empty($getRoleData)) {
-                return $getRoleData;
-            } else {
-                throw new \ErrorException(self::module . __('messages.validation.not_found'));
-            }
-        } else {
-            $getRoleData = $getRoleData->get();
-            if (count($getRoleData) > 0) {
-                return $getRoleData;
-            } else {
-                throw new \ErrorException(self::module . __('messages.validation.not_found'));
-            }
-        }
+        return response()->json($role, 200);
     }
 }
