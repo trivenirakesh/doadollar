@@ -1,10 +1,10 @@
 <aside class="main-sidebar sidebar-light-primary">
             <!-- Brand Logo -->
-            <div class="brand-link d-flex align-items-center justify-content-between">
+            <div class="brand-link d-flex align-items-center justify-content-between border-bottom-0">
                 <a href="#" class="logo">
-                    <span class="brand-text">OnField</span>
+                <img src="{{ asset('public/dist/img/logo.png') }}" class="" alt="DoADollar">
                 </a>
-                <a class="cm-back-btn" data-widget="pushmenu" href="#" role="button"><i class="fas fa-arrow-left"></i></a>
+                <a class="cm-back-btn" data-widget="pushmenu" href="#" role="button"><i class="fas fa-angle-left"></i></a>
             </div>
 
             <!-- Sidebar -->
@@ -40,31 +40,13 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
-                                <p> Calls</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
-                                <p> Engineer</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-pencil-ruler"></i>
-                                <p> Service</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-users"></i>
-                                <p> Clients</p>
+                            <i class="nav-icon fas fa-mail-bulk"></i>
+                                <p> Email Templates</p>
                             </a>
                         </li>
                         <li class="nav-item ">
                             <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-user-shield"></i>
+                            <i class="nav-icon fas fa-cogs"></i>
 
                                 <p>Configurations <i class="right fas fa-angle-left"></i></p>
                             </a>
@@ -72,19 +54,52 @@
                                 <li class="nav-item">
                                     <a href="" class="nav-link">
                                         <i class="fas fa-circle nav-icon"></i>
-                                        <p>Manage Skill</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
-                                        <p>Manage Address Type</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
                                         <p>Manage Role</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-circle nav-icon"></i>
+                                        <p>Manage User</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-circle nav-icon"></i>
+                                        <p>Manage API Keys</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-book"></i>
+
+                                <p>CMS Management <i class="right fas fa-angle-left"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="" class="nav-link">
+                                        <i class="fas fa-circle nav-icon"></i>
+                                        <p>Terms & Conditions</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-circle nav-icon"></i>
+                                        <p>Privacy Policy</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-circle nav-icon"></i>
+                                        <p>Contact Details</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fas fa-circle nav-icon"></i>
+                                        <p>Inquiry</p>
                                     </a>
                                 </li>
                             </ul>
