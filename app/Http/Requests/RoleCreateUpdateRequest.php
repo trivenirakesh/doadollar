@@ -40,7 +40,7 @@ class RoleCreateUpdateRequest extends FormRequest
         ];
         if (request()->has('name')) {
             $rules['name'] = 'required';
-            $messages['name.required'] = __('messages.validation.name');
+            
         }
         if (request()->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
@@ -49,19 +49,19 @@ class RoleCreateUpdateRequest extends FormRequest
         return $rules;
     }
 
-    public function messages()
-    {
-        $messages = [];
-        if (request()->has('name')) {
-            $messages['name.required'] = __('messages.validation.name');
-        }
-        if (request()->has('status')) {
-            if (request()->has('status')) {
-                $messages['status.required'] = __('messages.validation.status');
-                $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
-                $messages['status.lte'] = __('messages.validation.status_lte');
-            }
-        }
-        return $messages;
-    }
+    // public function messages()
+    // {
+    //     $messages = [];
+    //     if (request()->has('name')) {
+    //         // $messages['name.required'] = __('messages.validation.name');
+    //     }
+    //     if (request()->has('status')) {
+    //         if (request()->has('status')) {
+    //             $messages['status.required'] = __('messages.validation.status');
+    //             $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
+    //             $messages['status.lte'] = __('messages.validation.status_lte');
+    //         }
+    //     }
+    //     return $messages;
+    // }
 }

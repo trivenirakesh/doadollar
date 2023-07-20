@@ -65,10 +65,9 @@ class RoleService
     {
         $getRoleData = Role::where('id', $id)->first();
         if ($getRoleData != null) {
-            $data = $getRoleData;
-            return  ['status' => true, 'data' => $data];
+            return  ['status' => true, 'message' => self::module . __('messages.success.details'),'data' => $getRoleData];
         } else {
-            return ['status' => false, 'message' => self::module . __('messages.validation.not_found')];
+            return ['status' => false, 'message' => self::module . __('messages.validation.not_found'),'data' => []];
         }
     }
 

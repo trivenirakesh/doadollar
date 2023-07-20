@@ -54,7 +54,11 @@ class RoleController extends Controller
     public function show($id)
     {
         $getRoleDetails = $this->roleService->show($id);
-        return $this->successResponse(new RoleResource($getRoleDetails['data']), self::module . __('messages.success.details'), 200);
+        if(!empty($getRoleDetails['data'])){
+            return $this->successResponse(new RoleResource($getRoleDetails['data']), $getRoleDetails['message'], 200);
+        }else{
+            return $this->successResponse($getRoleDetails['data'], $getRoleDetails['message'], 404);
+        }
     }
 
     /**
@@ -64,10 +68,10 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoleCreateUpdateRequest $request, $id)
     {
         $getRoleDetails = $this->roleService->update($request, $id);
-        return $this->successResponse($getRoleDetails['data'], self::module . __('messages.success.update'), 200);
+        return $this->successResponse($getRoleDetails['data'], $getRoleDetails['message'], 200);
     }
 
     /**
