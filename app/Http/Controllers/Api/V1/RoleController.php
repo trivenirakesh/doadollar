@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\RoleResource;
-use App\Helpers\CommonHelper;
 use App\Http\Requests\RoleCreateUpdateRequest;
 use App\Services\RoleService;
-use Illuminate\Support\Facades\Cache;
 
 class RoleController extends Controller
 {
@@ -30,12 +27,6 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // public function index()
-    // {
-    //     return RoleResource::collection(Cache::remember('roles',60*60*24,function(){
-    //         return Role::latest('id')->get();
-    //     })); 
-    // }
     public function index()
     {
         $roles =  $this->roleService->index() ?? [];
@@ -48,49 +39,11 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
     public function store(RoleCreateUpdateRequest $request)
     {
         $getRoleDetails  = $this->roleService->store($request);
         return $getRoleDetails;
     }
-
-    // public function store(Request $request)
-    // {
-    //     // Validation section
-    //     $validateUser = Validator::make(
-    //         $request->all(),
-    //         [
-    //             'name' => 'required',
-    //         ],
-    //         [
-    //             'name.required' => __('messages.validation.name'),
-    //         ]
-    //     );
-
-    //     if ($validateUser->fails()) {
-    //         return $this->errorResponse($validateUser->errors(), 401);
-    //     }
-
-    //     // get logged in user details 
-    //     $getAdminDetails = auth('sanctum')->user();
-
-    //     // Save entity section
-    //     $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
-    //     $role = new Role;
-    //     $role->name = $roleName;
-    //     $role->status = 1;
-    //     $role->created_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
-    //     if (!empty($getAdminDetails)) {
-    //         $role->created_by = $getAdminDetails->id;
-    //         $role->created_ip = CommonHelper::getUserIp();
-    //     }
-    //     $role->save();
-    //     $lastId = $role->id;
-    //     $getRoleData = $this->getRoleDetails($lastId, 0);
-    //     $getRoleDetails = RoleResource::collection($getRoleData);
-    //     return $this->successResponse($getRoleDetails, self::module . __('messages.success.create'), 201);
-    // }
 
     /**
      * Display the specified resource.
