@@ -39,7 +39,7 @@ class RoleCreateUpdateRequest extends FormRequest
             'name' => 'required',
         ];
         if (request()->has('name')) {
-            $rules['name'] = 'required';
+            $rules['name'] = 'required|max:255';
             $messages['name.required'] = __('messages.validation.name');
         }
         if (request()->has('status')) {
@@ -54,6 +54,7 @@ class RoleCreateUpdateRequest extends FormRequest
         $messages = [];
         if (request()->has('name')) {
             $messages['name.required'] = __('messages.validation.name');
+            $messages['name.max'] = __('messages.validation.max_name');
         }
         if (request()->has('status')) {
             if (request()->has('status')) {

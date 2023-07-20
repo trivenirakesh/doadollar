@@ -25,7 +25,7 @@ class RoleService
         $data =  (Cache::remember('roles', 60 * 60 * 24, function () {
             return RoleResource::collection(Role::latest('id')->get());
         }));
-        return ['status' => true, 'message' => 'success', 'data' => $data];
+        return $this->successResponseArr(self::module . __('messages.success.list'), $data);
     }
 
 
@@ -37,23 +37,17 @@ class RoleService
      */
     public function store(Request $request)
     {
-
-        // get logged in user details 
-        $getAdminDetails = auth()->user();
         // Save entity section
         $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
         $role = new Role;
         $role->name = $roleName;
         $role->status = 1;
-        if (!empty($getAdminDetails)) {
-            $role->created_by = $getAdminDetails->id;
-            $role->created_ip = CommonHelper::getUserIp();
-        }
+        $role->created_by = auth()->user()->id;
+        $role->created_ip = CommonHelper::getUserIp();
         $role->save();
         $lastId = $role->id;
-        $getRoleData = $this->getRoleDetails($lastId, 0);
-        $getRoleDetails = RoleResource::collection($getRoleData);
-        return ['status' => true, 'message' => self::module . __('messages.success.create'), 'data' => $getRoleDetails];
+        $getRoleDetails = new RoleResource($role);
+        return $this->successResponseArr(self::module . __('messages.success.create'), $getRoleDetails);
     }
 
     /**
@@ -65,14 +59,12 @@ class RoleService
     public function show($id)
     {
         $getRoleData = Role::where('id', $id)->first();
-        if ($getRoleData != null) {
-            $data = $getRoleData;
-            return  ['status' => true, 'data' => $data];
-        } else {
-            return ['status' => false, 'message' => self::module . __('messages.validation.not_found')];
+        if ($getRoleData == null) {
+            return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
+        $getRoleData = new RoleResource($getRoleData);
+        return $this->successResponseArr(self::module . __('messages.success.details'), $getRoleData);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -83,14 +75,11 @@ class RoleService
      */
     public function update(Request $request, $id)
     {
-        // check role exist or not 
-        $checkRole = $this->getRoleDetails($id, 1);
 
-        // get logged in user details 
-        $getAdminDetails = auth()->user();
-
-        // Save entity section
-        $role = $checkRole;
+        $role = Role::where('id', $id)->first();
+        if ($role == null) {
+            return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
+        }
         if ($request->has('name')) {
             $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
             $role->name = $roleName;
@@ -98,15 +87,12 @@ class RoleService
         if ($request->has('status')) {
             $role->status = $request->status;
         }
-        $role->updated_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
-        if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
-            $role->updated_by = $getAdminDetails->id;
-            $role->updated_ip = CommonHelper::getUserIp();
-        }
+        $role->updated_by = auth()->user()->id;
+        $role->updated_ip = CommonHelper::getUserIp();
+
         $role->update();
-        $getRoleData = $this->getRoleDetails($id, 1);
-        $getRoleDetails = new RoleResource($getRoleData);
-        return ['status' => true, 'message' => self::module . __('messages.success.update'), 'data' => $getRoleDetails];
+        $getRoleDetails = new RoleResource($role);
+        return $this->successResponseArr(self::module . __('messages.success.update'), $getRoleDetails);
     }
 
     /**
@@ -117,45 +103,18 @@ class RoleService
      */
     public function destroy($id)
     {
-        // check role exist or not 
-        $checkRole = $this->getRoleDetails($id, 1);
-
-        // get logged in user details 
-        $getAdminDetails = auth()->user();
+        $role =  Role::where('id', $id)->first();
+        if ($role == null) {
+            return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
+        }
 
         // Delete entity
-        $checkRoleData = $checkRole;
-        if (!empty($checkRoleData)) {
-            // $checkRoleData->deleted_at = CommonHelper::getUTCDateTime(date('Y-m-d H:i:s'));
-            $checkRoleData->deleted_by = $getAdminDetails->id;
-            $checkRoleData->deleted_ip = CommonHelper::getUserIp();
-            $checkRoleData->update();
-            $deleteRole = Role::find($id)->delete();
-            if ($deleteRole) {
-                return ['status' => true, 'message' => self::module . __('messages.success.delete')];
-            }
-        } else {
-            return ['status' => false, 'message' => self::module . __('messages.validation.not_found')];
-        }
-    }
-
-    public function getRoleDetails($id, $type)
-    {
-        $getRoleData = Role::where('id', $id);
-        if ($type == 1) {
-            $getRoleData = $getRoleData->first();
-            if (!empty($getRoleData)) {
-                return $getRoleData;
-            } else {
-                throw new \ErrorException(self::module . __('messages.validation.not_found'));
-            }
-        } else {
-            $getRoleData = $getRoleData->get();
-            if (count($getRoleData) > 0) {
-                return $getRoleData;
-            } else {
-                throw new \ErrorException(self::module . __('messages.validation.not_found'));
-            }
+        $role->deleted_by = auth()->user()->id;
+        $role->deleted_ip = CommonHelper::getUserIp();
+        $role->update();
+        $deleteRole = $role->delete();
+        if ($deleteRole) {
+            return $this->successResponseArr(self::module . __('messages.success.delete'));
         }
     }
 }
