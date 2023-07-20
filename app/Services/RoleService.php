@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Role;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\RoleResource;

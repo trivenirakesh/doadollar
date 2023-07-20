@@ -4,12 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleCreateUpdateRequest;
-use App\Http\Resources\V1\RoleResource;
-use App\Models\Role;
-use Illuminate\Http\Request;
 use App\Services\RoleService;
 use App\Traits\CommonTrait;
-use Illuminate\Support\Facades\Cache;
 
 class RoleController extends Controller
 {

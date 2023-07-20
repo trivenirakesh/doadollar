@@ -20,7 +20,6 @@ class RoleController extends Controller
         $this->roleService = $roleService;
     }
 
-
     public function index()
     {
         $roles =  $this->roleService->index() ?? [];
@@ -36,7 +35,6 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
     public function store(RoleCreateUpdateRequest $request)
     {
         $role  = $this->roleService->store($request);
@@ -45,7 +43,6 @@ class RoleController extends Controller
         }
         return response()->json($role, 200);
     }
-
 
     /**
      * Display the specified resource.
