@@ -94,9 +94,8 @@
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            <span class="mr-3">Privacy Policy</span> <span>Terms of Use</span>
-            <div class="float-right d-none d-sm-inline-block">
-                © Copyright 2023. Powered by <span class="text-bold color-primary">OnField</strong>
+            <div class="d-none d-sm-block text-center">
+                © Copyright 2023. Powered by <span class="text-bold">DoADollar</strong>
             </div>
         </footer>
 

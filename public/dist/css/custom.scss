@@ -1,6 +1,7 @@
 :root {
-    --primary-color: #32297c;
+    --primary-color: #20BAE8;
     --background-color: #f5f6ff;
+    --color-dark: #010101;
     --bg-titan-white: #efedff;
     --bg-windsor: var(--primary-color);
     --bg-corn-silk: #fff4de;
@@ -50,8 +51,12 @@ html {
 }
 
 body {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Lexend Deca', sans-serif;
     background-color: var(--background-color);
+
+    .color-dark{
+        color: var(--color-dark);
+    }
 
     &.cm-layout {
         .logo {
@@ -505,11 +510,9 @@ body {
                 /*header css start*/
                 nav {
                     &.main-header {
-                        border-radius: 0px 0px 16px 16px;
                         background: #ffffff;
-                        box-shadow: 0px 10px 30px 0px rgba(50, 41, 124, 0.05);
                         padding: 1.07143rem 0.71429rem 1.07143rem 1.42857rem;
-                        border: none;
+                        border-bottom: 1px solid #cecfd6;
 
                         .cm-global-search {
                             .form-control {
@@ -569,8 +572,8 @@ body {
                         }
 
                         @media (min-width: 768px) {
-                            margin-left: 21.79rem;
-                            margin-right: 1.43rem;
+                            margin-left: calc(21.79rem - 20px);
+                            margin-right: 0;
                             min-height: 5.365rem;
                         }
                     }
@@ -579,8 +582,7 @@ body {
 
                 /*sidebar css start*/
                 .main-sidebar {
-                    border-radius: 0px 16px 0px 0px;
-                    box-shadow: 0px 10px 30px 0px rgba(50, 41, 124, 0.05);
+                    border-right: 1px solid #cecfd6;
                     width: 20.35714rem;
 
                     .brand-link {
@@ -598,6 +600,9 @@ body {
 
                         a {
                             display: inline-block;
+                            img {
+                                max-height: 2.12vw;
+                            }
                         }
 
                         .cm-back-btn {
@@ -621,12 +626,16 @@ body {
                     .sidebar {
                         margin-top: 0;
                         padding: 1.42857rem 1.07143rem 0;
+                        height: calc(100% - 5.6rem);
 
                         .nav-item {
                             .nav-link {
+                                display: flex;
                                 width: 100%;
                                 margin-bottom: 0.57143rem;
                                 border-radius: 4px;
+                                padding: 0.75rem 1rem;
+                                background-color: transparent;
 
                                 i {
                                     color: var(--text-color);
@@ -643,13 +652,13 @@ body {
 
                                 p {
                                     color: var(--text-color);
-                                    font-weight: 700;
+                                    font-weight: 600;
+                                    padding-left: 0.5rem;
                                 }
 
                                 &.active {
-                                    border-left: 3px solid var(--primary-color);
-                                    background: #f5f6ff;
-                                    box-shadow: 0px 0px 5px 0px rgba(50, 41, 124, 0.05);
+                                    background: #e8f8fd;
+                                    box-shadow: none;
 
                                     i {
                                         color: var(--primary-color);
@@ -658,6 +667,10 @@ body {
                                     p {
                                         color: var(--primary-color);
                                     }
+                                }
+                                &:hover {
+                                    background: #e8f8fd;
+                                    box-shadow: none;
                                 }
                             }
 
@@ -681,9 +694,10 @@ body {
                     background-color: var(--background-color);
 
                     @media (min-width: 768px) {
-                        margin-left: 20.79rem;
-                        margin-right: 0.43rem;
+                        margin-left: 20.35714rem;
+                        margin-right: 0;
                         margin-top: calc(5.3rem + 1px);
+                        
                     }
                 }
                 .color-primary {
@@ -726,15 +740,12 @@ body {
                 /*footer css start*/
                 footer {
                     &.main-footer {
-                        padding: 1.07143rem 1.42857rem;
-                        border-radius: 1.14286rem 1.14286rem 0rem 0rem;
                         background: #fff;
-                        box-shadow: 0px 0px 30px 0px rgba(50, 41, 124, 0.05);
-                        border: none;
+                        border-top: 1px solid #cecfd6;
 
                         @media (min-width: 768px) {
-                            margin-left: 21.79rem;
-                            margin-right: 1.43rem;
+                            margin-left: 0;
+                            margin-right: 0;
                         }
                     }
                 }
@@ -745,6 +756,10 @@ body {
 
             &.sidebar-collapse {
                 .wrapper {
+                    .main-header {
+                        margin-left: 5.2rem !important;
+                    }
+
                     .main-sidebar {
                         width: 5.2rem;
 
@@ -756,6 +771,7 @@ body {
                             }
                             .cm-back-btn {
                                 position: absolute;
+                                display: none;
                             }
                         }
 
@@ -777,9 +793,21 @@ body {
                             .brand-link {
                                 .cm-back-btn {
                                     position: unset;
+                                    display: flex;
+                                    >i {
+                                        transform: rotate(180deg);
+                                    }
                                 }
                             }
                         }
+                    }
+
+                    .content-wrapper {
+                        margin-left: 5.2rem !important;
+                    }
+
+                    .main-footer {
+                        margin-left: 5.2rem !important;
                     }
                 }
             }
@@ -791,86 +819,59 @@ body {
             .wrapper {
                 .content-wrapper {
                     margin: auto;
-                    background-image: url("../img/login-ellipse.svg");
+                    background-image: url("../img/vectors.svg");
                     background-position: bottom center;
                     background-repeat: no-repeat;
                     background-size: 100%;
                     background-color: var(--background-color);
 
-                    .input-group {
-                        padding: 1.14286rem;
-                        height: auto;
-                        border-radius: 0.57143rem;
-                        border: 0.996px solid var(--primary-color);
-                        margin-bottom: 2.5rem;
-
-                        .input-group-prepend,
-                        .input-group-append {
-                            .input-group-text {
-                                padding: 0;
-                                background-color: transparent;
-                                border: none;
-
-                                i {
-                                    color: var(--primary-color);
-                                    font-size: 1.42857rem;
-                                }
-                            }
-                        }
-
                         .form-control {
-                            padding: 0 0 0 1.07rem;
+                            padding: 12px 20px;
                             border: none;
                             height: auto;
                             font-size: 1.14286rem;
                             font-weight: 500;
                             line-height: 1.38;
                             letter-spacing: 0.01071rem;
-                            color: var(--primary-color);
+                            color: var(--color-dark);
+                            border-radius: 10px;
+                            background: rgba(154, 207, 29, 0.50);
+                            box-shadow: 0px 0px 15px 0px rgba(60, 194, 196, 0.20);
 
                             &[type="password"] {
                                 padding-right: 1.07rem;
                             }
 
                             &::placeholder {
-                                color: var(--primary-color);
+                                color: var(--color-dark);
                                 font-size: 1.14286rem;
-                                font-weight: 500;
+                                font-weight: 400;
                                 line-height: normal;
+                            }
+                            
+                            + {
+                                .error {
+                                    color:#d44950;
+                                    font-weight: 500;
+                                    display: block;
+                                    text-align: left;
+                                }
                             }
                         }
 
-                        .fa-eye {
-                            color: var(--primary-color);
-                            font-size: 1.42857rem;
-                        }
-                    }
-
-                    .cm-forgot-password {
-                        color: var(--primary-color);
-                        text-align: center;
-                        font-size: 1.14286rem;
-                        font-weight: 500;
-                        line-height: normal;
-                        display: inline-block;
-                        margin-top: 0.79rem;
-                        margin-bottom: 2.07rem;
-                    }
 
                     .cm-login-btn {
-                        display: block;
                         width: 100%;
                         border: none;
-                        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
-                        border-radius: 0.85714rem;
+                        box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.20);
+                        border-radius: 10px;
                         background: var(--primary-color);
                         color: #fff;
                         text-align: center;
                         font-size: 1.28571rem;
                         font-weight: 700;
                         line-height: normal;
-                        text-transform: uppercase;
-                        padding: 1.14286rem;
+                        padding: 12px 20px;
                     }
 
                     .card {
@@ -908,7 +909,7 @@ body {
                             color: var(--primary-color);
                             text-align: center;
                             font-size: 1.14286rem;
-                            font-weight: 400;
+                            font-weight: 500;
                             line-height: normal;
                             margin-bottom: 2.07rem;
                         }
@@ -927,17 +928,13 @@ body {
             @media (max-width: 991px) {
                 .wrapper {
                     .content-wrapper {
-                        background-size: 170%;
                     }
                 }
             }
 
             @media (max-width: 767px) {
                 .wrapper {
-                    .content-wrapper {
-                        background-size: auto;
-                        background-image: url("../img/login-ellipse-small.svg");
-                    }
+                    
                 }
             }
         }
