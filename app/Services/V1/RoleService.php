@@ -22,7 +22,7 @@ class RoleService
     public function index()
     {
         $expiry = CommonHelper::getConfigValue('cache_expiry');
-        $data =  (Cache::remember('roles',$expiry, function () {
+        $data =  (Cache::remember('roles', $expiry, function () {
             return RoleResource::collection(Role::latest('id')->get());
         }));
         return $this->successResponseArr(self::module . __('messages.success.list'), $data);
@@ -108,7 +108,7 @@ class RoleService
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
 
-        // Delete entity
+        // Delete role
         $role->deleted_by = auth()->user()->id;
         $role->deleted_ip = CommonHelper::getUserIp();
         $role->update();

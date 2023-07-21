@@ -43,7 +43,7 @@ class PaymentGatewaySettingService
         $createSetting->name = $paymentGatewaySettingName;
         $createSetting->api_key = $request->api_key;
         $createSetting->secret_key = $request->secret_key;
-        
+
         // get logged in user details 
         $createSetting->created_by = auth()->user()->id;
         $createSetting->created_ip = CommonHelper::getUserIp();
@@ -52,7 +52,7 @@ class PaymentGatewaySettingService
         // Update filename & path
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $lastId.'/');
+            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $lastId . '/');
             if (!empty($data)) {
                 $updateImageData = PaymentGatewaySetting::find($lastId);
                 $updateImageData->file_name = $data['filename'];
@@ -77,7 +77,7 @@ class PaymentGatewaySettingService
         if ($getPaymentGatewayData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getPaymentGatewayData = new PaymentGatewaySetting($getPaymentGatewayData);
+        $getPaymentGatewayData = new PaymentGatewaySettingResource($getPaymentGatewayData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getPaymentGatewayData);
     }
 
@@ -96,7 +96,7 @@ class PaymentGatewaySettingService
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
         // remove blank spaces from string 
-        $paymentGatewaySettingName = ucfirst(strtolower(str_replace(' ', '',$request->name)));
+        $paymentGatewaySettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
         $paymentGatewaySetting->name = $paymentGatewaySettingName;
         $paymentGatewaySetting->api_key = $request->api_key;
         $paymentGatewaySetting->secret_key = $request->secret_key;
@@ -107,7 +107,7 @@ class PaymentGatewaySettingService
         // Update filename & path
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $id.'/');
+            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $id . '/');
             if (!empty($data)) {
                 $paymentGatewaySetting->file_name = $data['filename'];
                 $paymentGatewaySetting->path = $data['path'];
@@ -115,7 +115,7 @@ class PaymentGatewaySettingService
         }
         $paymentGatewaySetting->update();
         $getSettingDetails = new PaymentGatewaySettingResource($paymentGatewaySetting);
-        return $this->successResponseArr($getSettingDetails,self::module.__('messages.success.update'));
+        return $this->successResponseArr($getSettingDetails, self::module . __('messages.success.update'));
     }
 
     /**
@@ -130,7 +130,7 @@ class PaymentGatewaySettingService
         if ($paymentGatewaySetting == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        // Delete entity
+        // Delete payment gateway setting
         $paymentGatewaySetting->deleted_by = auth()->user()->id;
         $paymentGatewaySetting->deleted_ip = CommonHelper::getUserIp();
         $paymentGatewaySetting->update();

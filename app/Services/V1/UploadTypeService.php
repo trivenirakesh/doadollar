@@ -110,7 +110,7 @@ class UploadTypeService
         if ($uploadType == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        // Delete entity
+        // Delete upload type
         $uploadType->deleted_by = auth()->user()->id;
         $uploadType->deleted_ip = CommonHelper::getUserIp();
         $uploadType->update();

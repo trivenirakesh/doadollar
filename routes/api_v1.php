@@ -69,7 +69,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::delete('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'destroy']);
 
     // Manage Upload types 
-    Route::resource('uploadtypes',UploadTypesController::class)->except(['create','edit']);;
+    Route::resource('uploadtypes',UploadTypesController::class)->except(['create','edit']);
 
     //Manage campaign
     Route::post('campaignslist',[CampaignController::class,'index']);
@@ -79,7 +79,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::delete('campaign/{id}',[CampaignController::class,'destroy']);
     
     // Manage Email template 
-    Route::resource('emailtemplates',EmailTemplatesController::class);
+    Route::resource('emailtemplates',EmailTemplatesController::class)->except(['create','edit']);
 
     // Manage Pages
     Route::resource('staticpages',StaticPageController::class);

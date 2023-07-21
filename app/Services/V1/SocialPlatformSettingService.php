@@ -43,7 +43,7 @@ class SocialPlatformSettingService
         $createSetting->name = $paymentGatewaySettingName;
         $createSetting->api_key = $request->api_key;
         $createSetting->secret_key = $request->secret_key;
-        
+
         // get logged in user details 
         $createSetting->created_by = auth()->user()->id;
         $createSetting->created_ip = CommonHelper::getUserIp();
@@ -52,7 +52,7 @@ class SocialPlatformSettingService
         // Update filename & path
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $lastId.'/');
+            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $lastId . '/');
             if (!empty($data)) {
                 $updateImageData = SocialPlatformSetting::find($lastId);
                 $updateImageData->file_name = $data['filename'];
@@ -77,7 +77,7 @@ class SocialPlatformSettingService
         if ($getSocialPlatformData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getSocialPlatformData = new SocialPlatformSetting($getSocialPlatformData);
+        $getSocialPlatformData = new SocialPlatformSettingResource($getSocialPlatformData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getSocialPlatformData);
     }
 
@@ -96,7 +96,7 @@ class SocialPlatformSettingService
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
         // remove blank spaces from string 
-        $socialPlatformSettingName = ucfirst(strtolower(str_replace(' ', '',$request->name)));
+        $socialPlatformSettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
         $socialPlatformSetting->name = $socialPlatformSettingName;
         $socialPlatformSetting->api_key = $request->api_key;
         $socialPlatformSetting->secret_key = $request->secret_key;
@@ -107,7 +107,7 @@ class SocialPlatformSettingService
         // Update filename & path
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $id.'/');
+            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $id . '/');
             if (!empty($data)) {
                 $socialPlatformSetting->file_name = $data['filename'];
                 $socialPlatformSetting->path = $data['path'];
@@ -115,7 +115,7 @@ class SocialPlatformSettingService
         }
         $socialPlatformSetting->update();
         $getSettingDetails = new SocialPlatformSettingResource($socialPlatformSetting);
-        return $this->successResponseArr($getSettingDetails,self::module.__('messages.success.update'));
+        return $this->successResponseArr($getSettingDetails, self::module . __('messages.success.update'));
     }
 
     /**
@@ -130,7 +130,7 @@ class SocialPlatformSettingService
         if ($socialPlatformSetting == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        // Delete entity
+        // Delete social platform setting
         $socialPlatformSetting->deleted_by = auth()->user()->id;
         $socialPlatformSetting->deleted_ip = CommonHelper::getUserIp();
         $socialPlatformSetting->update();

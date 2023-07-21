@@ -14,17 +14,20 @@ class StaticPagesSeeder extends Seeder
      */
     public function run()
     {
-        StaticPage::create([
-            'title' => 'about_us',
-            'content' => 'about_us',
-        ]);
-        StaticPage::create([
-            'title' => 'privacy_policy',
-            'content' => 'privacy_policy',
-        ]);
-        StaticPage::create([
-            'title' => 'terms_and_condition',
-            'content' => 'terms_and_condition',
-        ]);
+        $saveArr = [
+            [
+                'title' => 'about_us',
+                'content' => 'about_us',
+            ],
+            [
+                'title' => 'privacy_policy',
+                'content' => 'privacy_policy',
+            ],
+            [
+                'title' => 'terms_and_condition',
+                'content' => 'terms_and_condition',
+            ]
+        ];
+        StaticPage::insert($saveArr);
     }
 }
