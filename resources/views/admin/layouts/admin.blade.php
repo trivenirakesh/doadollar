@@ -8,6 +8,7 @@
   <title>{{config('app.name')}}</title>
   @include('admin.layouts.styles')
 
+
 </head>
 
 <body class="hold-transition sidebar-mini cm-layout layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -109,7 +110,6 @@
   @include('admin.layouts.modals')
   @include('admin.layouts.script')
   @include('admin.layouts.messages')
-  @stack('scripts')
 </body>
 
 </html>

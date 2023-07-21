@@ -19,6 +19,12 @@
                         <p> Dashboard</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.campaign-category.index')}}" class="nav-link  {{request()->is('admin/campaign-category*') ?'active' : ''}}">
+                        <i class="nav-icon fas fa-shapes"></i>
+                        <p> Campaign Category</p>
+                    </a>
+                </li>
                 <!-- <li class="nav-item">
                     <a href="{{ url('adminlogin')}}" class="nav-link  {{request()->is('categories*') ?'active' : ''}}">
                         <i class="nav-icon fa fa-th-large"></i>

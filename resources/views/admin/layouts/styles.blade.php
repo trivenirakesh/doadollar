@@ -24,3 +24,42 @@
 <!-- Toaster message -->
 <link rel="stylesheet" type="text/css" href="{{ asset('public/plugins/toastr/toastr.css') }}">
 <link rel="stylesheet" href="{{ asset('public/dist/css/custom.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.18/sweetalert2.min.css" />
+<style>
+    .theme_primary_text {
+        color: var(--primary-color);
+    }
+
+    .theme_primary_btn {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-circle {
+        width: 33px;
+        height: 33px;
+        border-radius: 50%;
+        padding: 7px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .form-group .form-control {
+        border: 1px solid #44444459 !important;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .profile-img {
+        border: 3px solid #adb5bd;
+        margin: 0 auto;
+        padding: 3px;
+        width: 100px;
+        height: 100px;
+    }
+</style>
+@stack('style')
