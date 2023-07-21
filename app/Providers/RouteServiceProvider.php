@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = 'admin/dashboard';
+    public const HOME = 'admin';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -35,7 +35,7 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('api')
                 ->middleware('api')
                 ->group(base_path('routes/api.php'));
-            $this->mapApiRoutes();  
+            $this->mapApiRoutes();
         });
     }
 
@@ -52,7 +52,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /** @var string $apiNamespace */
-    protected $apiNamespace ='App\Http\Controllers\Api';
+    protected $apiNamespace = 'App\Http\Controllers\Api';
 
     /**
      * Define the "api" routes for the application.
@@ -69,7 +69,7 @@ class RouteServiceProvider extends ServiceProvider
             'prefix'     => 'api/v1',
         ], function ($router) {
             require base_path('routes/api_v1.php');
-        });    
+        });
         Route::group([
             'middleware' => ['api', 'api_version:v2'],
             'namespace'  => "{$this->apiNamespace}\V2",

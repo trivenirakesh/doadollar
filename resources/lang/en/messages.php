@@ -45,7 +45,19 @@ return [
         'message' => 'Please enter message',
         'alpha_num' => ' only contain letters and numbers',
         'max' => 'Max 200 characters allow',
+        'password_confirmed' => 'The password confirmation does not match.',
+        'password_min' => "Invalid password",
 
+    ],
+
+    'auth' => [
+        'login_failed' => 'These credentials do not match our records.',
+        'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+        'password_reset_link_success' => 'We have emailed your password reset link!',
+        'password_reset_link_failed' => 'Password reset link failed, Something went wrong!!',
+        'token' => 'Token field is required',
+        'password_reset_success' => 'Your password has been reset!',
+        'password_reset_failed' => 'Password reset failed, Something went wrong!!',
     ],
 
     'success' => [
