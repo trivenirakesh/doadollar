@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Entitymst;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
@@ -18,13 +19,12 @@ class AdminAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        // $user = Auth::user();
-        // if($user != null){
-        //     if($user->role != User::ROLEADMIN){
-        //         return redirect('/');
-        //     }
-        // }
-
+        $user = Auth::user();
+        if ($user != null) {
+            if ($user->entity_type != Entitymst::ENTITYADMIN) {
+                return redirect('/');
+            }
+        }
         return $next($request);
     }
 }

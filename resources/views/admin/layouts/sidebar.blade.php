@@ -1,116 +1,116 @@
 <aside class="main-sidebar sidebar-light-primary">
-            <!-- Brand Logo -->
-            <div class="brand-link d-flex align-items-center justify-content-between border-bottom-0">
-                <a href="#" class="logo">
-                <img src="{{ asset('public/dist/img/logo.png') }}" class="" alt="DoADollar">
-                </a>
-                <a class="cm-back-btn" data-widget="pushmenu" href="#" role="button"><i class="fas fa-angle-left"></i></a>
-            </div>
+    <!-- Brand Logo -->
+    <div class="brand-link d-flex align-items-center justify-content-between border-bottom-0">
+        <a href="#" class="logo">
+            <img src="{{ asset('public/dist/img/logo.png') }}" class="" alt="DoADollar">
+        </a>
+        <a class="cm-back-btn" data-widget="pushmenu" href="#" role="button"><i class="fas fa-angle-left"></i></a>
+    </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
 
-            <!-- Sidebar -->
-            <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav>
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a href="{{ route('admin.dashboard')}}" class="nav-link  {{request()->is('admin') ?'active' : ''}}">
+                        <i class="nav-icon fa fa-th-large"></i>
+                        <p> Dashboard</p>
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a href="{{ url('adminlogin')}}" class="nav-link  {{request()->is('categories*') ?'active' : ''}}">
+                        <i class="nav-icon fa fa-th-large"></i>
+                        <p> Login</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url('form')}}" class="nav-link ">
+                        <i class="nav-icon fa fa-th-large"></i>
+                        <p> Sample Form</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url('datatablelist')}}" class="nav-link ">
+                        <i class="nav-icon fa fa-th-large"></i>
+                        <p> Sample list</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-mail-bulk"></i>
+                        <p> Email Templates</p>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-cogs"></i>
 
-                <!-- Sidebar Menu -->
-                <nav>
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
+                        <p>Configurations <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('admin.dashboard')}}" class="nav-link active">
-                            <i class="nav-icon fa fa-th-large"></i>
-                                <p> Dashboard</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('adminlogin')}}" class="nav-link ">
-                            <i class="nav-icon fa fa-th-large"></i>
-                                <p> Login</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('form')}}" class="nav-link ">
-                            <i class="nav-icon fa fa-th-large"></i>
-                                <p> Sample Form</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('datatablelist')}}" class="nav-link ">
-                            <i class="nav-icon fa fa-th-large"></i>
-                                <p> Sample list</p>
+                            <a href="" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Manage Role</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-mail-bulk"></i>
-                                <p> Email Templates</p>
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Manage User</p>
                             </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-cogs"></i>
-
-                                <p>Configurations <i class="right fas fa-angle-left"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
-                                        <p>Manage Role</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
-                                        <p>Manage User</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
-                                        <p>Manage API Keys</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item ">
-                            <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-book"></i>
-
-                                <p>CMS Management <i class="right fas fa-angle-left"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
-                                        <p>Terms & Conditions</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
-                                        <p>Privacy Policy</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
-                                        <p>Contact Details</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="fas fa-circle nav-icon"></i>
-                                        <p>Inquiry</p>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.logout') }}" class="nav-link">
-                                <i class="nav-icon fas fa-sign-out-alt"></i>
-                                <p> Logout</p>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Manage API Keys</p>
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
+                    </ul>
+                </li>
+                <li class="nav-item ">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+
+                        <p>CMS Management <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Terms & Conditions</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Privacy Policy</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Contact Details</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Inquiry</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                 -->
+                <li class="nav-item">
+                    <a href="{{ route('admin.logout') }}" class="nav-link">
+                        <i class="nav-icon fas fa-sign-out-alt"></i>
+                        <p> Logout</p>
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p> Products</p>
@@ -122,7 +122,7 @@
                                 <p> Vendors</p>
                             </a>
                         </li> -->
-                        <!-- <li class="nav-item">
+                <!-- <li class="nav-item">
                             <a href="pages/widgets.html" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -724,9 +724,9 @@
                                 <p>Informational</p>
                             </a>
                         </li> -->
-                    </ul>
-                </nav>
-                <!-- /.sidebar-menu -->
-            </div>
-            <!-- /.sidebar -->
-        </aside>
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

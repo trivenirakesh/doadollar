@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Entitymst extends Authenticatable
 {
+    const ENTITYADMIN = 0;
     protected $table = 'entitymst';
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
 
@@ -20,7 +21,7 @@ class Entitymst extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name','mobile', 'email', 'password',
+        'first_name', 'last_name', 'mobile', 'email', 'password',
     ];
 
     /**
@@ -41,7 +42,8 @@ class Entitymst extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function role(){
-        return $this->belongsTo(Role::class,'role_id')->where('status',1);
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id')->where('status', 1);
     }
 }
