@@ -3,40 +3,26 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\UploadType;
-use App\Traits\CommonTrait;
-use App\Http\Resources\V1\UploadTypesResources;
-use App\Helpers\CommonHelper;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Requests\V1\UploadTypeCreateUpdateRequest;
+use App\Services\V1\UploadTypeService;
 
 class UploadTypesController extends Controller
 {
-    use CommonTrait;
-    const module = 'Upload type';
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    private $uploadType;
+
+    public function __construct(UploadTypeService $uploadType)
     {
-        $expiry = CommonHelper::getConfigValue('cache_expiry');
-        $getUploadTypesList =  UploadTypesResources::collection(Cache::remember('uploadTypes',$expiry,function(){
-            return UploadType::latest('id')->get();
-        }));
-        return $this->successResponse($getUploadTypesList, self::module.__('messages.success.list'), 200);
+        $this->uploadType = $uploadType;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function index()
     {
-        //
+        $uploadTypes =  $this->uploadType->index() ?? [];
+        if (!$uploadTypes['status']) {
+            return response()->json($uploadTypes, 401);
+        }
+        return response()->json($uploadTypes, 200);
     }
 
     /**
@@ -45,44 +31,13 @@ class UploadTypesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UploadTypeCreateUpdateRequest $request)
     {
-        // Validation section
-        $validateUploadType = Validator::make($request->all(),
-            [
-                'name' => 'required|max:200',
-                'type' => 'required|numeric|lte:1'
-            ],
-            [
-                'name.required' => __('messages.validation.name'),
-                'name.max' => __('messages.validation.max'),
-                'type.required' => __('messages.validation.type'),
-                'type.numeric' => 'Type'.__('messages.validation.must_numeric'),
-                'type.lte' => __('messages.validation.type_lte'),
-            ]
-        );
-
-        if ($validateUploadType->fails()) {
-            return $this->errorResponse($validateUploadType->errors(), 401);
+        $uploadType  = $this->uploadType->store($request);
+        if (!$uploadType['status']) {
+            return response()->json($uploadType, 401);
         }
-
-        // get logged in user details 
-        $getAdminDetails = auth('sanctum')->user();
-
-        // Save upload type section
-        $uploadTypeName = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->name)));
-        $uploadType = new UploadType();
-        $uploadType->name = $uploadTypeName;
-        $uploadType->type = $request->type;
-        if (!empty($getAdminDetails)) {
-            $uploadType->created_by = $getAdminDetails->id;
-            $uploadType->created_ip = CommonHelper::getUserIp();
-        }
-        $uploadType->save();
-        $lastId = $uploadType->id;
-        $getUploadTypeData = $this->getTypeDetails($lastId,0);
-        $getTypeDetails = UploadTypesResources::collection($getUploadTypeData);
-        return $this->successResponse($getTypeDetails, self::module.__('messages.success.create'), 201);
+        return response()->json($uploadType, 200);
     }
 
     /**
@@ -93,19 +48,11 @@ class UploadTypesController extends Controller
      */
     public function show($id)
     {
-        $getTypeDetails = $this->getTypeDetails($id,0);
-        return $this->successResponse(UploadTypesResources::collection($getTypeDetails), self::module.__('messages.success.details'), 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $uploadType = $this->uploadType->show($id);
+        if (!$uploadType['status']) {
+            return response()->json($uploadType, 401);
+        }
+        return response()->json($uploadType, 200);
     }
 
     /**
@@ -115,60 +62,13 @@ class UploadTypesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UploadTypeCreateUpdateRequest $request, $id)
     {
-        // check role exist or not 
-        $checkRole = $this->getTypeDetails($id,1);
-
-        // Validation section
-        $rules = [];
-        $messages = [];
-        if($request->has('name')){
-            $rules['name'] = 'required|max:200';
-            $messages['name.required'] = __('messages.validation.name');
-            $messages['name.max'] = __('messages.validation.max');
+        $uploadType = $this->uploadType->update($request, $id);
+        if (!$uploadType['status']) {
+            return response()->json($uploadType, 401);
         }
-        if($request->has('type')){
-            $rules['type'] = 'required|numeric|lte:1';
-            $messages['type.required'] = __('messages.validation.type');
-            $messages['type.numeric'] = 'Type'.__('messages.validation.must_numeric');
-            $messages['type.lte'] = __('messages.validation.type_lte');
-        }
-        if($request->has('status')){
-            $rules['status'] = 'required|numeric|lte:1';
-            $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = 'Status'.__('messages.validation.must_numeric');
-            $messages['status.lte'] = __('messages.validation.status_lte');
-        }
-        $validateUploadType = Validator::make($request->all(),$rules,$messages);
-
-        if ($validateUploadType->fails()) {
-            return $this->errorResponse($validateUploadType->errors(), 401);
-        }
-
-        // get logged in user details 
-        $getAdminDetails = auth('sanctum')->user();
-
-        // Save upload type section
-        $uploadType = $checkRole;
-        if($request->has('name')){
-            $uploadTypeName = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->name)));
-            $uploadType->name = $uploadTypeName;
-        }
-        if($request->has('type')){
-            $uploadType->type = $request->type;
-        }
-        if($request->has('status')){
-            $uploadType->status = $request->status;
-        }
-        if (!empty($getAdminDetails) && !empty($getAdminDetails->id)) {
-            $uploadType->updated_by = $getAdminDetails->id;
-            $uploadType->updated_ip = CommonHelper::getUserIp();
-        }
-        $uploadType->update();
-        $getUploadTypeData = $this->getTypeDetails($id,0);
-        $getTypeDetails = UploadTypesResources::collection($getUploadTypeData);
-        return $this->successResponse($getTypeDetails, self::module.__('messages.success.update'), 200);
+        return response()->json($uploadType, 200);
     }
 
     /**
@@ -179,46 +79,10 @@ class UploadTypesController extends Controller
      */
     public function destroy($id)
     {
-        // check role exist or not 
-        $checkRole = $this->getTypeDetails($id,1);
-
-        // get logged in user details 
-        $getAdminDetails = auth('sanctum')->user();
-
-        // Delete upload type
-        $checkUploadTypeData = $checkRole;
-        if (!empty($checkUploadTypeData)) {
-            $checkUploadTypeData->deleted_by = $getAdminDetails->id;
-            $checkUploadTypeData->deleted_ip = CommonHelper::getUserIp();
-            $checkUploadTypeData->update();
-            $deleteRole = UploadType::find($id)->delete();
-            if ($deleteRole) {
-                return $this->successResponse([], self::module.__('messages.success.delete'), 200);
-            }
+        $uploadType = $this->uploadType->destroy($id);
+        if (!$uploadType['status']) {
+            return response()->json($uploadType, 401);
         }
-    }
-
-    /**
-     * Fetch the specified resource.
-     *
-     */
-    public function getTypeDetails($id,$type){
-        $getUploadTypeData = UploadType::where('id',$id);
-        if($type == 1){
-            $getUploadTypeData = $getUploadTypeData->first();
-            if(!empty($getUploadTypeData)){
-                return $getUploadTypeData;
-            }else{
-                throw new \ErrorException(self::module.__('messages.validation.not_found'));
-            }
-        }else{
-            $getUploadTypeData = $getUploadTypeData->get();
-            if(count($getUploadTypeData) > 0){
-                return $getUploadTypeData;
-            }else{
-                throw new \ErrorException(self::module.__('messages.validation.not_found'));
-            }
-        }
-        
+        return response()->json($uploadType, 200);
     }
 }

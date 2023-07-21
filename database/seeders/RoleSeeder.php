@@ -14,19 +14,21 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        Role::create([
-            'name' => 'super_admin',
-            'status' => 1,
-        ]);
+        $saveArr = [
+            [
+                'name' => 'Super Admin',
+                'status' => 1,
+            ],
+            [
+                'name' => 'Manager',
+                'status' => 1,
+            ],
+            [
+                'name' => 'User',
+                'status' => 1,
+            ]
+        ];
+        Role::insert($saveArr);
 
-        Role::create([
-            'name' => 'manager',
-            'status' => 1,
-        ]);
-
-        Role::create([
-            'name' => 'user',
-            'status' => 1,
-        ]);
     }
 }

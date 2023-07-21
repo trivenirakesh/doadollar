@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\V1;
 
 use App\Traits\CommonTrait;
 use Illuminate\Foundation\Http\FormRequest;
-// use Illuminate\Support\Facades\Validator;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\ValidationException;
 
-class RoleCreateUpdateRequest extends FormRequest
+class UploadTypeCreateUpdateRequest extends FormRequest
 {
 
     use CommonTrait;
@@ -35,12 +31,12 @@ class RoleCreateUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $rules =  [
-            'name' => 'required',
-        ];
+        $rules = [];
         if (request()->has('name')) {
             $rules['name'] = 'required|max:255';
-            $messages['name.required'] = __('messages.validation.name');
+        }
+        if (request()->has('type')) {
+            $rules['type'] = 'required|numeric|lte:1';
         }
         if (request()->has('status')) {
             $rules['status'] = 'required|numeric|lte:1';
@@ -56,12 +52,15 @@ class RoleCreateUpdateRequest extends FormRequest
             $messages['name.required'] = __('messages.validation.name');
             $messages['name.max'] = __('messages.validation.max_name');
         }
+        if (request()->has('type')) {
+            $messages['type.required'] = __('messages.validation.type');
+            $messages['type.numeric'] = 'Type'.__('messages.validation.must_numeric');
+            $messages['type.lte'] = __('messages.validation.type_lte');
+        }
         if (request()->has('status')) {
-            if (request()->has('status')) {
-                $messages['status.required'] = __('messages.validation.status');
-                $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
-                $messages['status.lte'] = __('messages.validation.status_lte');
-            }
+            $messages['status.required'] = __('messages.validation.status');
+            $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
+            $messages['status.lte'] = __('messages.validation.status_lte');
         }
         return $messages;
     }

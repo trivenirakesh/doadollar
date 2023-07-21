@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\V1;
 
 use Illuminate\Http\Request;
 use App\Models\Role;
@@ -21,7 +21,8 @@ class RoleService
      */
     public function index()
     {
-        $data =  (Cache::remember('roles', 60 * 60 * 24, function () {
+        $expiry = CommonHelper::getConfigValue('cache_expiry');
+        $data =  (Cache::remember('roles', $expiry, function () {
             return RoleResource::collection(Role::latest('id')->get());
         }));
         return $this->successResponseArr(self::module . __('messages.success.list'), $data);
@@ -36,7 +37,7 @@ class RoleService
      */
     public function store(Request $request)
     {
-        // Save entity section
+        // Save role section
         $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
         $role = new Role;
         $role->name = $roleName;
@@ -107,7 +108,7 @@ class RoleService
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
 
-        // Delete entity
+        // Delete role
         $role->deleted_by = auth()->user()->id;
         $role->deleted_ip = CommonHelper::getUserIp();
         $role->update();

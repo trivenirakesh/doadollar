@@ -50,26 +50,26 @@ Route::middleware('auth:sanctum')->group( function () {
     // Manage campaign category
     Route::get('campaigncategory',[CampaignCategoryController::class,'index']);
     Route::get('campaigncategory/{id}',[CampaignCategoryController::class,'show']);
-    Route::post('campaigncategory',[CampaignCategoryController::class,'create']);
+    Route::post('campaigncategory',[CampaignCategoryController::class,'store']);
     Route::post('campaigncategory/{id}',[CampaignCategoryController::class,'update']);
     Route::delete('campaigncategory/{id}',[CampaignCategoryController::class,'destroy']);
 
     // Manage payment gateway setting
     Route::get('paymentgatewaysetting',[PaymentGatewaySettingController::class,'index']);
     Route::get('paymentgatewaysetting/{id}',[PaymentGatewaySettingController::class,'show']);
-    Route::post('paymentgatewaysetting',[PaymentGatewaySettingController::class,'create']);
+    Route::post('paymentgatewaysetting',[PaymentGatewaySettingController::class,'store']);
     Route::post('paymentgatewaysetting/{id}',[PaymentGatewaySettingController::class,'update']);
     Route::delete('paymentgatewaysetting/{id}',[PaymentGatewaySettingController::class,'destroy']);
 
     // Manage social platform setting
     Route::get('socialplatformsetting',[SocialPlatformSettingController::class,'index']);
     Route::get('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'show']);
-    Route::post('socialplatformsetting',[SocialPlatformSettingController::class,'create']);
+    Route::post('socialplatformsetting',[SocialPlatformSettingController::class,'store']);
     Route::post('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'update']);
     Route::delete('socialplatformsetting/{id}',[SocialPlatformSettingController::class,'destroy']);
 
     // Manage Upload types 
-    Route::resource('uploadtypes',UploadTypesController::class);
+    Route::resource('uploadtypes',UploadTypesController::class)->except(['create','edit']);
 
     //Manage campaign
     Route::post('campaignslist',[CampaignController::class,'index']);
@@ -79,7 +79,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::delete('campaign/{id}',[CampaignController::class,'destroy']);
     
     // Manage Email template 
-    Route::resource('emailtemplates',EmailTemplatesController::class);
+    Route::resource('emailtemplates',EmailTemplatesController::class)->except(['create','edit']);
 
     // Manage Pages
     Route::resource('staticpages',StaticPageController::class);
