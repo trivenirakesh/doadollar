@@ -8,6 +8,7 @@ use App\Traits\CommonTrait;
 use App\Http\Resources\V1\EntityResource;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\CommonHelper;
+use App\Http\Resources\V1\EntityDetailResource;
 use App\Models\Role;
 
 class UserService
@@ -58,14 +59,15 @@ class UserService
         $createUser->entity_type = $request->entity_type;
         $createUser->password = Hash::make($request->password);
         $createUser->status = 1;
-        if (isset($request->role_id) && $request->entity_type != 2) {
-            $activeStatus = CommonHelper::getConfigValue('status.active');
-            $checkRoleExist = Role::where('id', $request->role_id)->where('status', $activeStatus)->first();
-            if (!$checkRoleExist) {
-                return $this->errorResponseArr('Role' . __('messages.validation.not_found'));
-            }
-            $createUser->role_id = $request->role_id;
-        }
+        $createUser->role_id = $request->role_id;
+        // if (isset($request->role_id) && $request->entity_type != 2) {
+        //     $activeStatus = CommonHelper::getConfigValue('status.active');
+        //     $checkRoleExist = Role::where('id', $request->role_id)->where('status', $activeStatus)->first();
+        //     if (!$checkRoleExist) {
+        //         return $this->errorResponseArr('Role' . __('messages.validation.not_found'));
+        //     }
+        //     $createUser->role_id = $request->role_id;
+        // }
         $createUser->created_by = auth()->user()->id;
         $createUser->created_ip = CommonHelper::getUserIp();
         $createUser->save();
@@ -85,7 +87,7 @@ class UserService
         if ($getUserData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getUserData = new EntityResource($getUserData);
+        $getUserData = new EntityDetailResource($getUserData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getUserData);
     }
 

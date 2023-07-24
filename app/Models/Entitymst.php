@@ -12,6 +12,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Entitymst extends Authenticatable
 {
     const ENTITYADMIN = 0;
+    const ENTITYMANAGER = 1;
+    const ENTITYUSER = 2;
+    const ENTITYTYPES = [
+        2 => 'User',
+        1 => 'Manager',
+    ];
+
     protected $table = 'entitymst';
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
 
@@ -44,6 +51,15 @@ class Entitymst extends Authenticatable
 
     public function role()
     {
-        return $this->belongsTo(Role::class, 'role_id')->where('status', 1);
+        return $this->belongsTo(Role::class, 'role_id', 'id')->where('status', 1);
+    }
+
+    public function scopeNotAdmin($query)
+    {
+        return $query->where('entity_type', '!=', self::ENTITYADMIN);
+    }
+    public function scopeRoleUser($query)
+    {
+        return $query->where('entity_type', self::ENTITYUSER);
     }
 }
