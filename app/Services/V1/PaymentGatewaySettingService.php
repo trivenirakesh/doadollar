@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PaymentGatewaySetting;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\PaymentGatewaySettingResource;
+use App\Http\Resources\V1\PaymentGatewaySettingDetailsResource;
 use App\Helpers\CommonHelper;
 use Illuminate\Support\Facades\Cache;
 
@@ -47,21 +48,17 @@ class PaymentGatewaySettingService
         // get logged in user details 
         $createSetting->created_by = auth()->user()->id;
         $createSetting->created_ip = CommonHelper::getUserIp();
-        $createSetting->save();
-        $lastId = $createSetting->id;
-        // Update filename & path
+
+        // upload file 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $lastId . '/');
+            $data = CommonHelper::uploadImages($image,PaymentGatewaySetting::FOLDERNAME,0);
             if (!empty($data)) {
-                $updateImageData = PaymentGatewaySetting::find($lastId);
-                $updateImageData->file_name = $data['filename'];
-                $updateImageData->path = $data['path'];
-                $updateImageData->update();
+                $createSetting->image = $data['filename'];
             }
         }
-        $getPaymentGateway =  PaymentGatewaySetting::where('id', $lastId)->first();
-        $getPaymentGatewayDetails = new PaymentGatewaySettingResource($getPaymentGateway);
+        $createSetting->save();
+        $getPaymentGatewayDetails = new PaymentGatewaySettingResource($createSetting);
         return $this->successResponseArr(self::module . __('messages.success.create'), $getPaymentGatewayDetails);
     }
 
@@ -77,7 +74,7 @@ class PaymentGatewaySettingService
         if ($getPaymentGatewayData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getPaymentGatewayData = new PaymentGatewaySettingResource($getPaymentGatewayData);
+        $getPaymentGatewayData = new PaymentGatewaySettingDetailsResource($getPaymentGatewayData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getPaymentGatewayData);
     }
 
@@ -104,13 +101,19 @@ class PaymentGatewaySettingService
         // get logged in user details 
         $paymentGatewaySetting->updated_by = auth()->user()->id;
         $paymentGatewaySetting->updated_ip = CommonHelper::getUserIp();
-        // Update filename & path
+        // Update file
         if ($request->hasFile('image')) {
+            // Unlink old image from storage 
+            $oldImage = $paymentGatewaySetting->getAttributes()['image'] ?? null;
+            if ($oldImage != null){
+                CommonHelper::removeUploadedImages($oldImage,PaymentGatewaySetting::FOLDERNAME);
+            }
+            // Unlink old image from storage 
+
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $id . '/');
+            $data = CommonHelper::uploadImages($image,PaymentGatewaySetting::FOLDERNAME,0);
             if (!empty($data)) {
-                $paymentGatewaySetting->file_name = $data['filename'];
-                $paymentGatewaySetting->path = $data['path'];
+                $paymentGatewaySetting->image = $data['filename'];
             }
         }
         $paymentGatewaySetting->update();
