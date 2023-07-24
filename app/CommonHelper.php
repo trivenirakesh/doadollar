@@ -36,34 +36,29 @@ class CommonHelper{
         return $dateTimeUTC;
     }
 
-    public static function uploadImages($file,$path,$number = null){
-        $public = 'public/';
-        $uploadPath = $path;
-        $thumbUploadPath = $path.'thumb/';
-        if(!empty($number) || $number == 0){
-            $fileName = $number.date('YmdHis') . '.' . $file->extension();
-        }else{
-            $fileName = date('YmdHis') . '.' . $file->extension();
+    public static function uploadImages($file,$path,$type = null){ 
+        $uploadPath = self::getConfigValue('upload_path').$path;
+
+        // Upload base image
+        if($type != 0){
+            $imagePath = $file->store($uploadPath);
+            $fileName = basename($imagePath);
         }
-      
-        // start base image
-        $path = Storage::putFileAs($public.$uploadPath, $file, $fileName);
-        // start base image
-      
-        if(!isset($number)){
-        // start thumb image
-        $img = Image::make($file->getRealPath());
-        $img->resize(120, 120, function ($constraint) {
-            $constraint->aspectRatio();                 
-        });
-        $img->stream();
-        Storage::disk('local')->put($public.$thumbUploadPath.$fileName, $img, 'public');
-        // start thumb image
+        // Upload base image
+
+        // start thumb image $type = 0 make thumb
+        if($type == 0){
+            $img = Image::make($file->getRealPath());
+            $img->resize(200, 200, function ($constraint) {
+                $constraint->aspectRatio();                 
+            });
+            $img->stream();
+            $fileName = \Illuminate\Support\Str::random(40).'.'.$file->extension();
+            Storage::disk('local')->put($uploadPath.$fileName, $img, 'public');
         }
+        // start thumb image
       
         $responseArr['filename'] = $fileName;
-        $responseArr['path'] = $public.'storage/'.$uploadPath;
-        $responseArr['thumbpath'] = $public.'storage/'.$thumbUploadPath;
         return $responseArr;
     }
 
@@ -77,28 +72,12 @@ class CommonHelper{
         return $imageUrl;
     }
 
-    public static function unlinkFiles($baseFile,$thumbFile){
 
-        if(!empty($baseFile)){
-            if (Storage::exists($baseFile)) {
-                Storage::delete($baseFile);
-            }
-        }
-        
-        if(!empty($thumbFile)){
-            if (Storage::exists($thumbFile)) {
-                Storage::delete($thumbFile);
-            }
-        }
-        return true;
-    }
-
-    public static function removeUploadedImages($pathName,$fileName){
-
-        if(!empty($pathName) && $fileName){
-            $imagePath = str_replace('storage/','',$pathName).$fileName;
-            $thumbImagePath = str_replace('storage/','',$pathName).'thumb/'.$fileName;
-            self::unlinkFiles($imagePath,$thumbImagePath);
+    public static function removeUploadedImages($file_name,$path){
+        $fileFullPath = self::getConfigValue('storage_path').$path;
+        $filePath = storage_path($fileFullPath . $file_name);
+        if (file_exists($filePath)) {
+            unlink($filePath);
         }
     }
 

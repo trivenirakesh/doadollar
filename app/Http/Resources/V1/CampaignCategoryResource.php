@@ -18,10 +18,9 @@ class CampaignCategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => (!empty($this->description)) ? $this->description : "",
+            'description' => (!empty($this->description)) ? CommonHelper::shortString($this->description) : "",
             'status' => ($this->status == 1 ? 'Active' : 'Deactive'),
-            'thumb_image' => (!empty($this->file_name)) ? CommonHelper::getImageUrl($this->file_name,$this->path,1) : "",
-            'image' => (!empty($this->file_name)) ? CommonHelper::getImageUrl($this->file_name,$this->path,0) : "",
+            'image' => $this->image,
             'created_at' => CommonHelper::getConvertedDateTime($this->created_at)
         ];
     }

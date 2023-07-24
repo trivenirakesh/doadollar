@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SocialPlatformSetting;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\SocialPlatformSettingResource;
+use App\Http\Resources\V1\SocialPlatformSettingDetailResource;
 use App\Helpers\CommonHelper;
 use Illuminate\Support\Facades\Cache;
 
@@ -47,21 +48,17 @@ class SocialPlatformSettingService
         // get logged in user details 
         $createSetting->created_by = auth()->user()->id;
         $createSetting->created_ip = CommonHelper::getUserIp();
-        $createSetting->save();
-        $lastId = $createSetting->id;
-        // Update filename & path
+        
+        // upload file 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $lastId . '/');
+            $data = CommonHelper::uploadImages($image,SocialPlatformSetting::FOLDERNAME,0);
             if (!empty($data)) {
-                $updateImageData = SocialPlatformSetting::find($lastId);
-                $updateImageData->file_name = $data['filename'];
-                $updateImageData->path = $data['path'];
-                $updateImageData->update();
+                $createSetting->image = $data['filename'];
             }
         }
-        $getSocialSetting =  SocialPlatformSetting::where('id', $lastId)->first();
-        $getSocialPlatformSettingDetails = new SocialPlatformSettingResource($getSocialSetting);
+        $createSetting->save();
+        $getSocialPlatformSettingDetails = new SocialPlatformSettingResource($createSetting);
         return $this->successResponseArr(self::module . __('messages.success.create'), $getSocialPlatformSettingDetails);
     }
 
@@ -77,7 +74,7 @@ class SocialPlatformSettingService
         if ($getSocialPlatformData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getSocialPlatformData = new SocialPlatformSettingResource($getSocialPlatformData);
+        $getSocialPlatformData = new SocialPlatformSettingDetailResource($getSocialPlatformData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getSocialPlatformData);
     }
 
@@ -104,13 +101,19 @@ class SocialPlatformSettingService
         // get logged in user details 
         $socialPlatformSetting->updated_by = auth()->user()->id;
         $socialPlatformSetting->updated_ip = CommonHelper::getUserIp();
-        // Update filename & path
+        // Update file
         if ($request->hasFile('image')) {
+            // Unlink old image from storage 
+            $oldImage = $socialPlatformSetting->getAttributes()['image'] ?? null;
+            if($oldImage != null){
+                CommonHelper::removeUploadedImages($oldImage,SocialPlatformSetting::FOLDERNAME);
+            }
+            // Unlink old image from storage 
+
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'paymentgateway/' . $id . '/');
+            $data = CommonHelper::uploadImages($image,SocialPlatformSetting::FOLDERNAME,0);
             if (!empty($data)) {
-                $socialPlatformSetting->file_name = $data['filename'];
-                $socialPlatformSetting->path = $data['path'];
+                $socialPlatformSetting->image = $data['filename'];
             }
         }
         $socialPlatformSetting->update();

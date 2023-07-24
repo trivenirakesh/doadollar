@@ -20,7 +20,7 @@ class CampaignUploadResource extends JsonResource
             'campaign_id' => $this->campaign_id,
             'upload_type_name' => isset($this->uploadType['name']) ? $this->uploadType['name'] : '',
             'title' => $this->title,
-            'description' => $this->description,
+            'description' => (!empty($this->description)) ? CommonHelper::shortString($this->description) : "",
             'file_name' => (!empty($this->file_name)) ? $this->file_name : "",
             'file_path' => (!empty($this->path)) ? $this->path : "",
             'link' => (!empty($this->link)) ? $this->link : "",
