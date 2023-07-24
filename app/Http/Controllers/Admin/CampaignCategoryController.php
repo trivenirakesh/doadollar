@@ -49,8 +49,9 @@ class CampaignCategoryController extends Controller
                     return $image;
                 })
                 ->addColumn('status', function ($row) {
-                    $statusText = $row->status == 1 ? "Active" : "Inctive";
-                    $status = "<span class='text-md badge badge-pill badge-dark'>$statusText</span>";
+                    $statusText = $row->status == 1 ? "Active" : "Inactive";
+                    $statusclass = $row->status == 1 ? "badge-primary" : " badge-danger";
+                    $status = "<span class='text-md badge badge-pill $statusclass'>$statusText</span>";
                     return $status;
                 })
                 ->rawColumns(['actions', 'image', 'status'])

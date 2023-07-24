@@ -33,7 +33,7 @@ Route::group(['prefix' => 'admin'], function () {
     Auth::routes(['register' => false]);
 });
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin'], 'as' => 'admin.'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin','revalidate'], 'as' => 'admin.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard');
     Route::get('logout', [HomeController::class, 'logout'])->name('logout');
     Route::resource('campaign-category', CampaignCategoryController::class)->except(['edit','update']);
