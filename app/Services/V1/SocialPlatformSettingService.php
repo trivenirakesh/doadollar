@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\SocialPlatformSetting;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\SocialPlatformSettingResource;
-use App\Http\Resources\V1\SocialPlatformSettingDetailResource;
 use App\Helpers\CommonHelper;
 use Illuminate\Support\Facades\Cache;
 
@@ -74,7 +73,7 @@ class SocialPlatformSettingService
         if ($getSocialPlatformData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getSocialPlatformData = new SocialPlatformSettingDetailResource($getSocialPlatformData);
+        $getSocialPlatformData = new SocialPlatformSettingResource($getSocialPlatformData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getSocialPlatformData);
     }
 
@@ -88,7 +87,7 @@ class SocialPlatformSettingService
     public function update(Request $request, $id)
     {
         // update details 
-        $socialPlatformSetting = SocialPlatformSetting::where('id', $id)->first();;
+        $socialPlatformSetting = SocialPlatformSetting::where('id', $id)->first();
         if ($socialPlatformSetting == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }

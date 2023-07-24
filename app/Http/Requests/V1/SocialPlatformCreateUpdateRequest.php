@@ -32,7 +32,7 @@ class SocialPlatformCreateUpdateRequest extends FormRequest
     public function rules()
     {
         if (request()->has('name')) {
-            $rules['name'] = 'required|max:255';
+            $rules['name'] = 'required|max:200';
         }
         if (request()->has('api_key')) {
             $rules['api_key'] = 'required|alpha_num';

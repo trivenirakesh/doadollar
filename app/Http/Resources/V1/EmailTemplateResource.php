@@ -19,7 +19,7 @@ class EmailTemplateResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'subject' => $this->subject,
-            'message' => $this->message,
+            'message' => (!empty($this->message)) ? CommonHelper::shortString($this->message) : "",
             'status' => ($this->status == 1 ? 'Active' : 'Deactive'),
             'created_at' => CommonHelper::getConvertedDateTime($this->created_at)
         ];
