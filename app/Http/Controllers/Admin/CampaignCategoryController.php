@@ -24,6 +24,7 @@ class CampaignCategoryController extends Controller
      */
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
             $baseurl = route('admin.campaign-category.index');
             $data = CampaignCategory::with(['entitymst' => function ($query) {
@@ -52,7 +53,7 @@ class CampaignCategoryController extends Controller
                     $status = "<span class='text-md badge badge-pill badge-dark'>$statusText</span>";
                     return $status;
                 })
-                ->rawColumns(['actions', 'image','status'])
+                ->rawColumns(['actions', 'image', 'status'])
                 ->make(true);
         }
         $title =  'Campaign Category';

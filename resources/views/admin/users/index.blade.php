@@ -50,6 +50,7 @@
     let module_index_url = $("#module_index_url").val();
 
     function addModel() {
+        $("#password_note").addClass('d-none');
         var $alertas = $("#module_form");
         $alertas.validate().resetForm();
         $alertas.find(".error").removeClass("error");
@@ -109,6 +110,7 @@
 
         // edit resource
         $(document).on("click", ".module_edit_record", function() {
+            $("#password_note").removeClass('d-none');
             const id = $(this).parent().data("id");
             const url = $(this).parent().data("url");
             $("#modal_title").text(`Edit ${module}`);
@@ -173,9 +175,6 @@
                 password: {
                     minlength: 6,
                 },
-                password_confirmation: {
-                    equalTo: "#password"
-                },
             },
             messages: {
                 first_name: {
@@ -205,9 +204,6 @@
                 password: {
                     minlength: "Please enter password atleast 6 character!"
                 },
-                password_confirmation: {
-                    equalTo: "password and confirm password not match"
-                },
 
             },
             submitHandler: function(form, e) {
@@ -215,10 +211,12 @@
                 const formbtn = $("#module_form_btn");
                 const formloader = $("#module_form_loader");
                 console.log(formloader);
+                let formData = new FormData(form);
+
                 $.ajax({
                     url: form.action,
                     type: "POST",
-                    data: new FormData(form),
+                    data: formData,
                     dataType: "json",
                     processData: false,
                     contentType: false,

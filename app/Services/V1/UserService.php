@@ -8,6 +8,7 @@ use App\Traits\CommonTrait;
 use App\Http\Resources\V1\EntityResource;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\CommonHelper;
+use App\Http\Resources\V1\EntityDetailResource;
 use App\Models\Role;
 
 class UserService
@@ -86,7 +87,7 @@ class UserService
         if ($getUserData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getUserData = new EntityResource($getUserData);
+        $getUserData = new EntityDetailResource($getUserData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getUserData);
     }
 

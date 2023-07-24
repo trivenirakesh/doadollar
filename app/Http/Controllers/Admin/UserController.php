@@ -31,7 +31,7 @@ class UserController extends Controller
             $baseurl = route('admin.users.index');
             $data = Entitymst::with(['role' => function ($query) {
                 $query->select('id', 'name');
-            }])->roleUser();
+            }])->notAdmin();
             if ($request->order == null) {
                 $data->orderBy('created_at', 'desc');
             }
@@ -54,7 +54,8 @@ class UserController extends Controller
                 ->make(true);
         }
         $title =  'Users';
-        return view('admin.users.index', compact('title'));
+        $entityTypes = Entitymst::ENTITYTYPES;
+        return view('admin.users.index', compact('title', 'entityTypes'));
     }
 
     /**
@@ -65,6 +66,7 @@ class UserController extends Controller
      */
     public function store(UsersCreateUpdateRequest $request)
     {
+
         if (isset($request->id) && $request->id > 0) { //update data
             $user = $this->userService->update($request, $request->id);
         } else { //add data
@@ -94,7 +96,7 @@ class UserController extends Controller
         }
         return response()->json($user, 200);
     }
-    
+
 
     /**
      * Remove the specified resource from storage.

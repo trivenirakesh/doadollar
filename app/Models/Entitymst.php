@@ -14,6 +14,11 @@ class Entitymst extends Authenticatable
     const ENTITYADMIN = 0;
     const ENTITYMANAGER = 1;
     const ENTITYUSER = 2;
+    const ENTITYTYPES = [
+        2 => 'User',
+        1 => 'Manager',
+    ];
+
     protected $table = 'entitymst';
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
 

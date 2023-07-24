@@ -13,10 +13,7 @@
                         <div class="col-12">
                             <div class="card card-primary card-outline">
                                 <div class="card-body box-profile">
-                                    <div class="text-center">
-                                        <img id="info_image" class="profile-user-img img-fluid img-circle" src="" alt="User profile picture">
-                                    </div>
-                                    <h3 class="profile-username text-center" id="info_name">Nina Mcintire</h3>
+                                    <h3 class="profile-username text-center mb-4" id="info_username">Nina Mcintire</h3>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label class="col-form-label"><b>First Name</b></label><br>
@@ -29,6 +26,26 @@
                                         <div class="col-md-6">
                                             <label class="col-form-label"><b>Email</b></label><br>
                                             <p id="info_email"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="col-form-label"><b>Mobile</b></label><br>
+                                            <p id="info_mobile"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="col-form-label"><b>Role</b></label><br>
+                                            <p id="info_role"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="col-form-label"><b>Entity Type</b></label><br>
+                                            <p id="info_entity_type_text"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="col-form-label"><b>Created At</b></label><br>
+                                            <p id="info_created_at"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="col-form-label"><b>Status</b></label><br>
+                                            <p id="info_status_text"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -49,15 +66,25 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modal_title">Large Modal</h4>
+                <h4 class="modal-title" id="modal_title">Module</h4>
                 <button type="button" class="close" style="font-size: 20px;" data-dismiss="modal" aria-label="Close">&times;</button>
             </div>
             <form class="form-horizontal" id="module_form" action="{{route('admin.users.store')}}" name="users_form" novalidate="novalidate">
                 <div class="modal-body">
                     <div class="card-body">
                         <input type="hidden" name="id" id="id" value="">
+
                         <div class="row">
-                            <div class="form-group col-md-12" id="password_note">
+                            <div class="form-group d-flex align-items:center">
+                                <select class="form-control form-control-sm" name="status" id="status">
+                                    <option value="1" selected>Active</option>
+                                    <option value="0">InActive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="form-group col-md-12 d-none" id="password_note">
                                 <div class="callout callout-info">
                                     <h5><i class="icon fas fa-info"></i> Note :</h5>
                                     <p>Leave <b>Password</b> and <b>Confirm Password</b> empty, if you are not going to change the password.</p>
@@ -93,16 +120,21 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    <label>Entity type <span class="red">*</span></label>
+                                    <select class="form-control" name="entity_type" id="entity_type">
+                                        @foreach ($entityTypes as $key => $entityType)
+                                        <option value="{{$key}}">{{$entityType}}</option>
+                                        @endforeach
+                                    </select>
+                                    <label id="entity_type-error" class="error" for="entity_type"></label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
                                     <label>Password</label>
                                     <input type="password" class="form-control" placeholder="Please enter password" id="password" name="password">
                                     <label id="password-error" class="error" for="password"></label>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Confirm Password</label>
-                                    <input type="password" class="form-control" placeholder="Please enter confirm password" id="password_confirmation" name="password_confirmation">
-                                    <label id="password_confirmation-error" class="error" for="password_confirmation"></label>
                                 </div>
                             </div>
                         </div>

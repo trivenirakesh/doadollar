@@ -42,8 +42,8 @@ class UsersCreateUpdateRequest extends FormRequest
             $rules['email'] = 'required|email|unique:entitymst,email,NULL,id,deleted_at,NULL';
             $rules['mobile'] = 'required|numeric|digits:10|unique:entitymst,mobile,NULL,id,deleted_at,NULL';
         }
-        if (request()->has('password')) {
-            $rules['password'] = 'required';
+        if (request()->has('password') || request()->has('id') ) {
+            $rules['password'] = request()->has('id') && request()->id>0 ? 'nullable': 'required';
         }
         if (request()->has('entity_type')) {
             $rules['entity_type'] = 'required|digits:1|lte:2';
