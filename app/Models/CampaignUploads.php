@@ -11,6 +11,8 @@ class CampaignUploads extends Model
 {
     use HasFactory,SoftDeletes;
 
+    const FOLDERNAME = "campaigns/uploads/";
+
     public function uploadType(){
         $activeStatus = CommonHelper::getConfigValue('status.active');
         return $this->belongsTo(UploadType::class,'upload_type_id')->where('status',$activeStatus);

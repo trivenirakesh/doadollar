@@ -38,33 +38,27 @@ class CommonHelper{
 
     public static function uploadImages($file,$path,$type = null){ 
         $uploadPath = self::getConfigValue('upload_path').$path;
-
+        $fileName = '';
         // Upload base image
         if($type != 0){
             $imagePath = $file->store($uploadPath);
             $fileName = basename($imagePath);
 
-            // create thumb 
-            $uploadPath = $uploadPath.'thumb/';
-            $img = Image::make($file->getRealPath());
-            $img->resize(200, 200, function ($constraint) {
-                $constraint->aspectRatio();                 
-            });
-            $img->stream();
-            Storage::disk('local')->put($uploadPath.$fileName, $img, 'public');
+            $uploadPath = $uploadPath.'thumb/'; // folder path for thumb files
         }
         // Upload base image
 
         // start thumb image $type = 0 make thumb
-        if($type == 0){
-            $img = Image::make($file->getRealPath());
-            $img->resize(200, 200, function ($constraint) {
-                $constraint->aspectRatio();                 
-            });
-            $img->stream();
+        if($type == 0 && empty($fileName)){
             $fileName = \Illuminate\Support\Str::random(40).'.'.$file->extension();
-            Storage::disk('local')->put($uploadPath.$fileName, $img, 'public');
         }
+        $img = Image::make($file->getRealPath());
+        $img->resize(200, 200, function ($constraint) {
+            $constraint->aspectRatio();                 
+        });
+        $img->stream();
+        
+        Storage::disk('local')->put($uploadPath.$fileName, $img, 'public');
         // start thumb image
       
         $responseArr['filename'] = $fileName;

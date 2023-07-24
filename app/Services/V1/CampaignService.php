@@ -78,6 +78,7 @@ class CampaignService
         $lastId = $createCampaign->id;
 
         // save uploads & links 
+        $campaignUploadsPath = CampaignUploads::FOLDERNAME;
         if ($request->has('upload_types')) {
             $uploadTypes = $request->upload_types;
             if (count($uploadTypes) > 0) {
@@ -92,10 +93,9 @@ class CampaignService
                     if (isset($request->file('upload_file')[$i])) {
                         $uploadImage = $request->file('upload_file')[$i];
                         if (!empty($uploadImage)) {
-                            $data = CommonHelper::uploadImages($uploadImage, $uploadPath, $i);
+                            $data = CommonHelper::uploadImages($uploadImage, $campaignUploadsPath, 1);
                             if (!empty($data)) {
-                                $saveUploadArr->file_name = $data['filename'];
-                                $saveUploadArr->path = $data['path'];
+                                $saveUploadArr->image = $data['filename'];
                             }
                         }
                     }
@@ -168,15 +168,15 @@ class CampaignService
         $updateCampaign->end_datetime = CommonHelper::getUTCDateTime($request->end_datetime);
         $updateCampaign->donation_target = $request->donation_target;
 
-        // Update filename & path
-        $uploadPath = Campaign::FOLDERNAME;;
+        // upload file
+        $uploadPath = Campaign::FOLDERNAME;
         if ($request->hasFile('image')) {
 
             // Unlink old image from storage 
             $oldImage = $updateCampaign->getAttributes()['image'] ?? null;
             if($oldImage != null){
-                CommonHelper::removeUploadedImages($oldImage,Campaign::FOLDERNAME);
-                CommonHelper::removeUploadedImages($oldImage,Campaign::FOLDERNAME.'thumb/');
+                CommonHelper::removeUploadedImages($oldImage,$uploadPath);
+                CommonHelper::removeUploadedImages($oldImage,$uploadPath.'thumb/');
             }
             // Unlink old image from storage 
 
@@ -207,6 +207,8 @@ class CampaignService
         $updateCampaign->updated_by = auth()->user()->id;
         $updateCampaign->updated_ip = CommonHelper::getUserIp();
         $updateCampaign->update();
+
+        $campaignUploadsPath = CampaignUploads::FOLDERNAME;
         // save uploads & links 
         if($request->has('upload_types')){
             $uploadTypes = $request->upload_types;
@@ -222,21 +224,20 @@ class CampaignService
                             if(isset($request->file('upload_file')[$i])){
                                 $uploadImage = $request->file('upload_file')[$i];
                                 if(!empty($uploadImage)){
-                                    // Unlink qr from storage 
-                                    if(!empty($checkCampaignData)){
-                                        $pathName = $checkCampaignUploads->path;
-                                        $fileName = $checkCampaignUploads->file_name;
-                                        CommonHelper::removeUploadedImages($pathName,$fileName);
+                                    // Unlink file from storage 
+                                    $oldImage = $checkCampaignUploads->image;
+                                    if(!empty($oldImage)){
+                                        CommonHelper::removeUploadedImages($oldImage,$campaignUploadsPath);
+                                        CommonHelper::removeUploadedImages($oldImage,$campaignUploadsPath.'thumb/');
                                     }
-                                    // Unlink qr from storage 
-                                    $data = CommonHelper::uploadImages($uploadImage, $uploadPath,$i);
+                                    // Unlink file from storage 
+                                    $data = CommonHelper::uploadImages($uploadImage, $campaignUploadsPath, 1);
                                     if (!empty($data)) {
-                                        $checkCampaignUploads->file_name = $data['filename'];
-                                        $checkCampaignUploads->path = $data['path'];
+                                        $checkCampaignUploads->image = $data['filename'];
                                     }
                                 }
                             }
-                            $checkCampaignUploads->updated_by = auth()->user()->id;;
+                            $checkCampaignUploads->updated_by = auth()->user()->id;
                             $checkCampaignUploads->updated_ip = CommonHelper::getUserIp();
                             $checkCampaignUploads->update();
                         }
@@ -249,14 +250,13 @@ class CampaignService
                         if(isset($request->file('upload_file')[$i])){
                             $uploadImage = $request->file('upload_file')[$i];
                             if(!empty($uploadImage)){
-                                $data = CommonHelper::uploadImages($uploadImage, $uploadPath,$i);
+                                $data = CommonHelper::uploadImages($uploadImage, $campaignUploadsPath, 1);
                                 if (!empty($data)) {
-                                    $saveUploadArr->file_name = $data['filename'];
-                                    $saveUploadArr->path = $data['path'];
+                                    $saveUploadArr->image = $data['filename'];
                                 }
                             }
                         }
-                        $saveUploadArr->created_by = auth()->user()->id;;
+                        $saveUploadArr->created_by = auth()->user()->id;
                         $saveUploadArr->created_ip = CommonHelper::getUserIp();
                         $saveUploadArr->save();
                     }
@@ -276,7 +276,7 @@ class CampaignService
                             $checkCampaignLinks->title = $request->link_title[$i];
                             $checkCampaignLinks->description = $request->link_description[$i];
                             $checkCampaignLinks->link = $request->link[$i];
-                            $checkCampaignLinks->updated_by = auth()->user()->id;;
+                            $checkCampaignLinks->updated_by = auth()->user()->id;
                             $checkCampaignLinks->updated_ip = CommonHelper::getUserIp();
                             $checkCampaignLinks->update();
                         }
@@ -287,7 +287,7 @@ class CampaignService
                         $saveLinksArr->title = $request->link_title[$i];
                         $saveLinksArr->description = $request->link_description[$i];
                         $saveLinksArr->link = $request->link[$i];
-                        $saveLinksArr->created_by = auth()->user()->id;;
+                        $saveLinksArr->created_by = auth()->user()->id;
                         $saveLinksArr->created_ip = CommonHelper::getUserIp();
                         $saveLinksArr->save();
 
