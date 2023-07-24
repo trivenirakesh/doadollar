@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\CampaignCategory;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\CampaignCategoryResource;
+use App\Http\Resources\V1\CampaignCategoryDetailResource;
 use App\Helpers\CommonHelper;
 use Illuminate\Support\Facades\Cache;
 
@@ -44,21 +45,17 @@ class CampaignCategoryService
         $createCampaignCat->description = $request->description;
         $createCampaignCat->created_by = auth()->user()->id;
         $createCampaignCat->created_ip = CommonHelper::getUserIp();
-        $createCampaignCat->save();
-        $lastId = $createCampaignCat->id;
-        // Update filename & path
+
+        // upload file 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'campaigncategory/' . $lastId . '/');
+            $data = CommonHelper::uploadImages($image,CampaignCategory::FOLDERNAME,0);
             if (!empty($data)) {
-                $updateImageData = CampaignCategory::find($lastId);
-                $updateImageData->file_name = $data['filename'];
-                $updateImageData->path = $data['path'];
-                $updateImageData->update();
+                $createCampaignCat->image = $data['filename'];
             }
         }
-        $campaignCategory =  CampaignCategory::where('id', $lastId)->first();
-        $getCampaignCategoryDetails = new CampaignCategoryResource($campaignCategory);
+        $createCampaignCat->save();
+        $getCampaignCategoryDetails = new CampaignCategoryResource($createCampaignCat);
         return $this->successResponseArr(self::module . __('messages.success.create'), $getCampaignCategoryDetails);
     }
 
@@ -74,7 +71,7 @@ class CampaignCategoryService
         if ($getCampaignCategoryData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getCampaignCategoryData = new CampaignCategoryResource($getCampaignCategoryData);
+        $getCampaignCategoryData = new CampaignCategoryDetailResource($getCampaignCategoryData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getCampaignCategoryData);
     }
 
@@ -101,18 +98,20 @@ class CampaignCategoryService
         // get logged in user details 
         $campaignCategory->updated_by = auth()->user()->id;
         $campaignCategory->updated_ip = CommonHelper::getUserIp();
-        // Update filename & path
+        
+        // Update file
         if ($request->hasFile('image')) {
             // Unlink old image from storage 
-            $pathName = $campaignCategory->path;
-            $fileName = $campaignCategory->file_name;
-            CommonHelper::removeUploadedImages($pathName, $fileName);
+            $oldImage = $campaignCategory->getAttributes()['image'] ?? null;
+            if($oldImage != null){
+                CommonHelper::removeUploadedImages($oldImage,CampaignCategory::FOLDERNAME);
+            }
             // Unlink old image from storage 
+
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, 'campaigncategory/' . $id . '/');
+            $data = CommonHelper::uploadImages($image,CampaignCategory::FOLDERNAME,0);
             if (!empty($data)) {
-                $campaignCategory->file_name = $data['filename'];
-                $campaignCategory->path = $data['path'];
+                $campaignCategory->image = $data['filename'];
             }
         }
         $campaignCategory->update();
