@@ -43,8 +43,8 @@ Route::middleware('auth:sanctum')->group( function () {
     // Manage Entity
     Route::get('entity',[UsersController::class,'index']);
     Route::get('entity/{id}',[UsersController::class,'show']);
-    Route::post('entity',[UsersController::class,'create']);
-    Route::post('entity/{id}',[UsersController::class,'update']);
+    Route::post('entity',[UsersController::class,'store']);
+    Route::put('entity/{id}',[UsersController::class,'update']);
     Route::delete('entity/{id}',[UsersController::class,'destroy']);
 
     // Manage campaign category
@@ -72,7 +72,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::resource('uploadtypes',UploadTypesController::class)->except(['create','edit']);
 
     //Manage campaign
-    Route::post('campaignslist',[CampaignController::class,'index']);
+    Route::get('campaignslist',[CampaignController::class,'index']);
     Route::get('campaign/{id}',[CampaignController::class,'show']);
     Route::post('campaign',[CampaignController::class,'store']);
     Route::post('campaign/{id}',[CampaignController::class,'update']);

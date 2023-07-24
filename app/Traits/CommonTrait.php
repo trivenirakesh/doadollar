@@ -32,7 +32,7 @@ trait CommonTrait
 		];
 	}
 
-	public function errorResponseArr($message = 'somethig went wrong!!', $errors = [])
+	public function errorResponseArr($message = 'Something went wrong!!', $errors = [])
 	{
 		return [
 			'status' => false,
