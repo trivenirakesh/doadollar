@@ -35,7 +35,7 @@ class CampaignCategoryCreateUpdateRequest extends FormRequest
             'name' => 'required',
         ];
         if (request()->has('name')) {
-            $rules['name'] = 'required|max:255';
+            $rules['name'] = 'required|max:200';
         }
         if (request()->hasFile('image')) {
             $rules['image'] = 'required|max:2048|mimes:jpg,png,jpeg';

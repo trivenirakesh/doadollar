@@ -26,11 +26,6 @@ class CampaignService
     public function store(Request $request)
     {
         $campaignCategoryId = $request->campaign_category_id;
-        $activeStatus = CommonHelper::getConfigValue('status.active');
-        $checkCampaignCategory = CampaignCategory::where('id', $campaignCategoryId)->where('status', $activeStatus)->first();
-        if (empty($checkCampaignCategory)) {
-            return $this->errorResponseArr('Campaign Category' . __('messages.validation.not_found'));
-        }
         // save details
         $createCampaign = new Campaign();
         // remove blank space from string   
@@ -148,17 +143,12 @@ class CampaignService
      */
     public function update(Request $request, $id)
     {
-        $campaignCategoryId = $request->campaign_category_id;
-        $activeStatus = CommonHelper::getConfigValue('status.active');
-        $checkCampaignCategory = CampaignCategory::where('id', $campaignCategoryId)->where('status', $activeStatus)->first();
-        if (empty($checkCampaignCategory)) {
-            return $this->errorResponseArr('Campaign Category' . __('messages.validation.not_found'));
-        }
         $updateCampaign = Campaign::where('id',$id)->first();
         if (empty($updateCampaign)) {
             return $this->errorResponseArr('Campaign' . __('messages.validation.not_found'));
         }
         // save details
+        $campaignCategoryId = $request->campaign_category_id;
         $campaignName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
         $updateCampaign->campaign_category_id = $campaignCategoryId;
         $updateCampaign->name = $campaignName;
