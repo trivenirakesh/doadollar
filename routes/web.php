@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\CampaignCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -34,6 +36,6 @@ Route::group(['prefix' => 'admin'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin'], 'as' => 'admin.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('dashboard');
     Route::get('logout', [HomeController::class, 'logout'])->name('logout');
-
-    // Route::resource('roles', RoleController::class);
+    Route::resource('campaign-category', CampaignCategoryController::class)->except(['edit','update']);
+    Route::resource('users', UserController::class)->except(['edit','update']);
 });

@@ -16,6 +16,14 @@ class CampaignCategory extends Model
     public function getImageAttribute($val)
     {
         $linkPath = CommonHelper::getConfigValue('link_path');
-        return $val == null ? asset('assets/images/dummy.png') : asset($linkPath.self::FOLDERNAME . $val);
+        return $val == null ? asset('public/dist/img/no-image.png') : asset($linkPath.self::FOLDERNAME . $val);
+    }
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+    ];
+    public function entitymst()
+    {
+        return $this->hasOne(Entitymst::class, 'id', 'created_by');
     }
 }

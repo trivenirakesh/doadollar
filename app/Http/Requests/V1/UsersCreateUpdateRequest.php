@@ -32,20 +32,20 @@ class UsersCreateUpdateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'first_name' => 'required',
-            'last_name' => 'required'
+            'first_name' => 'required|max:50',
+            'last_name' => 'required|max:50'
         ];
-        if($this->id != null){
-            $rules['email'] = 'required|email|unique:entitymst,email,'.$this->id.',id,deleted_at,NULL';
-            $rules['mobile'] = 'required|numeric|digits:10|unique:entitymst,mobile,'.$this->id.',id,deleted_at,NULL';
-        }else{
+        if ($this->id != null) {
+            $rules['email'] = 'required|email|unique:entitymst,email,' . $this->id . ',id,deleted_at,NULL';
+            $rules['mobile'] = 'required|numeric|digits:10|unique:entitymst,mobile,' . $this->id . ',id,deleted_at,NULL';
+        } else {
             $rules['email'] = 'required|email|unique:entitymst,email,NULL,id,deleted_at,NULL';
             $rules['mobile'] = 'required|numeric|digits:10|unique:entitymst,mobile,NULL,id,deleted_at,NULL';
         }
-        if(request()->has('password')){
-            $rules['password'] = 'required';
+        if (request()->has('password') || request()->has('id') ) {
+            $rules['password'] = request()->has('id') && request()->id>0 ? 'nullable': 'required';
         }
-        if(request()->has('entity_type')){
+        if (request()->has('entity_type')) {
             $rules['entity_type'] = 'required|digits:1|lte:2';
         }
         if (request()->has('status')) {
@@ -67,14 +67,14 @@ class UsersCreateUpdateRequest extends FormRequest
             'email.email' => __('messages.validation.email_email'),
             'email.unique' => __('messages.validation.email_unique'),
             'mobile.required' => __('messages.validation.mobile'),
-            'mobile.numeric' => 'Mobile'.__('messages.validation.must_numeric'),
+            'mobile.numeric' => 'Mobile' . __('messages.validation.must_numeric'),
             'mobile.digits' => __('messages.validation.mobile_digits'),
             'mobile.unique' => __('messages.validation.mobile_unique')
         ];
-        if(request()->has('entity_type')){
+        if (request()->has('entity_type')) {
             $messages['password.required'] = __('messages.validation.password');
         }
-        if(request()->has('entity_type')){
+        if (request()->has('entity_type')) {
             $messages['entity_type.required'] = __('messages.validation.entity_type');
             $messages['entity_type.digits'] = __('messages.validation.entity_type_digits');
             $messages['entity_type.lte'] = __('messages.validation.entity_type_lte');
@@ -86,9 +86,9 @@ class UsersCreateUpdateRequest extends FormRequest
         }
         if (request()->has('role_id') && request()->entity_type != 2) {
             $messages['role_id.required'] = __('messages.validation.role_id');
-            $messages['role_id.numeric'] = 'Role id'.__('messages.validation.must_numeric');
+            $messages['role_id.numeric'] = 'Role id' . __('messages.validation.must_numeric');
         }
-        
+
         return $messages;
     }
 }

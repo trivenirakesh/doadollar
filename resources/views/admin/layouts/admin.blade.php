@@ -5,9 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
-  <title>{{config('app.name')}}</title>
+  <title>{{config('app.name')}}{{isset($title)? " | $title":''}}</title>
   @include('admin.layouts.styles')
-
 </head>
 
 <body class="hold-transition sidebar-mini cm-layout layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -109,7 +108,6 @@
   @include('admin.layouts.modals')
   @include('admin.layouts.script')
   @include('admin.layouts.messages')
-  @stack('scripts')
 </body>
 
 </html>
