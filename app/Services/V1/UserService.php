@@ -58,14 +58,15 @@ class UserService
         $createUser->entity_type = $request->entity_type;
         $createUser->password = Hash::make($request->password);
         $createUser->status = 1;
-        if (isset($request->role_id) && $request->entity_type != 2) {
-            $activeStatus = CommonHelper::getConfigValue('status.active');
-            $checkRoleExist = Role::where('id', $request->role_id)->where('status', $activeStatus)->first();
-            if (!$checkRoleExist) {
-                return $this->errorResponseArr('Role' . __('messages.validation.not_found'));
-            }
-            $createUser->role_id = $request->role_id;
-        }
+        $createUser->role_id = $request->role_id;
+        // if (isset($request->role_id) && $request->entity_type != 2) {
+        //     $activeStatus = CommonHelper::getConfigValue('status.active');
+        //     $checkRoleExist = Role::where('id', $request->role_id)->where('status', $activeStatus)->first();
+        //     if (!$checkRoleExist) {
+        //         return $this->errorResponseArr('Role' . __('messages.validation.not_found'));
+        //     }
+        //     $createUser->role_id = $request->role_id;
+        // }
         $createUser->created_by = auth()->user()->id;
         $createUser->created_ip = CommonHelper::getUserIp();
         $createUser->save();

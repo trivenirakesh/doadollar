@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-light-primary">
     <!-- Brand Logo -->
     <div class="brand-link d-flex align-items-center justify-content-between border-bottom-0">
-        <a href="#" class="logo">
+        <a href="{{route('admin.dashboard')}}" class="logo">
             <img src="{{ asset('public/dist/img/logo.png') }}" class="" alt="DoADollar">
         </a>
         <a class="cm-back-btn" data-widget="pushmenu" href="#" role="button"><i class="fas fa-angle-left"></i></a>
@@ -23,6 +23,12 @@
                     <a href="{{ route('admin.campaign-category.index')}}" class="nav-link  {{request()->is('admin/campaign-category*') ?'active' : ''}}">
                         <i class="nav-icon fas fa-shapes"></i>
                         <p> Campaign Category</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.users.index')}}" class="nav-link  {{request()->is('admin/users*') ?'active' : ''}}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p> Users</p>
                     </a>
                 </li>
                 <!-- <li class="nav-item">

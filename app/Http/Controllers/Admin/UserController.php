@@ -3,20 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\CampaignCategoryCreateUpdateRequest;
-use App\Models\CampaignCategory;
-use App\Services\V1\CampaignCategoryService;
+use App\Http\Requests\V1\UsersCreateUpdateRequest;
+use App\Models\Entitymst;
+use App\Models\Role;
+use App\Services\V1\UserService;
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 
-class CampaignCategoryController extends Controller
+class UserController extends Controller
 {
-    protected $campaignCategoryService;
+    protected $userService;
 
-    public function __construct(CampaignCategoryService $campaignCategoryService)
+    public function __construct(UserService $userService)
     {
-        $this->campaignCategoryService = $campaignCategoryService;
+        $this->userService = $userService;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,11 +26,12 @@ class CampaignCategoryController extends Controller
      */
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
-            $baseurl = route('admin.campaign-category.index');
-            $data = CampaignCategory::with(['entitymst' => function ($query) {
-                $query->select('id', 'first_name', 'last_name');
-            }]);
+            $baseurl = route('admin.users.index');
+            $data = Entitymst::with(['role' => function ($query) {
+                $query->select('id', 'name');
+            }])->roleUser();
             if ($request->order == null) {
                 $data->orderBy('created_at', 'desc');
             }
@@ -42,21 +45,16 @@ class CampaignCategoryController extends Controller
                 </div>";
                     return $url;
                 })
-
-                ->addColumn('image', function ($row) {
-                    $image = '<img src="' . $row->image . '" class="img-fluid img-radius" width="40px" height="40px">';
-                    return $image;
-                })
                 ->addColumn('status', function ($row) {
                     $statusText = $row->status == 1 ? "Active" : "Inctive";
                     $status = "<span class='text-md badge badge-pill badge-dark'>$statusText</span>";
                     return $status;
                 })
-                ->rawColumns(['actions', 'image','status'])
+                ->rawColumns(['actions', 'status'])
                 ->make(true);
         }
-        $title =  'Campaign Category';
-        return view('admin.campaign-category.index', compact('title'));
+        $title =  'Users';
+        return view('admin.users.index', compact('title'));
     }
 
     /**
@@ -65,17 +63,21 @@ class CampaignCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CampaignCategoryCreateUpdateRequest $request)
+    public function store(UsersCreateUpdateRequest $request)
     {
         if (isset($request->id) && $request->id > 0) { //update data
-            $campaignCategory = $this->campaignCategoryService->update($request, $request->id);
+            $user = $this->userService->update($request, $request->id);
         } else { //add data
-            $campaignCategory  = $this->campaignCategoryService->store($request);
+            $request->request->add([
+                'entity_type' => Entitymst::ENTITYUSER,
+                'role_id' => Role::ROLEUSER,
+            ]);
+            $user  = $this->userService->store($request);
         }
-        if (!$campaignCategory['status']) {
-            return response()->json($campaignCategory, 401);
+        if (!$user['status']) {
+            return response()->json($user, 401);
         }
-        return response()->json($campaignCategory, 200);
+        return response()->json($user, 200);
     }
 
     /**
@@ -86,12 +88,13 @@ class CampaignCategoryController extends Controller
      */
     public function show($id)
     {
-        $campaignCategory = $this->campaignCategoryService->show($id);
-        if (!$campaignCategory['status']) {
-            return response()->json($campaignCategory, 401);
+        $user = $this->userService->show($id);
+        if (!$user['status']) {
+            return response()->json($user, 401);
         }
-        return response()->json($campaignCategory, 200);
+        return response()->json($user, 200);
     }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -101,10 +104,10 @@ class CampaignCategoryController extends Controller
      */
     public function destroy($id)
     {
-        $campaignCategory = $this->campaignCategoryService->destroy($id);
-        if (!$campaignCategory['status']) {
-            return response()->json($campaignCategory, 401);
+        $user = $this->userService->destroy($id);
+        if (!$user['status']) {
+            return response()->json($user, 401);
         }
-        return response()->json($campaignCategory, 200);
+        return response()->json($user, 200);
     }
 }

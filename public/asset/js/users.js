@@ -204,10 +204,6 @@ $(document).ready(function () {
                 name: "created_at",
             },
             {
-                data: "status",
-                name: "status",
-            },
-            {
                 data: "actions",
                 name: "actions",
                 searchable: false,

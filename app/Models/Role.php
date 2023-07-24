@@ -10,6 +10,8 @@ class Role extends Model
 {
     use HasFactory,SoftDeletes;
 
+    const ROLEUSER = 3;
+
     public function entitymst(){
         return $this->hasOne(Entitymst::class);
     }
