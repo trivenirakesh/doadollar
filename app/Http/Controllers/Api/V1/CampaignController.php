@@ -22,14 +22,11 @@ class CampaignController extends Controller
 
     public function index(Request $request){
 
-        $campaign = new Campaign();
-        $campaignListData = $campaign->getCampaignsList($request);
-        $getCampaignList =  CampaignResource::collection($campaignListData['data']);
-        $responseArr['totalRecords'] = $campaign->getCampaignsListCount();
-        $responseArr['filterResults'] = $campaignListData['count'];
-        $responseArr['getCampaignList'] = $getCampaignList;
-
-        return $this->successResponse($responseArr,'Campaign List ' , 200);
+        $campaign =  $this->campaignService->index($request) ?? [];
+        if (!$campaign['status']) {
+            return response()->json($campaign, 401);
+        }
+        return response()->json($campaign, 200);
     }
 
     public function show($id){

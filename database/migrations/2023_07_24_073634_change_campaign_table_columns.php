@@ -15,6 +15,7 @@ class ChangeCampaignTableColumns extends Migration
     {
         Schema::table('campaigns', function (Blueprint $table) {
             $table->dropColumn('cover_image_path');
+            $table->dropColumn('qr_path');
             $table->renameColumn('cover_image', 'image');
         });
     }

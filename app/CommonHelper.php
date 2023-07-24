@@ -43,6 +43,15 @@ class CommonHelper{
         if($type != 0){
             $imagePath = $file->store($uploadPath);
             $fileName = basename($imagePath);
+
+            // create thumb 
+            $uploadPath = $uploadPath.'thumb/';
+            $img = Image::make($file->getRealPath());
+            $img->resize(200, 200, function ($constraint) {
+                $constraint->aspectRatio();                 
+            });
+            $img->stream();
+            Storage::disk('local')->put($uploadPath.$fileName, $img, 'public');
         }
         // Upload base image
 
@@ -64,8 +73,9 @@ class CommonHelper{
 
     public static function getImageUrl($filename,$path,$type){
         $imageUrl = '';
+        $linkPath = self::getConfigValue('link_path');
         if($type == 0){
-            $imageUrl = asset($path.''.$filename);
+            $imageUrl = asset($linkPath.$path.''.$filename);
         }else{
             $imageUrl = asset($path.'thumb/'.$filename);
         }

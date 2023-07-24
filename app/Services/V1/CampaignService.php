@@ -18,6 +18,22 @@ class CampaignService
     const module = 'Campaign';
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $campaign = new Campaign();
+        $campaignListData = $campaign->getCampaignsList($request);
+        $getCampaignList =  CampaignResource::collection($campaignListData['data']);
+        $responseArr['totalRecords'] = $campaign->getCampaignsListCount();
+        $responseArr['filterResults'] = $campaignListData['count'];
+        $responseArr['getCampaignList'] = $getCampaignList;
+        return $this->successResponseArr($responseArr);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -40,19 +56,14 @@ class CampaignService
         $createCampaign->donation_target = $request->donation_target;
         $createCampaign->created_by = auth()->user()->id;
         $createCampaign->created_ip = CommonHelper::getUserIp();
-        $createCampaign->save();
-        $lastId = $createCampaign->id;
 
-        // Update filename & path
-        $uploadPath = 'campaign/' . $lastId . '/';
+        // upload file
+        $uploadPath = Campaign::FOLDERNAME;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image, $uploadPath);
+            $data = CommonHelper::uploadImages($image, $uploadPath,1);
             if (!empty($data)) {
-                $updateImageData = Campaign::find($lastId);
-                $updateImageData->cover_image = $data['filename'];
-                $updateImageData->cover_image_path = $data['path'];
-                $updateImageData->update();
+                $createCampaign->image = $data['filename'];
             }
         }
 
@@ -61,11 +72,10 @@ class CampaignService
         $qrFileName = 'qr_' . date('YmdHis') . '.svg';
         $qrFileNameWithPath = $uploadPath . $qrFileName;
         Storage::disk('public')->put($qrFileNameWithPath, $qrFile);
-        $updateQrData = Campaign::find($lastId);
-        $updateQrData->qr_image = $qrFileName;
-        $updateQrData->qr_path = 'public/storage/' . $uploadPath;
-        $updateImageData->update();
+        $createCampaign->qr_image = $qrFileName;
         // generate QR code 
+        $createCampaign->save();
+        $lastId = $createCampaign->id;
 
         // save uploads & links 
         if ($request->has('upload_types')) {
@@ -159,14 +169,14 @@ class CampaignService
         $updateCampaign->donation_target = $request->donation_target;
 
         // Update filename & path
-        $uploadPath = 'campaign/'.$id.'/';
+        $uploadPath = Campaign::FOLDERNAME;;
         if ($request->hasFile('image')) {
 
             // Unlink old image from storage 
-            if(!empty($checkCampaignData)){
-                $pathName = $checkCampaignData->cover_image_path;
-                $fileName = $checkCampaignData->cover_image;
-                CommonHelper::removeUploadedImages($pathName,$fileName);
+            $oldImage = $updateCampaign->getAttributes()['image'] ?? null;
+            if($oldImage != null){
+                CommonHelper::removeUploadedImages($oldImage,Campaign::FOLDERNAME);
+                CommonHelper::removeUploadedImages($oldImage,Campaign::FOLDERNAME.'thumb/');
             }
             // Unlink old image from storage 
 
@@ -181,10 +191,9 @@ class CampaignService
         // generate QR code 
         if($updateCampaign->unique_code != $request->unique_code){
             // Unlink qr from storage 
-            if(!empty($checkCampaignData)){
-                $pathName = $updateCampaign->qr_path;
-                $fileName = $updateCampaign->qr_image;
-                CommonHelper::removeUploadedImages($pathName,$fileName);
+            $oldImage = $updateCampaign->qr_image;
+            if(!empty($oldImage)){
+                CommonHelper::removeUploadedImages($oldImage,Campaign::FOLDERNAME);
             }
             // Unlink qr from storage 
 
