@@ -169,7 +169,7 @@ $(document).ready(function () {
     var table = $("#data_table_main").DataTable({
         processing: true,
         serverSide: true,
-        // dom: 'Bfrtip',
+        dom: '<f<t><"cm-dataTables-footer d-flex align-items-center float-right"lip>>',
         buttons: [],
         ajax: module_index_url,
         order: [],
