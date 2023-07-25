@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\PaymentGatewaySetting;
 use App\Traits\CommonTrait;
 use App\Http\Resources\V1\PaymentGatewaySettingResource;
-use App\Http\Resources\V1\PaymentGatewaySettingDetailsResource;
 use App\Helpers\CommonHelper;
 use Illuminate\Support\Facades\Cache;
 
@@ -74,7 +73,7 @@ class PaymentGatewaySettingService
         if ($getPaymentGatewayData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getPaymentGatewayData = new PaymentGatewaySettingDetailsResource($getPaymentGatewayData);
+        $getPaymentGatewayData = new PaymentGatewaySettingResource($getPaymentGatewayData);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getPaymentGatewayData);
     }
 
@@ -88,7 +87,7 @@ class PaymentGatewaySettingService
     public function update(Request $request, $id)
     {
         // update details 
-        $paymentGatewaySetting = PaymentGatewaySetting::where('id', $id)->first();;
+        $paymentGatewaySetting = PaymentGatewaySetting::where('id', $id)->first();
         if ($paymentGatewaySetting == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }

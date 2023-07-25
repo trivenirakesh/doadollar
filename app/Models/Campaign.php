@@ -13,6 +13,8 @@ class Campaign extends Model
 {
     use HasFactory,SoftDeletes;
 
+    const FOLDERNAME = "campaigns/";
+
     public function getCampaignsList($request){
         $perPageData = CommonHelper::getConfigValue('per_page');
         $campaignId = 0;

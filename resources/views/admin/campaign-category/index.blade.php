@@ -21,7 +21,7 @@
                                     <tr>
                                         <th class="text-center"></th>
                                         <th>Image</th>
-                                        <th>name</th>
+                                        <th>Name</th>
                                         <th>Created By</th>
                                         <th>Created At</th>
                                         <th>Status</th>

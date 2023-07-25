@@ -33,7 +33,7 @@ class UploadTypeCreateUpdateRequest extends FormRequest
     {
         $rules = [];
         if (request()->has('name')) {
-            $rules['name'] = 'required|max:255';
+            $rules['name'] = 'required|max:200';
         }
         if (request()->has('type')) {
             $rules['type'] = 'required|numeric|lte:1';

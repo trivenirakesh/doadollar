@@ -26,9 +26,6 @@ class CampaignResource extends JsonResource
             'campaign_start_datetime' => CommonHelper::getConvertedDateTime($this->start_datetime,'d-m-Y | H:i'),
             'campaign_end_datetime' => CommonHelper::getConvertedDateTime($this->end_datetime,'d-m-Y | H:i'),
             'donation_target' => $this->donation_target,
-            'qr_code' => (!empty($this->qr_image)) ? CommonHelper::getImageUrl($this->qr_image,$this->qr_path,0) : "",
-            'thumb_image' => (!empty($this->cover_image)) ? CommonHelper::getImageUrl($this->cover_image,$this->cover_image_path,1) : "",
-            'image' => (!empty($this->cover_image)) ? CommonHelper::getImageUrl($this->cover_image,$this->cover_image_path,0) : "",
             'created_at' => CommonHelper::getConvertedDateTime($this->created_at)
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Http\Resources\V1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Helpers\CommonHelper;
+use App\Models\CampaignUploads;
 
 class CampaignUploadResource extends JsonResource
 {
@@ -21,8 +22,8 @@ class CampaignUploadResource extends JsonResource
             'upload_type_name' => isset($this->uploadType['name']) ? $this->uploadType['name'] : '',
             'title' => $this->title,
             'description' => (!empty($this->description)) ? CommonHelper::shortString($this->description) : "",
-            'file_name' => (!empty($this->file_name)) ? $this->file_name : "",
-            'file_path' => (!empty($this->path)) ? $this->path : "",
+            'thumb_image' => (!empty($this->image)) ? CommonHelper::getImageUrl($this->image,CampaignUploads::FOLDERNAME.'thumb/',0) : "",
+            'image' => (!empty($this->image)) ? CommonHelper::getImageUrl($this->image,CampaignUploads::FOLDERNAME,0) : "",
             'link' => (!empty($this->link)) ? $this->link : "",
             'created_at' => CommonHelper::getConvertedDateTime($this->created_at)
         ];

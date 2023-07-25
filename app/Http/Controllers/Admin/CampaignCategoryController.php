@@ -8,7 +8,7 @@ use App\Models\CampaignCategory;
 use App\Services\V1\CampaignCategoryService;
 use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class CampaignCategoryController extends Controller
 {
@@ -38,10 +38,10 @@ class CampaignCategoryController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action_edit', function ($row) use ($baseurl) {
-                   return $this->actionHtml($baseurl,$row->id,false);
+                    return $this->actionHtml($baseurl, $row->id, false);
                 })
                 ->addColumn('action_delete', function ($row) use ($baseurl) {
-                    return $this->actionHtml($baseurl,$row->id,true);
+                    return $this->actionHtml($baseurl, $row->id, true);
                 })
 
                 ->addColumn('image', function ($row) {
