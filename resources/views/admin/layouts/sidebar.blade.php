@@ -19,6 +19,26 @@
                         <p> Dashboard</p>
                     </a>
                 </li>
+                <li class="nav-item ">
+                    <a href="#" class="nav-link {{request()->is('admin/setting*') ?'active' : ''}}">
+                    <i class="nav-icon fas fa-tools"></i>
+                        <p>Setting <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('admin.static_page',['about_us'])}}" class="nav-link {{request()->is('admin/setting/payment_gateway*') ?'active' : ''}}">
+                                <i class="fas fa-shopping-cart nav-icon"></i>
+                                <p>Payment Gateway</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('admin.static_page',['privacy_policy'])}}" class="nav-link {{request()->is('admin/setting/social_platform*') ?'active' : ''}}">
+                                <i class="fas fa-share-alt nav-icon"></i>
+                                <p>Social Platform </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.campaign-category.index')}}" class="nav-link  {{request()->is('admin/campaign-category*') ?'active' : ''}}">
                         <i class="nav-icon fas fa-shapes"></i>
