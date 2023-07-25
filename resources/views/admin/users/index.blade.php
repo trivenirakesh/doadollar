@@ -19,14 +19,14 @@
                             <table id="data_table_main" class="table w-100">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">#</th>
+                                        <th class="text-center"></th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Email</th>
                                         <th>Role</th>
                                         <th>Created At</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                             </table>

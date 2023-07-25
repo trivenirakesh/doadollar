@@ -23,16 +23,18 @@ class StaticPageController extends Controller
     public function index($page)
     {
         $pages = StaticPage::PAGES;
+        $slug = $page;
         $title = $pages[$page] ?? null;
         if ($title === null) {
             abort(404);
         }
 
-        $staticPages =  $this->staticPage->index() ?? [];
+        $staticPages =  $this->staticPage->show($page) ?? [];
         if (!$staticPages['status']) {
             return response()->json($staticPages, 401);
         }
-        return view('admin.static-page.index', compact('title'));
+        $content = $staticPages['data']['content'] ?? '';
+        return view('admin.static-page.index', compact('title', 'slug', 'content'));
     }
 
     /**
@@ -48,21 +50,5 @@ class StaticPageController extends Controller
             return response()->json($staticPages, 401);
         }
         return response()->json($staticPages, 200);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        // dd($id);
-        $staticPage = $this->staticPage->show($id);
-        if (!$staticPage['status']) {
-            return response()->json($staticPage, 401);
-        }
-        return response()->json($staticPage, 200);
     }
 }

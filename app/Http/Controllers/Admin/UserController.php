@@ -7,11 +7,13 @@ use App\Http\Requests\V1\UsersCreateUpdateRequest;
 use App\Models\Entitymst;
 use App\Models\Role;
 use App\Services\V1\UserService;
+use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
+    use CommonTrait;
     protected $userService;
 
     public function __construct(UserService $userService)
@@ -37,21 +39,16 @@ class UserController extends Controller
             }
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('actions', function ($row) use ($baseurl) {
-                    $url = "<div class='actions-a' data-id='" . $row->id . "' data-url='" . $baseurl . "'>
-                <a class='btn-circle theme_primary_btn module_view_record' title='View'><i class='fa fa-eye'></i></a>
-                <a class='btn-circle theme_primary_btn module_edit_record' title='Edit'><i class='fa fa-edit'></i></a>
-                <a class='btn-circle btn-danger module_delete_record' title='Delete'><i class='fa fa-trash-alt'></i></a>
-                </div>";
-                    return $url;
+                ->addColumn('action_edit', function ($row) use ($baseurl) {
+                    return $this->actionHtml($baseurl, $row->id, false);
+                })
+                ->addColumn('action_delete', function ($row) use ($baseurl) {
+                    return $this->actionHtml($baseurl, $row->id, true);
                 })
                 ->addColumn('status', function ($row) {
-                    $statusText = $row->status == 1 ? "Active" : "Inactive";
-                    $statusclass = $row->status == 1 ? "badge-primary" : " badge-danger";
-                    $status = "<span class='text-md badge badge-pill $statusclass'>$statusText</span>";
-                    return $status;
+                    return $this->statusHtml($row);
                 })
-                ->rawColumns(['actions', 'status'])
+                ->rawColumns(['action_edit', 'action_delete', 'status'])
                 ->make(true);
         }
         $title =  'Users';

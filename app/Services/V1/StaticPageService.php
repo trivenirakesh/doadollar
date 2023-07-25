@@ -62,7 +62,7 @@ class StaticPageService
      */
     public function show($id)
     {
-        $getPageData = StaticPage::where('id', $id)->first();
+        $getPageData = StaticPage::where('id', $id)->orWhere('title', $id)->first();
         if ($getPageData == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }

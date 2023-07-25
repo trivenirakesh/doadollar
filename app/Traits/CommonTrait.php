@@ -55,4 +55,27 @@ trait CommonTrait
 		$table->string('deleted_ip')->nullable();
 		return $table;
 	}
+
+	public function actionHtml($baseurl, $id, $actionDelete = true)
+	{
+		if ($actionDelete) {
+			$html = "<div class='actions-a' data-id='" . $id . "' data-url='" . $baseurl . "'>
+			<a class='btn-circle btn-danger module_delete_record' title='Delete'><i class='fa fa-times'></i></a>
+			</div>";
+		} else {
+			$html = "<div class='actions-a' data-id='" . $id . "' data-url='" . $baseurl . "'>
+				<a class='btn-circle theme_primary_btn module_edit_record' title='Edit'><i class='fa fa-pen'></i></a>
+				<a class='btn-circle theme_primary_btn module_view_record' title='View'><i class='fa fa-eye'></i></a>
+				</div>";
+		}
+		return $html;
+	}
+
+	public function statusHtml($row)
+	{
+		$statusText = $row->status == 1 ? "Active" : "Inactive";
+		$statusclass = $row->status == 1 ? "badge-primary" : " badge-danger";
+		$status = "<span class='text-md badge badge-pill $statusclass'>$statusText</span>";
+		return $status;
+	}
 }

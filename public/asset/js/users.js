@@ -227,10 +227,10 @@ $(document).ready(function () {
         },
         columns: [
             {
-                data: "DT_RowIndex",
-                name: "",
-                orderable: false,
+                data: "action_edit",
+                name: "action_edit",
                 searchable: false,
+                orderable: false,
             },
             {
                 data: "first_name",
@@ -257,8 +257,8 @@ $(document).ready(function () {
                 name: "status",
             },
             {
-                data: "actions",
-                name: "actions",
+                data: "action_delete",
+                name: "action_delete",
                 searchable: false,
                 orderable: false,
             },
