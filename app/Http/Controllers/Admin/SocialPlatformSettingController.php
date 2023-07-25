@@ -31,7 +31,7 @@ class SocialPlatformSettingController extends Controller
     {
 
         if ($request->ajax()) {
-            $baseurl = route('admin.social-media-settings.index');
+            $baseurl = route('admin.social-media.index');
             $data = SocialPlatformSetting::with(['entitymst' => function ($query) {
                 $query->select('id', 'first_name', 'last_name');
             }]);

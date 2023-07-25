@@ -107,9 +107,11 @@ $(document).ready(function () {
                 required: false,
                 accept: "image/jpg,image/jpeg,image/png",
             },
-            description: {
+            secret_key: {
                 required: true,
-                minlength: 6,
+            },
+            api_key: {
+                required: true,
             },
         },
         messages: {
@@ -120,9 +122,11 @@ $(document).ready(function () {
                 required: "Please select image",
                 accept: "Only allow image!",
             },
-            description: {
-                required: "Please enter description",
-                minlength: "Please enter description atleast 6 character!",
+            secret_key: {
+                required: "Please enter secret key",
+            },
+            api_key: {
+                required: "Please enter api key",
             },
         },
         submitHandler: function (form, e) {

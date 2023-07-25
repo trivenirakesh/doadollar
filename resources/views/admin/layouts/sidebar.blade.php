@@ -32,9 +32,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{route('admin.static_page',['privacy_policy'])}}" class="nav-link {{request()->is('admin/setting/social_platform*') ?'active' : ''}}">
-                                <i class="fas fa-share-alt nav-icon"></i>
-                                <p>Social Platform </p>
+                            <a href="{{ route('admin.social-media.index')}}" class="nav-link  {{request()->is('admin/setting/social-media*') ?'active' : ''}}">
+                                <i class="nav-icon fas fa-share-alt"></i>
+                                <p>Social Platform Setting</p>
                             </a>
                         </li>
                     </ul>
@@ -49,12 +49,6 @@
                     <a href="{{ route('admin.users.index')}}" class="nav-link  {{request()->is('admin/users*') ?'active' : ''}}">
                         <i class="nav-icon fas fa-users"></i>
                         <p> Users</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.social-media-settings.index')}}" class="nav-link  {{request()->is('admin/social-media-settings*') ?'active' : ''}}">
-                        <i class="nav-icon fas fa-share-alt"></i>
-                        <p>Social Media Setting</p>
                     </a>
                 </li>
                 <li class="nav-item">

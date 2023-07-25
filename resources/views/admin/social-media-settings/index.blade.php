@@ -36,7 +36,7 @@
         </div>
     </section>
     <input type="hidden" id="page_module" value="{{$title}}">
-    <input type="hidden" id="module_index_url" value="{{ route('admin.social-media-settings.index') }}">
+    <input type="hidden" id="module_index_url" value="{{ route('admin.social-media.index') }}">
 </div>
 @include('admin.social-media-settings.modal')
 <!-- /.content -->

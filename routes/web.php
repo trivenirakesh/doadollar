@@ -36,7 +36,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'revalidate
     Route::get('logout', [HomeController::class, 'logout'])->name('logout');
     Route::resource('campaign-category', CampaignCategoryController::class)->except(['edit', 'update']);
     Route::resource('users', UserController::class)->except(['edit', 'update']);
-    Route::resource('social-media-settings', SocialPlatformSettingController::class)->except(['edit', 'update']);
+    Route::resource('setting/social-media', SocialPlatformSettingController::class)->except(['edit', 'update']);
 
     Route::get('static-page/{slug}', [StaticPageController::class, 'index'])->name('static_page');
     Route::post('update-static-page', [StaticPageController::class, 'store'])->name('static_page_update');

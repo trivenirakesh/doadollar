@@ -59,7 +59,7 @@
                 <h4 class="modal-title" id="modal_title">Large Modal</h4>
                 <button type="button" class="close" style="font-size: 20px;" data-dismiss="modal" aria-label="Close">&times;</button>
             </div>
-            <form class="form-horizontal" id="module_form" action="{{route('admin.social-media-settings.store')}}" name="module_form" novalidate="novalidate">
+            <form class="form-horizontal" id="module_form" action="{{route('admin.social-media.store')}}" name="module_form" novalidate="novalidate">
                 <div class="modal-body">
                     <div class="card-body">
                         <input type="hidden" name="id" id="id" value="">
