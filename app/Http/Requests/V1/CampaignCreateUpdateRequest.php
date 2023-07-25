@@ -44,6 +44,7 @@ class CampaignCreateUpdateRequest extends FormRequest
             'start_datetime' => 'required',
             'end_datetime' => 'required',
             'donation_target' => 'required',
+            'status' => 'required|numeric|lte:1',
         ];
         if (request()->hasFile('image')) {
             $rules['image'] = 'required|max:2048|mimes:jpg,png,jpeg';
@@ -71,6 +72,9 @@ class CampaignCreateUpdateRequest extends FormRequest
             'unique_code.required' => __('messages.validation.unique_code'),
             'unique_code.max' => __('messages.validation.max'),
             'unique_code.unique' => __('messages.validation.unique_code_unique'),
+            'status.required' => __('messages.validation.status'),
+            'status.numeric' => 'Status' . __('messages.validation.must_numeric'),
+            'status.lte' => __('messages.validation.status_lte'),
         ];
 
         if (request()->hasFile('image')) {
@@ -79,11 +83,6 @@ class CampaignCreateUpdateRequest extends FormRequest
             $messages['image.mimes'] = __('messages.validation.image-mimes');
         }
 
-        if (request()->has('status')) {
-            $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
-            $messages['status.lte'] = __('messages.validation.status_lte');
-        }
         return $messages;
     }
 }

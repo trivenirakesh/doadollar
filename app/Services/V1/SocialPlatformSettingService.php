@@ -38,9 +38,7 @@ class SocialPlatformSettingService
     {
         // save details 
         $createSetting = new SocialPlatformSetting();
-        // remove blank spaces from string 
-        $paymentGatewaySettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
-        $createSetting->name = $paymentGatewaySettingName;
+        $createSetting->name = $request->name;
         $createSetting->api_key = $request->api_key;
         $createSetting->secret_key = $request->secret_key;
 
@@ -91,9 +89,7 @@ class SocialPlatformSettingService
         if ($socialPlatformSetting == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        // remove blank spaces from string 
-        $socialPlatformSettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
-        $socialPlatformSetting->name = $socialPlatformSettingName;
+        $socialPlatformSetting->name = $request->name;
         $socialPlatformSetting->api_key = $request->api_key;
         $socialPlatformSetting->secret_key = $request->secret_key;
         $socialPlatformSetting->status = $request->status;

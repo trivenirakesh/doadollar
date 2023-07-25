@@ -15,4 +15,9 @@ class Role extends Model
     public function entitymst(){
         return $this->hasOne(Entitymst::class);
     }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));
+    }
 }

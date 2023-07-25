@@ -44,11 +44,9 @@ class CampaignService
         $campaignCategoryId = $request->campaign_category_id;
         // save details
         $createCampaign = new Campaign();
-        // remove blank space from string   
-        $campaignName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
 
         $createCampaign->campaign_category_id = $campaignCategoryId;
-        $createCampaign->name = $campaignName;
+        $createCampaign->name = $request->name;
         $createCampaign->description = $request->description;
         $createCampaign->unique_code = $request->unique_code;
         $createCampaign->start_datetime = CommonHelper::getUTCDateTime($request->start_datetime);
@@ -159,9 +157,8 @@ class CampaignService
         }
         // save details
         $campaignCategoryId = $request->campaign_category_id;
-        $campaignName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
         $updateCampaign->campaign_category_id = $campaignCategoryId;
-        $updateCampaign->name = $campaignName;
+        $updateCampaign->name = $request->name;
         $updateCampaign->description = $request->description;
         $updateCampaign->unique_code = $request->unique_code;
         $updateCampaign->start_datetime = CommonHelper::getUTCDateTime($request->start_datetime);

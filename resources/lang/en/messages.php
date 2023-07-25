@@ -47,6 +47,7 @@ return [
         'max' => 'Max 200 characters allow',
         'password_confirmed' => 'The password confirmation does not match.',
         'password_min' => "Invalid password",
+        'title_invalid' => 'Title is invalid',
         'password_confirmation' => 'Please enter password confirmation',
         'password_confirmation_same' => 'The password confirmation does not match',
         'old_password_incorrect' => 'The old password is incorrect.',

@@ -31,20 +31,15 @@ class SocialPlatformCreateUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        if (request()->has('name')) {
-            $rules['name'] = 'required|max:200';
-        }
-        if (request()->has('api_key')) {
-            $rules['api_key'] = 'required|alpha_num';
-        }
-        if (request()->has('secret_key')) {
-            $rules['secret_key'] = 'required|alpha_num';
-        }
+        $rules = [
+            'name' => 'required|max:200',
+            'api_key' => 'required|alpha_num',
+            'secret_key' => 'required|alpha_num',
+            'status' => 'required|numeric|lte:1', 
+        ];
+
         if (request()->hasFile('image')) {
             $rules['image'] = 'required|max:2048|mimes:jpg,png,jpeg';
-        }
-        if (request()->has('status')) {
-            $rules['status'] = 'required|numeric|lte:1';
         }
 
         return $rules;
@@ -52,31 +47,22 @@ class SocialPlatformCreateUpdateRequest extends FormRequest
 
     public function messages()
     {
-        $messages = [];
-        if (request()->has('name')) {
-            $messages['name.required'] = __('messages.validation.name');
-            $messages['name.max'] = __('messages.validation.max_name');
-        }
+        $messages = [
+            'name.required' => __('messages.validation.name'),
+            'name.max' => __('messages.validation.max_name'),
+            'api_key.required' => __('messages.validation.api_key'),
+            'api_key.alpha_num' => __('messages.validation.alpha_num'),
+            'secret_key.required' => __('messages.validation.secret_key'),
+            'secret_key.alpha_num' => __('messages.validation.alpha_num'),
+            'status.required' => __('messages.validation.status'),
+            'status.numeric' => 'Status' . __('messages.validation.must_numeric'),
+            'status.lte' => __('messages.validation.status_lte'),
+        ];
 
-        if (request()->has('api_key')) {
-            $messages['api_key.required'] = __('messages.validation.api_key');
-            $messages['api_key.alpha_num'] = __('messages.validation.alpha_num');
-        }
-
-        if (request()->has('secret_key')) {
-            $messages['secret_key.required'] = __('messages.validation.secret_key');
-            $messages['secret_key.alpha_num'] = __('messages.validation.alpha_num');
-        }
         if (request()->hasFile('image')) {
             $messages['image.required'] = __('messages.validation.image');
             $messages['image.max'] =  __('messages.validation.image-max');
             $messages['image.mimes'] = __('messages.validation.image-mimes');
-        }
-        
-        if (request()->has('status')) {
-            $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
-            $messages['status.lte'] = __('messages.validation.status_lte');
         }
         return $messages;
     }

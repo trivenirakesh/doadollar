@@ -3,6 +3,7 @@
 namespace App\Http\Requests\V1;
 
 use App\Traits\CommonTrait;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StaticPageCreateUpdateRequest extends FormRequest
@@ -31,26 +32,25 @@ class StaticPageCreateUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $rules =  [];
-        if (request()->has('title')) {
-            $rules['title'] = 'required';
-        }
-        if (request()->hasFile('content')) {
-            $rules['content'] = 'required';
-        }
+        $rules =  [
+            'title' => [
+                'required',
+                Rule::in('about_us','privacy_policy','terms_and_condition'),
+            ],
+            'content' => 'required'
+        ];
+        
         return $rules;
     }
 
     public function messages()
     {
-        $messages = [];
-        if (request()->has('title')) {
-            $messages['title.required'] = __('messages.validation.title');
-        }
-        if (request()->hasFile('content')) {
-            $messages['content.required'] = __('messages.validation.content');
-        }
-
+        $messages = [
+            'title.required' => __('messages.validation.title'),
+            'title.in' => __('messages.validation.title_invalid'),
+            'content.required' => __('messages.validation.content')
+        ];
+        
         return $messages;
     }
 }

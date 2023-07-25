@@ -38,9 +38,8 @@ class RoleService
     public function store(Request $request)
     {
         // Save role section
-        $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
         $role = new Role;
-        $role->name = $roleName;
+        $role->name = $request->name;
         $role->status = 1;
         $role->created_by = auth()->user()->id;
         $role->created_ip = CommonHelper::getUserIp();
@@ -81,8 +80,7 @@ class RoleService
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
         if ($request->has('name')) {
-            $roleName = preg_replace('/\s+/', ' ', ucwords(strtolower($request->name)));
-            $role->name = $roleName;
+            $role->name = $request->name;
         }
         if ($request->has('status')) {
             $role->status = $request->status;
