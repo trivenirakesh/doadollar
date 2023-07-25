@@ -169,7 +169,7 @@ $(document).ready(function () {
     var table = $("#data_table_main").DataTable({
         processing: true,
         serverSide: true,
-        // dom: 'Bfrtip',
+        dom: '<f<t><"cm-dataTables-footer d-flex align-items-center float-right"lip>>',
         buttons: [],
         ajax: module_index_url,
         order: [],
@@ -178,10 +178,10 @@ $(document).ready(function () {
         },
         columns: [
             {
-                data: "DT_RowIndex",
-                name: "",
-                orderable: false,
+                data: "action_edit",
+                name: "action_edit",
                 searchable: false,
+                orderable: false,
             },
             {
                 data: "image",
@@ -208,8 +208,8 @@ $(document).ready(function () {
                 name: "status",
             },
             {
-                data: "actions",
-                name: "actions",
+                data: "action_delete",
+                name: "action_delete",
                 searchable: false,
                 orderable: false,
             },

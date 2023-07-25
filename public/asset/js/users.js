@@ -2,6 +2,7 @@ let module = $("#page_module").val();
 let module_index_url = $("#module_index_url").val();
 
 function addModel() {
+    $("#password_note").addClass("d-none");
     var $alertas = $("#module_form");
     $alertas.validate().resetForm();
     $alertas.find(".error").removeClass("error");
@@ -61,6 +62,7 @@ $(document).ready(function () {
 
     // edit resource
     $(document).on("click", ".module_edit_record", function () {
+        $("#password_note").removeClass("d-none");
         const id = $(this).parent().data("id");
         const url = $(this).parent().data("url");
         $("#modal_title").text(`Edit ${module}`);
@@ -78,6 +80,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 if (response.status) {
+                    console.log(response.data);
                     $.each(response.data, function (key, value) {
                         if (key == "image") {
                             $("#image_preview").attr("src", value);
@@ -100,29 +103,58 @@ $(document).ready(function () {
 
     $("#module_form").validate({
         rules: {
-            name: {
+            first_name: {
                 required: true,
+                lettersonly: true,
+            },
+            last_name: {
+                required: true,
+                lettersonly: true,
+            },
+            mobile: {
+                required: true,
+                digits: true,
+                minlength: 10,
+                maxlength: 10,
+            },
+            email: {
+                required: true,
+                email: true,
             },
             image: {
-                required: false,
                 accept: "image/jpg,image/jpeg,image/png",
             },
-            description: {
-                required: true,
+            password: {
                 minlength: 6,
             },
         },
         messages: {
+            first_name: {
+                required: "Please enter firstname",
+                lettersonly: "Please enter valid firstname",
+            },
+            last_name: {
+                required: "Please enter lastname",
+                lettersonly: "Please enter valid lastname",
+            },
+            email: {
+                required: "Please enter email",
+                email: "Please enter valid email",
+            },
+            mobile: {
+                required: "Please enter your mobile number.",
+                digits: "Please enter a valid mobile number.",
+                minlength: "Mobile number must be at least 10 digits.",
+                maxlength: "Mobile number must not exceed 10 digits.",
+            },
             name: {
                 required: "Please enter name",
             },
             image: {
-                required: "Please select image",
                 accept: "Only allow image!",
             },
-            description: {
-                required: "Please enter description",
-                minlength: "Please enter description atleast 6 character!",
+            password: {
+                minlength: "Please enter password atleast 6 character!",
             },
         },
         submitHandler: function (form, e) {
@@ -130,10 +162,12 @@ $(document).ready(function () {
             const formbtn = $("#module_form_btn");
             const formloader = $("#module_form_loader");
             console.log(formloader);
+            let formData = new FormData(form);
+
             $.ajax({
                 url: form.action,
                 type: "POST",
-                data: new FormData(form),
+                data: formData,
                 dataType: "json",
                 processData: false,
                 contentType: false,
@@ -156,8 +190,22 @@ $(document).ready(function () {
                         toastr.error(result.message);
                     }
                 },
-                error: function () {
-                    toastr.error("Please Reload Page.");
+                error: function (result) {
+                    var errors = result.responseJSON.errors;
+                    console.log("result", errors);
+                    // Clear previous error messages
+                    $(".error-message").text("");
+                    // Display validation errors in form fields
+                    $.each(errors, function (field, messages) {
+                        console.log(field, messages);
+                        var inputField = $('[name="' + field + '"]');
+                        $(".form-group .error").css("display", "block");
+                        inputField
+                            .closest(".form-group")
+                            .find(".error")
+                            .text(messages[0]);
+                    });
+                    // toastr.error("Please Reload Page.");
                     formloader.hide();
                     formbtn.prop("disabled", false);
                 },
@@ -170,6 +218,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         // dom: 'Bfrtip',
+        dom: '<f<t><"cm-dataTables-footer d-flex align-items-center float-right"lip>>',
         buttons: [],
         ajax: module_index_url,
         order: [],
@@ -178,34 +227,38 @@ $(document).ready(function () {
         },
         columns: [
             {
-                data: "DT_RowIndex",
-                name: "",
-                orderable: false,
-                searchable: false,
-            },
-            {
-                data: "image",
-                name: "image",
+                data: "action_edit",
+                name: "action_edit",
                 searchable: false,
                 orderable: false,
             },
             {
-                data: "name",
-                name: "name",
+                data: "first_name",
+                name: "first_name",
             },
             {
-                data: "entitymst.first_name",
-                name: "entitymst.first_name",
-                searchable: true,
-                orderable: false,
+                data: "last_name",
+                name: "last_name",
+            },
+            {
+                data: "email",
+                name: "email",
+            },
+            {
+                data: "role.name",
+                name: "role.name",
             },
             {
                 data: "created_at",
                 name: "created_at",
             },
             {
-                data: "actions",
-                name: "actions",
+                data: "status",
+                name: "status",
+            },
+            {
+                data: "action_delete",
+                name: "action_delete",
                 searchable: false,
                 orderable: false,
             },

@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{{asset('public/dist/img/favicon-32x32.png')}}">
     <title>{{config('app.name')}}</title>
     @include('admin.layouts.styles')
 </head>

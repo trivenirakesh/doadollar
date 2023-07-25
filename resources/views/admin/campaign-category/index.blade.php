@@ -19,13 +19,13 @@
                             <table id="data_table_main" class="table w-100">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">#</th>
+                                        <th class="text-center"></th>
                                         <th>Image</th>
                                         <th>Name</th>
                                         <th>Created By</th>
                                         <th>Created At</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                             </table>

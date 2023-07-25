@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Notifications\ResetPasswordNotification;
 
 class Entitymst extends Authenticatable
 {
@@ -61,5 +62,10 @@ class Entitymst extends Authenticatable
     public function scopeRoleUser($query)
     {
         return $query->where('entity_type', self::ENTITYUSER);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
