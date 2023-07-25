@@ -62,4 +62,14 @@ class Entitymst extends Authenticatable
     {
         return $query->where('entity_type', self::ENTITYUSER);
     }
+
+    public function setFirstNameAttribute($value)
+    {
+        $this->attributes['first_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+    }
+
+    public function setLastNameAttribute($value)
+    {
+        $this->attributes['last_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+    }
 }

@@ -38,9 +38,7 @@ class UploadTypeService
     {
         // save details 
         $uploadType = new UploadType();
-        // remove blank spaces from string 
-        $uploadTypeName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
-        $uploadType->name = $uploadTypeName;
+        $uploadType->name = $request->name;
         $uploadType->type = $request->type;
         $uploadType->created_by = auth()->user()->id;
         $uploadType->created_ip = CommonHelper::getUserIp();
@@ -82,8 +80,7 @@ class UploadTypeService
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
         if($request->has('name')){
-            $uploadTypeName = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->name)));
-            $uploadType->name = $uploadTypeName;
+            $uploadType->name = $request->name;
         }
         if($request->has('type')){
             $uploadType->type = $request->type;

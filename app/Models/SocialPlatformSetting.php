@@ -17,4 +17,9 @@ class SocialPlatformSetting extends Model
         $linkPath = CommonHelper::getConfigValue('link_path');
         return $val == null ? asset('public/dist/img/no-image.png') : asset($linkPath.self::FOLDERNAME . $val);
     }
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));
+    }
 }

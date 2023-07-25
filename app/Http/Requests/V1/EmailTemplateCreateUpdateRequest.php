@@ -31,44 +31,29 @@ class EmailTemplateCreateUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $rules =  [];
-        if (request()->has('title')) {
-            $rules['title'] = 'required|max:200';
-        }
-        if (request()->hasFile('subject')) {
-            $rules['subject'] = 'required|max:200';
-        }
-        if (request()->hasFile('message')) {
-            $rules['message'] = 'required';
-        }
-        if (request()->has('status')) {
-            $rules['status'] = 'required|numeric|lte:1';
-        }
-
+        $rules =  [
+            'title' => 'required|max:200',
+            'subject' => 'required|max:200',
+            'message' => 'required',
+            'status' => 'required|numeric|lte:1'
+        ];
+        
         return $rules;
     }
 
     public function messages()
     {
-        $messages = [];
-        if (request()->has('title')) {
-            $messages['title.required'] = __('messages.validation.title');
-            $messages['title.max'] = __('messages.validation.max');
-        }
-        if (request()->hasFile('subject')) {
-            $messages['subject.required'] = __('messages.validation.subject');
-            $messages['subject.max'] =  __('messages.validation.max');
-        }
-
-        if (request()->hasFile('message')) {
-            $messages['message.required'] = __('messages.validation.message');
-        }
-
-        if (request()->has('status')) {
-            $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
-            $messages['status.lte'] = __('messages.validation.status_lte');
-        }
+        $messages = [
+            'title.required' => __('messages.validation.title'),
+            'title.max' => __('messages.validation.max'),
+            'subject.required' => __('messages.validation.subject'),
+            'subject.max' =>  __('messages.validation.max'),
+            'message.required' => __('messages.validation.message'),
+            'status.required' => __('messages.validation.status'),
+            'status.numeric' => 'Status' . __('messages.validation.must_numeric'),
+            'status.lte' => __('messages.validation.status_lte'),
+        ];
+        
         return $messages;
     }
 }

@@ -38,9 +38,7 @@ class PaymentGatewaySettingService
     {
         // save details 
         $createSetting = new PaymentGatewaySetting();
-        // remove blank spaces from string 
-        $paymentGatewaySettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
-        $createSetting->name = $paymentGatewaySettingName;
+        $createSetting->name = $request->name;
         $createSetting->api_key = $request->api_key;
         $createSetting->secret_key = $request->secret_key;
 
@@ -91,9 +89,7 @@ class PaymentGatewaySettingService
         if ($paymentGatewaySetting == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        // remove blank spaces from string 
-        $paymentGatewaySettingName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
-        $paymentGatewaySetting->name = $paymentGatewaySettingName;
+        $paymentGatewaySetting->name = $request->name;
         $paymentGatewaySetting->api_key = $request->api_key;
         $paymentGatewaySetting->secret_key = $request->secret_key;
         $paymentGatewaySetting->status = $request->status;

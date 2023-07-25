@@ -31,26 +31,21 @@ class StaticPageCreateUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $rules =  [];
-        if (request()->has('title')) {
-            $rules['title'] = 'required';
-        }
-        if (request()->hasFile('content')) {
-            $rules['content'] = 'required';
-        }
+        $rules =  [
+            'title' => 'required',
+            'content' => 'required'
+        ];
+        
         return $rules;
     }
 
     public function messages()
     {
-        $messages = [];
-        if (request()->has('title')) {
-            $messages['title.required'] = __('messages.validation.title');
-        }
-        if (request()->hasFile('content')) {
-            $messages['content.required'] = __('messages.validation.content');
-        }
-
+        $messages = [
+            'title.required' => __('messages.validation.title'),
+            'content.required' => __('messages.validation.content')
+        ];
+        
         return $messages;
     }
 }

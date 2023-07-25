@@ -47,27 +47,15 @@ class UserService
             return $this->errorResponseArr($errorMessage);
         }
 
-        // remove blank spaces from string 
-        $firstName = ucfirst(strtolower(str_replace(' ', '', $request->first_name)));
-        $lastName = ucfirst(strtolower(str_replace(' ', '', $request->last_name)));
-
         $createUser = new Entitymst();
-        $createUser->first_name = $firstName;
-        $createUser->last_name = $lastName;
+        $createUser->first_name = $request->first_name;
+        $createUser->last_name = $request->last_name;
         $createUser->email = str_replace(' ', '', $request->email);
         $createUser->mobile = $request->mobile;
         $createUser->entity_type = $request->entity_type;
         $createUser->password = Hash::make($request->password);
         $createUser->status = 1;
         $createUser->role_id = $request->role_id;
-        // if (isset($request->role_id) && $request->entity_type != 2) {
-        //     $activeStatus = CommonHelper::getConfigValue('status.active');
-        //     $checkRoleExist = Role::where('id', $request->role_id)->where('status', $activeStatus)->first();
-        //     if (!$checkRoleExist) {
-        //         return $this->errorResponseArr('Role' . __('messages.validation.not_found'));
-        //     }
-        //     $createUser->role_id = $request->role_id;
-        // }
         $createUser->created_by = auth()->user()->id;
         $createUser->created_ip = CommonHelper::getUserIp();
         $createUser->save();
@@ -104,24 +92,14 @@ class UserService
         if ($updateUser == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        // remove blank spaces from string 
-        $firstName = ucfirst(strtolower(str_replace(' ', '', $request->first_name)));
-        $lastName = ucfirst(strtolower(str_replace(' ', '', $request->last_name)));
 
         // update details 
-        $updateUser->first_name = $firstName;
-        $updateUser->last_name = $lastName;
+        $updateUser->first_name = $request->first_name;
+        $updateUser->last_name = $request->last_name;
         $updateUser->email = str_replace(' ', '', $request->email);
         $updateUser->mobile = $request->mobile;
         $updateUser->status = $request->status;
-        if (isset($request->role_id) && $request->entity_type != 2) {
-            $activeStatus = CommonHelper::getConfigValue('status.active');
-            $checkRoleExist = Role::where('id', $request->role_id)->where('status', $activeStatus)->first();
-            if (!$checkRoleExist) {
-                return $this->errorResponseArr('Role' . __('messages.validation.not_found'));
-            }
-            $updateUser->role_id = $request->role_id;
-        }
+        $updateUser->role_id = $request->role_id;
         $updateUser->updated_by = auth()->user()->id;
         $updateUser->updated_ip = CommonHelper::getUserIp();
         $updateUser->update();

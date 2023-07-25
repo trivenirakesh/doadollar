@@ -36,30 +36,23 @@ class RoleCreateUpdateRequest extends FormRequest
     public function rules()
     {
         $rules =  [
-            'name' => 'required',
+            'name' => 'required|max:200',
+            'status' => 'required|numeric|lte:1'
         ];
-        if (request()->has('name')) {
-            $rules['name'] = 'required|max:255';
-        }
-        if (request()->has('status')) {
-            $rules['status'] = 'required|numeric|lte:1';
-        }
 
         return $rules;
     }
 
     public function messages()
     {
-        $messages = [];
-        if (request()->has('name')) {
-            $messages['name.required'] = __('messages.validation.name');
-            $messages['name.max'] = __('messages.validation.max_name');
-        }
-        if (request()->has('status')) {
-            $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
-            $messages['status.lte'] = __('messages.validation.status_lte');
-        }
+        $messages = [
+            'name.required' => __('messages.validation.name'),
+            'name.max' => __('messages.validation.max_name'),
+            'status.required' => __('messages.validation.status'),
+            'status.numeric' => 'Status' . __('messages.validation.must_numeric'),
+            'status.lte' => __('messages.validation.status_lte'),
+        ];
+        
         return $messages;
     }
 }

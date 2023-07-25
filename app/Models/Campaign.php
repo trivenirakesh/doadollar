@@ -54,4 +54,9 @@ class Campaign extends Model
         return $this->hasMany(CampaignUploads::class);
     }
     
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+    }
+    
 }

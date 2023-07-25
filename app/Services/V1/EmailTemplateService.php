@@ -39,10 +39,8 @@ class EmailTemplateService
         // save details 
         $emailTemplate = new EmailTemplate();
         // remove blank spaces from string 
-        $emailTemplateTitle = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->title)));
-        $emailTemplateSubject = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->subject)));
-        $emailTemplate->title = $emailTemplateTitle;
-        $emailTemplate->subject = $emailTemplateSubject;
+        $emailTemplate->title = $request->title;
+        $emailTemplate->subject = $request->subject;
         $emailTemplate->message = $request->message;
         $emailTemplate->created_by = auth()->user()->id;
         $emailTemplate->created_ip = CommonHelper::getUserIp();
@@ -82,10 +80,8 @@ class EmailTemplateService
         if ($emailTemplate == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $emailTemplateTitle = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->title)));
-        $emailTemplateSubject = preg_replace('/\s+/', ' ', ucfirst(strtolower($request->subject)));
-        $emailTemplate->title = $emailTemplateTitle;
-        $emailTemplate->subject = $emailTemplateSubject;
+        $emailTemplate->title = $request->title;
+        $emailTemplate->subject = $request->subject;
         $emailTemplate->message = $request->message;
         if ($request->has('status')) {
             $emailTemplate->status = $request->status;

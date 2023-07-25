@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\V1;
 
+use App\Helpers\CommonHelper;
 use App\Traits\CommonTrait;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UsersCreateUpdateRequest extends FormRequest
@@ -32,8 +34,16 @@ class UsersCreateUpdateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'first_name' => 'required|max:50',
-            'last_name' => 'required|max:50'
+            'first_name' => 'required|max:200',
+            'last_name' => 'required|max:200',
+            'entity_type' => 'required|digits:1|lte:2',
+            'status' => 'required|numeric|lte:1',
+            'role_id' => [
+                'required',
+                Rule::exists('roles','id')->where(function ($query) {
+                    $query->where('status', CommonHelper::getConfigValue('status.active'));
+                }),
+            ]
         ];
         if ($this->id != null) {
             $rules['email'] = 'required|email|unique:entitymst,email,' . $this->id . ',id,deleted_at,NULL';
@@ -45,15 +55,7 @@ class UsersCreateUpdateRequest extends FormRequest
         if (request()->has('password') || request()->has('id') ) {
             $rules['password'] = request()->has('id') && request()->id>0 ? 'nullable': 'required';
         }
-        if (request()->has('entity_type')) {
-            $rules['entity_type'] = 'required|digits:1|lte:2';
-        }
-        if (request()->has('status')) {
-            $rules['status'] = 'required|numeric|lte:1';
-        }
-        if (request()->has('role_id') && request()->entity_type != 2) {
-            $rules['role_id'] = 'required|numeric';
-        }
+        
         return $rules;
     }
 
@@ -62,33 +64,29 @@ class UsersCreateUpdateRequest extends FormRequest
         $messages = [];
         $messages = [
             'first_name.required' => __('messages.validation.first_name'),
+            'first_name.max' => __('messages.validation.max'),
             'last_name.required' => __('messages.validation.last_name'),
+            'last_name.max' => __('messages.validation.max'),
             'email.required' => __('messages.validation.email'),
             'email.email' => __('messages.validation.email_email'),
             'email.unique' => __('messages.validation.email_unique'),
             'mobile.required' => __('messages.validation.mobile'),
             'mobile.numeric' => 'Mobile' . __('messages.validation.must_numeric'),
             'mobile.digits' => __('messages.validation.mobile_digits'),
-            'mobile.unique' => __('messages.validation.mobile_unique')
+            'mobile.unique' => __('messages.validation.mobile_unique'),
+            'entity_type.required' => __('messages.validation.entity_type'),
+            'entity_type.digits' => __('messages.validation.entity_type_digits'),
+            'entity_type.lte' => __('messages.validation.entity_type_lte'),
+            'status.required' => __('messages.validation.status'),
+            'status.numeric' => 'Status' . __('messages.validation.must_numeric'),
+            'status.lte' => __('messages.validation.status_lte'),
+            'role_id.required' => __('messages.validation.role_id'),
+            'role_id.exists' => 'Role'.__('messages.validation.not_found'),
         ];
-        if (request()->has('entity_type')) {
+        if (request()->has('password')) {
             $messages['password.required'] = __('messages.validation.password');
         }
-        if (request()->has('entity_type')) {
-            $messages['entity_type.required'] = __('messages.validation.entity_type');
-            $messages['entity_type.digits'] = __('messages.validation.entity_type_digits');
-            $messages['entity_type.lte'] = __('messages.validation.entity_type_lte');
-        }
-        if (request()->has('status')) {
-            $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
-            $messages['status.lte'] = __('messages.validation.status_lte');
-        }
-        if (request()->has('role_id') && request()->entity_type != 2) {
-            $messages['role_id.required'] = __('messages.validation.role_id');
-            $messages['role_id.numeric'] = 'Role id' . __('messages.validation.must_numeric');
-        }
-
+        
         return $messages;
     }
 }

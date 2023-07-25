@@ -39,9 +39,7 @@ class CampaignCategoryService
     {
         // save details 
         $createCampaignCat = new CampaignCategory();
-        // remove blank spaces from string 
-        $campaignCatName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
-        $createCampaignCat->name = $campaignCatName;
+        $createCampaignCat->name = $request->name;
         $createCampaignCat->description = $request->description;
         $createCampaignCat->created_by = auth()->user()->id;
         $createCampaignCat->created_ip = CommonHelper::getUserIp();
@@ -90,9 +88,7 @@ class CampaignCategoryService
         if ($campaignCategory == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        // remove blank spaces from string 
-        $campaignCatName = ucfirst(strtolower(str_replace(' ', '', $request->name)));
-        $campaignCategory->name = $campaignCatName;
+        $campaignCategory->name = $request->name;
         $campaignCategory->description = $request->description;
         $campaignCategory->status = $request->status;
         // get logged in user details 

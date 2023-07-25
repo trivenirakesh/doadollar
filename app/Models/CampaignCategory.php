@@ -12,6 +12,9 @@ class CampaignCategory extends Model
     use HasFactory, SoftDeletes;
 
     const FOLDERNAME = "campaigncategory/";
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+    ];
 
     public function getImageAttribute($val)
     {
@@ -19,9 +22,11 @@ class CampaignCategory extends Model
         return $val == null ? asset('public/dist/img/no-image.png') : asset($linkPath.self::FOLDERNAME . $val);
     }
 
-    protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s',
-    ];
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+    }
+
     public function entitymst()
     {
         return $this->hasOne(Entitymst::class, 'id', 'created_by');

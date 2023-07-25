@@ -17,4 +17,9 @@ class CampaignUploads extends Model
         $activeStatus = CommonHelper::getConfigValue('status.active');
         return $this->belongsTo(UploadType::class,'upload_type_id')->where('status',$activeStatus);
     }
+
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+    }
 }

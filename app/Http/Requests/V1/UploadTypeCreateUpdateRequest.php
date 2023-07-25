@@ -31,37 +31,28 @@ class UploadTypeCreateUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [];
-        if (request()->has('name')) {
-            $rules['name'] = 'required|max:200';
-        }
-        if (request()->has('type')) {
-            $rules['type'] = 'required|numeric|lte:1';
-        }
-        if (request()->has('status')) {
-            $rules['status'] = 'required|numeric|lte:1';
-        }
-
+        $rules = [
+            'name' => 'required|max:200',
+            'type' => 'required|numeric|lte:1',
+            'status' => 'required|numeric|lte:1',
+        ];
+        
         return $rules;
     }
 
     public function messages()
     {
-        $messages = [];
-        if (request()->has('name')) {
-            $messages['name.required'] = __('messages.validation.name');
-            $messages['name.max'] = __('messages.validation.max_name');
-        }
-        if (request()->has('type')) {
-            $messages['type.required'] = __('messages.validation.type');
-            $messages['type.numeric'] = 'Type'.__('messages.validation.must_numeric');
-            $messages['type.lte'] = __('messages.validation.type_lte');
-        }
-        if (request()->has('status')) {
-            $messages['status.required'] = __('messages.validation.status');
-            $messages['status.numeric'] = 'Status' . __('messages.validation.must_numeric');
-            $messages['status.lte'] = __('messages.validation.status_lte');
-        }
+        $messages = [
+            'name.required' => __('messages.validation.name'),
+            'name.max' => __('messages.validation.max_name'),
+            'type.required' => __('messages.validation.type'),
+            'type.numeric' => 'Type'.__('messages.validation.must_numeric'),
+            'type.lte' => __('messages.validation.type_lte'),
+            'status.required' => __('messages.validation.status'),
+            'status.numeric' => 'Status' . __('messages.validation.must_numeric'),
+            'status.lte' => __('messages.validation.status_lte'),
+        ];
+        
         return $messages;
     }
 }
