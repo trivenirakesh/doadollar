@@ -85,4 +85,5 @@ class LoginController extends Controller
             $this->username() =>  __('messages.auth.login_failed'),
         ]);
     }
+    
 }

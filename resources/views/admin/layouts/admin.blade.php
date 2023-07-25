@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}" />
+  <!-- favicon-32x32 -->
+  <link rel="icon" type="image/x-icon" href="{{asset('public/dist/img/favicon-32x32.png')}}">
   <title>{{config('app.name')}}{{isset($title)? " | $title":''}}</title>
   @include('admin.layouts.styles')
 </head>
@@ -31,12 +33,12 @@
         <li class="nav-item d-none d-sm-inline-block">
           <!-- <a href="#" class="nav-link">Contact</a> -->
           <!-- GlobalSearch Form -->
-          <div class="form-inline cm-global-search">
+          <!-- <div class="form-inline cm-global-search">
             <div class="input-group" data-widget="sidebar-search">
               <input class="form-control form-control-sidebar" type="search" placeholder="Search…" aria-label="Search">
               <i class="fas fa-search fa-fw"></i>
             </div>
-          </div>
+          </div> -->
         </li>
       </ul>
 

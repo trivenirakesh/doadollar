@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\CampaignCategoryCreateUpdateRequest;
 use App\Models\CampaignCategory;
 use App\Services\V1\CampaignCategoryService;
+use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
-use DataTables;
+use Yajra\DataTables\Facades\DataTables;
 
 class CampaignCategoryController extends Controller
 {
+    use CommonTrait;
     protected $campaignCategoryService;
 
     public function __construct(CampaignCategoryService $campaignCategoryService)
@@ -35,13 +37,11 @@ class CampaignCategoryController extends Controller
             }
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('actions', function ($row) use ($baseurl) {
-                    $url = "<div class='actions-a' data-id='" . $row->id . "' data-url='" . $baseurl . "'>
-                <a class='btn-circle theme_primary_btn module_view_record' title='View'><i class='fa fa-eye'></i></a>
-                <a class='btn-circle theme_primary_btn module_edit_record' title='Edit'><i class='fa fa-edit'></i></a>
-                <a class='btn-circle btn-danger module_delete_record' title='Delete'><i class='fa fa-trash-alt'></i></a>
-                </div>";
-                    return $url;
+                ->addColumn('action_edit', function ($row) use ($baseurl) {
+                    return $this->actionHtml($baseurl, $row->id, false);
+                })
+                ->addColumn('action_delete', function ($row) use ($baseurl) {
+                    return $this->actionHtml($baseurl, $row->id, true);
                 })
 
                 ->addColumn('image', function ($row) {
@@ -49,11 +49,9 @@ class CampaignCategoryController extends Controller
                     return $image;
                 })
                 ->addColumn('status', function ($row) {
-                    $statusText = $row->status == 1 ? "Active" : "Inactive";
-                    $status = "<span class='text-md badge badge-pill badge-dark'>$statusText</span>";
-                    return $status;
+                    return $this->statusHtml($row);
                 })
-                ->rawColumns(['actions', 'image', 'status'])
+                ->rawColumns(['action_edit', 'action_delete', 'image', 'status'])
                 ->make(true);
         }
         $title =  'Campaign Category';
