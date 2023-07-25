@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\SocialPlatformCreateUpdateRequest;
-use App\Http\Requests\V1\UsersCreateUpdateRequest;
 use App\Models\Entitymst;
 use App\Models\Role;
 use App\Models\SocialPlatformSetting;
@@ -57,7 +56,7 @@ class SocialPlatformSettingController extends Controller
                 ->rawColumns(['action_edit', 'image', 'action_delete', 'status_text'])
                 ->make(true);
         }
-        $title =  'Users';
+        $title =  'Social Media Settings';
         $entityTypes = Entitymst::ENTITYTYPES;
         return view('admin.social-media-settings.index', compact('title', 'entityTypes'));
     }
@@ -74,11 +73,6 @@ class SocialPlatformSettingController extends Controller
         if (isset($request->id) && $request->id > 0) { //update data
             $socialPlatformSetting = $this->socialPlatformSettingService->update($request, $request->id);
         } else { //add data
-            $request->request->add([
-                'entity_type' => Entitymst::ENTITYUSER,
-                'role_id' => Role::ROLEUSER,
-            ]);
-
             $socialPlatformSetting  = $this->socialPlatformSettingService->store($request);
         }
         if (!$socialPlatformSetting['status']) {
