@@ -45,7 +45,7 @@ class ResetPasswordNotification extends Notification
         ], false));
 
         $username =  Entitymst::where('email', $email)->first()->first_name ?? '';
-        return (new MailMessage)->view('emails.user.reset', ['url' => $url, 'username' => $username]);
+        return (new MailMessage)->view('emails.user.reset', ['url' => $url, 'username' => $username])->subject("Reset Password");;
     }
 
     /**

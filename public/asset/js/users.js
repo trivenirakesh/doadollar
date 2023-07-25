@@ -121,9 +121,6 @@ $(document).ready(function () {
                 required: true,
                 email: true,
             },
-            image: {
-                accept: "image/jpg,image/jpeg,image/png",
-            },
             password: {
                 minlength: 6,
             },
@@ -146,12 +143,6 @@ $(document).ready(function () {
                 digits: "Please enter a valid mobile number.",
                 minlength: "Mobile number must be at least 10 digits.",
                 maxlength: "Mobile number must not exceed 10 digits.",
-            },
-            name: {
-                required: "Please enter name",
-            },
-            image: {
-                accept: "Only allow image!",
             },
             password: {
                 minlength: "Please enter password atleast 6 character!",
@@ -192,7 +183,6 @@ $(document).ready(function () {
                 },
                 error: function (result) {
                     var errors = result.responseJSON.errors;
-                    console.log("result", errors);
                     // Clear previous error messages
                     $(".error-message").text("");
                     // Display validation errors in form fields

@@ -2,10 +2,7 @@
 
 use App\Http\Controllers\Admin\CampaignCategoryController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\StaticPageController;
+use App\Http\Controllers\Admin\{HomeController, ProfileController, UserController, StaticPageController};
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -39,6 +36,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'revalidate
     Route::get('logout', [HomeController::class, 'logout'])->name('logout');
     Route::resource('campaign-category', CampaignCategoryController::class)->except(['edit', 'update']);
     Route::resource('users', UserController::class)->except(['edit', 'update']);
-    Route::get('static-page/{slug}', [StaticPageController::class,'index'])->name('static_page');
-    Route::post('update-static-page', [StaticPageController::class,'store'])->name('static_page_update');
+    Route::get('static-page/{slug}', [StaticPageController::class, 'index'])->name('static_page');
+    Route::post('update-static-page', [StaticPageController::class, 'store'])->name('static_page_update');
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile');
+    Route::post('profile', [ProfileController::class, 'update'])->name('profile-update');
+    Route::post('update-password', [ProfileController::class, 'updatePassword'])->name('update-password');
 });
