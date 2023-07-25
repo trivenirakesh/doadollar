@@ -23,7 +23,7 @@
                             @csrf
                             <input type="hidden" name="title" value="{{$slug}}" id="page_slug">
                             <div class="card-body">
-                                <textarea id="editor" name="static_page_form_editor">{{$content}}</textarea>
+                                <textarea  name="static_page_form_editor">{{$content}}</textarea>
                                 <div class="card-footer text-center">
                                     <button type="button" class="btn btn-primary btn-flat" id="static_page_form_btn" onclick="saveStaticPage(`{{route('admin.static_page_update')}}`)">Save<span style="display: none" id="static_page_form_loader"><i class="fa fa-spinner fa-spin"></i></span></button>
                                 </div>
@@ -41,7 +41,7 @@
 
 @endsection
 @push('script')
-<!-- <script src="{{asset('public/plugins/ckeditor/ckeditor.js')}}"></script> -->
-<script src="{{asset('public/plugins/ckeditor5/package/build/ckeditor.js')}}"></script>
+<script src="{{asset('public/plugins/ckeditor/ckeditor.js')}}"></script>
+<!-- <script src="{{asset('public/plugins/ckeditor5/package/build/ckeditor.js')}}"></script> -->
 <script src="{{asset('public/asset/js/staticpage.js')}}"></script>
 @endpush

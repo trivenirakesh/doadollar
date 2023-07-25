@@ -45,11 +45,11 @@ class SocialPlatformSettingService
         // get logged in user details 
         $createSetting->created_by = auth()->user()->id;
         $createSetting->created_ip = CommonHelper::getUserIp();
-        
+
         // upload file 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image,SocialPlatformSetting::FOLDERNAME,0);
+            $data = CommonHelper::uploadImages($image, SocialPlatformSetting::FOLDERNAME, 0);
             if (!empty($data)) {
                 $createSetting->image = $data['filename'];
             }
@@ -100,20 +100,20 @@ class SocialPlatformSettingService
         if ($request->hasFile('image')) {
             // Unlink old image from storage 
             $oldImage = $socialPlatformSetting->getAttributes()['image'] ?? null;
-            if($oldImage != null){
-                CommonHelper::removeUploadedImages($oldImage,SocialPlatformSetting::FOLDERNAME);
+            if ($oldImage != null) {
+                CommonHelper::removeUploadedImages($oldImage, SocialPlatformSetting::FOLDERNAME);
             }
             // Unlink old image from storage 
 
             $image = $request->file('image');
-            $data = CommonHelper::uploadImages($image,SocialPlatformSetting::FOLDERNAME,0);
+            $data = CommonHelper::uploadImages($image, SocialPlatformSetting::FOLDERNAME, 0);
             if (!empty($data)) {
                 $socialPlatformSetting->image = $data['filename'];
             }
         }
         $socialPlatformSetting->update();
         $getSettingDetails = new SocialPlatformSettingResource($socialPlatformSetting);
-        return $this->successResponseArr($getSettingDetails, self::module . __('messages.success.update'));
+        return $this->successResponseArr(self::module . __('messages.success.update'), $getSettingDetails);
     }
 
     /**

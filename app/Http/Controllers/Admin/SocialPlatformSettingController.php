@@ -3,22 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\SocialPlatformCreateUpdateRequest;
 use App\Http\Requests\V1\UsersCreateUpdateRequest;
 use App\Models\Entitymst;
 use App\Models\Role;
-use App\Services\V1\UserService;
+use App\Models\SocialPlatformSetting;
+use App\Services\V1\SocialPlatformSettingService;
 use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class UserController extends Controller
+class SocialPlatformSettingController extends Controller
 {
     use CommonTrait;
-    protected $userService;
+    protected $socialPlatformSettingService;
 
-    public function __construct(UserService $userService)
+    public function __construct(SocialPlatformSettingService $socialPlatformSettingService)
     {
-        $this->userService = $userService;
+        $this->socialPlatformSettingService = $socialPlatformSettingService;
     }
 
     /**
@@ -30,10 +32,10 @@ class UserController extends Controller
     {
 
         if ($request->ajax()) {
-            $baseurl = route('admin.users.index');
-            $data = Entitymst::with(['role' => function ($query) {
-                $query->select('id', 'name');
-            }])->notAdmin();
+            $baseurl = route('admin.social-media-settings.index');
+            $data = SocialPlatformSetting::with(['entitymst' => function ($query) {
+                $query->select('id', 'first_name', 'last_name');
+            }]);
             if ($request->order == null) {
                 $data->orderBy('created_at', 'desc');
             }
@@ -45,15 +47,19 @@ class UserController extends Controller
                 ->addColumn('action_delete', function ($row) use ($baseurl) {
                     return $this->actionHtml($baseurl, $row->id, true);
                 })
+                ->addColumn('image', function ($row) {
+                    $image = '<img src="' . $row->image . '" class="img-fluid img-radius" width="40px" height="40px">';
+                    return $image;
+                })
                 ->addColumn('status_text', function ($row) {
                     return $this->statusHtml($row);
                 })
-                ->rawColumns(['action_edit', 'action_delete', 'status_text'])
+                ->rawColumns(['action_edit', 'image', 'action_delete', 'status_text'])
                 ->make(true);
         }
         $title =  'Users';
         $entityTypes = Entitymst::ENTITYTYPES;
-        return view('admin.users.index', compact('title', 'entityTypes'));
+        return view('admin.social-media-settings.index', compact('title', 'entityTypes'));
     }
 
     /**
@@ -62,22 +68,23 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UsersCreateUpdateRequest $request)
+    public function store(SocialPlatformCreateUpdateRequest $request)
     {
 
         if (isset($request->id) && $request->id > 0) { //update data
-            $user = $this->userService->update($request, $request->id);
+            $socialPlatformSetting = $this->socialPlatformSettingService->update($request, $request->id);
         } else { //add data
             $request->request->add([
                 'entity_type' => Entitymst::ENTITYUSER,
                 'role_id' => Role::ROLEUSER,
             ]);
-            $user  = $this->userService->store($request);
+
+            $socialPlatformSetting  = $this->socialPlatformSettingService->store($request);
         }
-        if (!$user['status']) {
-            return response()->json($user, 401);
+        if (!$socialPlatformSetting['status']) {
+            return response()->json($socialPlatformSetting, 401);
         }
-        return response()->json($user, 200);
+        return response()->json($socialPlatformSetting, 200);
     }
 
     /**
@@ -88,11 +95,11 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = $this->userService->show($id);
-        if (!$user['status']) {
-            return response()->json($user, 401);
+        $socialPlatformSetting = $this->socialPlatformSettingService->show($id);
+        if (!$socialPlatformSetting['status']) {
+            return response()->json($socialPlatformSetting, 401);
         }
-        return response()->json($user, 200);
+        return response()->json($socialPlatformSetting, 200);
     }
 
 
@@ -104,10 +111,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = $this->userService->destroy($id);
-        if (!$user['status']) {
-            return response()->json($user, 401);
+        $socialPlatformSetting = $this->socialPlatformSettingService->destroy($id);
+        if (!$socialPlatformSetting['status']) {
+            return response()->json($socialPlatformSetting, 401);
         }
-        return response()->json($user, 200);
+        return response()->json($socialPlatformSetting, 200);
     }
 }

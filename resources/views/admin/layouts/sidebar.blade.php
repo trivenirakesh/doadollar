@@ -21,7 +21,7 @@
                 </li>
                 <li class="nav-item ">
                     <a href="#" class="nav-link {{request()->is('admin/setting*') ?'active' : ''}}">
-                    <i class="nav-icon fas fa-tools"></i>
+                        <i class="nav-icon fas fa-tools"></i>
                         <p>Setting <i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -49,6 +49,12 @@
                     <a href="{{ route('admin.users.index')}}" class="nav-link  {{request()->is('admin/users*') ?'active' : ''}}">
                         <i class="nav-icon fas fa-users"></i>
                         <p> Users</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.social-media-settings.index')}}" class="nav-link  {{request()->is('admin/social-media-settings*') ?'active' : ''}}">
+                        <i class="nav-icon fas fa-share-alt"></i>
+                        <p>Social Media Setting</p>
                     </a>
                 </li>
                 <li class="nav-item">
