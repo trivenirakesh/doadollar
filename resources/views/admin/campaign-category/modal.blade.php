@@ -25,6 +25,14 @@
                                             <label class="col-form-label"><b>Description</b></label><br>
                                             <p id="info_description"></p>
                                         </div>
+                                        <div class="col-md-12">
+                                            <label class="col-form-label"><b>Status</b></label><br>
+                                            <p id="info_status_text"></p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="col-form-label"><b>Created At</b></label><br>
+                                            <p id="info_created_at"></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -51,6 +59,14 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <input type="hidden" name="id" id="id" value="">
+                        <div class="row">
+                            <div class="form-group d-flex align-items:center">
+                                <select class="form-control form-control-sm" name="status" id="status">
+                                    <option value="1" selected>Active</option>
+                                    <option value="0">InActive</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
