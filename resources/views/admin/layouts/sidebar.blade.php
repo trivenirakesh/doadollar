@@ -31,6 +31,32 @@
                         <p> Users</p>
                     </a>
                 </li>
+                <li class="nav-item ">
+                    <a href="#" class="nav-link {{request()->is('admin/static-page*') ?'active' : ''}}">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>Static Page <i class="right fas fa-angle-left"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('admin.static_page',['about_us'])}}" class="nav-link {{request()->is('admin/static-page/about_us*') ?'active' : ''}}">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Abount Us</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('admin.static_page',['privacy_policy'])}}" class="nav-link {{request()->is('admin/static-page/privacy_policy*') ?'active' : ''}}">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Privacy Policy</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('admin.static_page',['terms_and_condition'])}}" class="nav-link {{request()->is('admin/static-page/terms_and_condition*') ?'active' : ''}}">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Terms & Condition</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <!-- <li class="nav-item">
                     <a href="{{ url('adminlogin')}}" class="nav-link  {{request()->is('categories*') ?'active' : ''}}">
                         <i class="nav-icon fa fa-th-large"></i>
