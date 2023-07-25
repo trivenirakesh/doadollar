@@ -219,6 +219,10 @@ $(document).ready(function () {
         serverSide: true,
         // dom: 'Bfrtip',
         dom: '<f<t><"cm-dataTables-footer d-flex align-items-center float-right"lip>>',
+        oLanguage: {
+            "sInfo": "_START_-_END_ of _TOTAL_",// text you want show for info section
+            "sLengthMenu": "_MENU_"
+        },
         buttons: [],
         ajax: module_index_url,
         order: [],

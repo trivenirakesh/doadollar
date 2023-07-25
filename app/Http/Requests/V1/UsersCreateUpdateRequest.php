@@ -53,7 +53,14 @@ class UsersCreateUpdateRequest extends FormRequest
             $rules['mobile'] = 'required|numeric|digits:10|unique:entitymst,mobile,NULL,id,deleted_at,NULL';
         }
         if (request()->has('password') || request()->has('id') ) {
-            $rules['password'] = request()->has('id') && request()->id>0 ? 'nullable': 'required';
+            $rules['password'] = request()->has('id') && request()->id>0 ? null: [
+                'required',
+                'string',          // must be at least 10 characters in length
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/[0-9]/',      // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ];
         }
         
         return $rules;
@@ -85,6 +92,7 @@ class UsersCreateUpdateRequest extends FormRequest
         ];
         if (request()->has('password')) {
             $messages['password.required'] = __('messages.validation.password');
+            $messages['password.regex'] = __('messages.validation.strong_password');
         }
         
         return $messages;

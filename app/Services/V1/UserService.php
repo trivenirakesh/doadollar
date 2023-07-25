@@ -37,16 +37,6 @@ class UserService
     public function store(Request $request)
     {
         // save details 
-        $password = $request->password;
-        $uppercase = preg_match('@[A-Z]@', $password);
-        $lowercase = preg_match('@[a-z]@', $password);
-        $number    = preg_match('@[0-9]@', $password);
-        $specialChars = preg_match('@[^\w]@', $password);
-        if (!$uppercase || !$lowercase || !$number || !$specialChars || strlen($password) < 8) {
-            $errorMessage = __('messages.validation.strong_password');
-            return $this->errorResponseArr($errorMessage);
-        }
-
         $createUser = new Entitymst();
         $createUser->first_name = $request->first_name;
         $createUser->last_name = $request->last_name;
