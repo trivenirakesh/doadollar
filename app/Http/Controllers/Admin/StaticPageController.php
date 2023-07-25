@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\V1\StaticPageCreateUpdateRequest;
 use App\Models\StaticPage;
 use App\Services\V1\StaticPageService;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class StaticPageController extends Controller
 {

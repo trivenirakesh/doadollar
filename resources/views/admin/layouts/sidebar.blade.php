@@ -31,9 +31,15 @@
                         <p> Users</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.profile')}}" class="nav-link  {{request()->is('admin/profile*') ?'active' : ''}}">
+                        <i class="nav-icon fas fa-user-circle"></i>
+                        <p>Profile</p>
+                    </a>
+                </li>
                 <li class="nav-item ">
                     <a href="#" class="nav-link {{request()->is('admin/static-page*') ?'active' : ''}}">
-                        <i class="nav-icon fas fa-cogs"></i>
+                        <i class="nav-iconfas fas fa-file-alt"></i>
                         <p>Static Page <i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
