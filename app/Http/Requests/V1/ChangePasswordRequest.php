@@ -33,7 +33,7 @@ class ChangePasswordRequest extends FormRequest
                     $fail(__('messages.validation.old_password_incorrect'));
                 }
             }],
-            'password' => ['required', 'min:6'],
+            'password' => ['required', 'min:8', 'string', 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/', 'regex:/[@$!%*#?&]/'],
             'password_confirmation' => ['required', 'same:password'],
         ];
         return $rules;
@@ -45,6 +45,7 @@ class ChangePasswordRequest extends FormRequest
             'old_password.required' => __('messages.validation.old_password'),
             'password.required' => __('messages.validation.new_password'),
             'password.min' => __('messages.validation.new_password_min'),
+            'password.regex' => __('messages.validation.strong_password'),
             'password_confirmation.required' => __('messages.validation.password_confirmation'),
             'password_confirmation.same' => __('messages.validation.password_confirmation_same'),
         ];
