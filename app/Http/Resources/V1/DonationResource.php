@@ -17,7 +17,10 @@ class DonationResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'campaign_id' => $this->campaign_id,
             'campaign_name' => (!empty($this->campaign_name)) ? $this->campaign_name : '',
+            'payment_type_id' => $this->payment_type_id,
+            'entity_id' => $this->entity_id,
             'payment_type_name' => (!empty($this->payment_type_name)) ? $this->payment_type_name : '',
             'entity_first_name' => (!empty($this->entity_first_name)) ? $this->entity_first_name : "",
             'entity_last_name' => (!empty($this->entity_last_name)) ? $this->entity_last_name : "",

@@ -13,12 +13,16 @@ class Donation extends Model
 
     public function getDonation($request){
         $perPageData = CommonHelper::getConfigValue('per_page');
+        $entityId = 0;
         $donationId = 0;
         $campaignId = 0;
         $searchValue = '';
         $orderColumn = 'don.id';
         $orderBy = 'DESC';
         $offset = 0;
+        if (!empty($request->entity_id)) {
+            $entityId = $request->entity_id;
+        }
         if (!empty($request->donation_id)) {
             $donationId = $request->donation_id;
         }
@@ -37,7 +41,7 @@ class Donation extends Model
         if (!empty($request->offset)) {
             $offset = $request->offset;
         }
-        $campaignListQuery = "CALL sp_get_donations_list('$perPageData','$offset','$searchValue','$orderColumn','$orderBy','$campaignId','$donationId')";
+        $campaignListQuery = "CALL sp_get_donations_list('$perPageData','$offset','$searchValue','$orderColumn','$orderBy','$entityId','$campaignId','$donationId')";
         $getCampaignListDetails = DB::select($campaignListQuery);
         $returnArr['count'] = count($getCampaignListDetails);
         $returnArr['data'] = $getCampaignListDetails;
