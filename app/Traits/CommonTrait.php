@@ -74,8 +74,8 @@ trait CommonTrait
 	public function statusHtml($row)
 	{
 		$statusText = $row->status == 1 ? "Active" : "Inactive";
-		$statusclass = $row->status == 1 ? "badge-primary" : " badge-danger";
-		$status = "<span class='text-md badge badge-pill $statusclass'>$statusText</span>";
+		$statusClass = $row->status == 1 ? "badge-primary" : " badge-danger";
+		$status = "<span class='text-md badge badge-pill $statusClass'>$statusText</span>";
 		return $status;
 	}
 }

@@ -55,7 +55,7 @@ class UsersCreateUpdateRequest extends FormRequest
         if (request()->has('password') || request()->has('id') ) {
             $rules['password'] = request()->has('id') && request()->id>0 ? null: [
                 'required',
-                'string',          // must be at least 10 characters in length
+                'min:8',          
                 'regex:/[a-z]/',      // must contain at least one lowercase letter
                 'regex:/[A-Z]/',      // must contain at least one uppercase letter
                 'regex:/[0-9]/',      // must contain at least one digit
@@ -92,6 +92,7 @@ class UsersCreateUpdateRequest extends FormRequest
         ];
         if (request()->has('password')) {
             $messages['password.required'] = __('messages.validation.password');
+            $messages['password.min'] = __('messages.validation.new_password_min');
             $messages['password.regex'] = __('messages.validation.strong_password');
         }
         

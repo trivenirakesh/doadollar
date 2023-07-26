@@ -51,6 +51,7 @@ return [
         'password_confirmation' => 'Please enter password confirmation',
         'password_confirmation_same' => 'The password confirmation does not match',
         'old_password_incorrect' => 'The old password is incorrect.',
+        'new_password_min' => 'Password must 8 character.'
     ],
 
     'auth' => [

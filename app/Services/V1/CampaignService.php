@@ -83,7 +83,7 @@ class CampaignService
                 for ($i = 0; $i < count($uploadTypes); $i++) {
                     $saveUploadArr = new CampaignUploads();
                     $saveUploadArr->campaign_id = $lastId;
-                    $saveUploadArr->upload_type_id = $request->upload_types[$i];
+                    $saveUploadArr->upload_type = $request->upload_types[$i];
                     $saveUploadArr->title = $request->upload_title[$i];
                     $saveUploadArr->description = $request->upload_description[$i];
                     $saveUploadArr->created_by = auth()->user()->id;
@@ -108,7 +108,7 @@ class CampaignService
                 for ($i = 0; $i < count($linkTypes); $i++) {
                     $saveLinksArr = new CampaignUploads();
                     $saveLinksArr->campaign_id = $lastId;
-                    $saveLinksArr->upload_type_id = $request->link_type[$i];
+                    $saveLinksArr->upload_type = $request->link_type[$i];
                     $saveLinksArr->title = $request->link_title[$i];
                     $saveLinksArr->description = $request->link_description[$i];
                     $saveLinksArr->link = $request->link[$i];
@@ -215,7 +215,7 @@ class CampaignService
                         $uploadId = $request->upload_id[$i];
                         $checkCampaignUploads = CampaignUploads::where('id',$uploadId)->first();
                         if(!empty($checkCampaignUploads)){
-                            $checkCampaignUploads->upload_type_id = $request->upload_types[$i];
+                            $checkCampaignUploads->upload_type = $request->upload_types[$i];
                             $checkCampaignUploads->title = $request->upload_title[$i];
                             $checkCampaignUploads->description = $request->upload_description[$i];
                             if(isset($request->file('upload_file')[$i])){
@@ -241,7 +241,7 @@ class CampaignService
                     }else{
                         $saveUploadArr = new CampaignUploads();
                         $saveUploadArr->campaign_id = $id;
-                        $saveUploadArr->upload_type_id = $request->upload_types[$i];
+                        $saveUploadArr->upload_type = $request->upload_types[$i];
                         $saveUploadArr->title = $request->upload_title[$i];
                         $saveUploadArr->description = $request->upload_description[$i];
                         if(isset($request->file('upload_file')[$i])){
@@ -269,7 +269,7 @@ class CampaignService
                         $linkId = $request->link_id[$i];
                         $checkCampaignLinks = CampaignUploads::where('id',$linkId)->first();
                         if(!empty($checkCampaignLinks)){
-                            $checkCampaignLinks->upload_type_id = $request->link_type[$i];
+                            $checkCampaignLinks->upload_type = $request->link_type[$i];
                             $checkCampaignLinks->title = $request->link_title[$i];
                             $checkCampaignLinks->description = $request->link_description[$i];
                             $checkCampaignLinks->link = $request->link[$i];
@@ -280,7 +280,7 @@ class CampaignService
                     }else{
                         $saveLinksArr = new CampaignUploads();
                         $saveLinksArr->campaign_id = $id;
-                        $saveLinksArr->upload_type_id = $request->link_type[$i];
+                        $saveLinksArr->upload_type = $request->link_type[$i];
                         $saveLinksArr->title = $request->link_title[$i];
                         $saveLinksArr->description = $request->link_description[$i];
                         $saveLinksArr->link = $request->link[$i];
