@@ -24,9 +24,9 @@
                         <i class="nav-icon fas fa-tools"></i>
                         <p>Setting <i class="right fas fa-angle-left"></i></p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview" style="display: {{request()->is('admin/setting*') ? 'block' : 'none'}}">
                         <li class="nav-item">
-                            <a href="{{route('admin.static_page',['about_us'])}}" class="nav-link {{request()->is('admin/setting/payment_gateway*') ?'active' : ''}}">
+                            <a href="{{ route('admin.payment-gateway.index')}}" class="nav-link {{request()->is('admin/setting/payment-gateway*') ?'active' : ''}}">
                                 <i class="fas fa-shopping-cart nav-icon"></i>
                                 <p>Payment Gateway</p>
                             </a>
@@ -62,7 +62,7 @@
                         <i class="nav-iconfas fas fa-file-alt"></i>
                         <p>Static Page <i class="right fas fa-angle-left"></i></p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <ul class="nav nav-treeview" style="display: {{request()->is('admin/static-page*') ? 'block' : 'none'}}">
                         <li class="nav-item">
                             <a href="{{route('admin.static_page',['about_us'])}}" class="nav-link {{request()->is('admin/static-page/about_us*') ?'active' : ''}}">
                                 <i class="fas fa-circle nav-icon"></i>

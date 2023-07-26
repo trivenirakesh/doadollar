@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\ChangePasswordRequest;
 use App\Http\Requests\V1\UsersCreateUpdateRequest;
+use App\Models\Entitymst;
 use App\Services\V1\UserService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Traits\CommonTrait;
 
 class UsersController extends Controller
 {
+    use CommonTrait;
     private $userService;
 
     public function __construct(UserService $userService)
@@ -97,55 +103,12 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function changePassword(Request $request)
+    public function changePassword(ChangePasswordRequest $request)
     {
-
-        // Validation section
-        $rules = [];
-        $messages = [];
-        $rules = [
-            'id' => 'required',
-            'old_password' => 'required',
-            'new_password' => 'required'
-        ];
-
-        $messages = [
-            'id.required' => __('messages.validation.id'),
-            'old_password.required' => __('messages.validation.old_password'),
-            'new_password.required' => __('messages.validation.new_password')
-        ];
-
-        $validateUser = Validator::make($request->all(), $rules, $messages);
-
-        if ($validateUser->fails()) {
-            return $this->errorResponse($validateUser->errors(), 400);
-        }
-
-        // check user exist or not 
-        $userId = $request->id;
-        $checkUser = $this->getUserDetails($userId, 1);
-
-        //Match The Old Password
-        $getAdminDetails = auth('sanctum')->user();
-        if (!Hash::check($request->old_password, $getAdminDetails->password)) {
-            return $this->errorResponse(__('messages.success.old_password_wrong'), 400);
-        }
-
-        $password = $request->new_password;
-        $uppercase = preg_match('@[A-Z]@', $password);
-        $lowercase = preg_match('@[a-z]@', $password);
-        $number    = preg_match('@[0-9]@', $password);
-        $specialChars = preg_match('@[^\w]@', $password);
-        if (!$uppercase || !$lowercase || !$number || !$specialChars || strlen($password) < 8) {
-            $errorMessage = __('messages.validation.strong_password');
-            return $this->errorResponse($errorMessage, 400);
-        }
-
-        $updateUserPassword = $checkUser;
-        $updateUserPassword->password = Hash::make($request->new_password);
-        $updateUserPassword->update();
-        if ($updateUserPassword) {
-            return $this->successResponse([], __('messages.success.password_reset'), 200);
-        }
+        $userId = Auth::user()->id;
+        $user = Entitymst::where('id', $userId)->first();
+        $validatedData['password'] = Hash::make($request->password);
+        $user->update($validatedData);
+        return $this->successResponse([], __('messages.success.password_reset'), 200);
     }
 }
