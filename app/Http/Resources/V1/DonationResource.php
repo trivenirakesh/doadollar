@@ -17,7 +17,7 @@ class DonationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'campaign_name' => (!empty($this->name)) ? $this->name : '',
+            'campaign_name' => (!empty($this->campaign_name)) ? $this->campaign_name : '',
             'payment_type_name' => (!empty($this->payment_type_name)) ? $this->payment_type_name : '',
             'entity_first_name' => (!empty($this->entity_first_name)) ? $this->entity_first_name : "",
             'entity_last_name' => (!empty($this->entity_last_name)) ? $this->entity_last_name : "",
@@ -27,7 +27,7 @@ class DonationResource extends JsonResource
             'tip' => (!empty($this->tip)) ? $this->tip : '',
             'transaction_id' => $this->transaction_id,
             'transaction_status' => $this->transaction_status,
-            'created_at' => CommonHelper::getConvertedDateTime($this->created_at)
+            'created_at' => (!empty($this->created_at)) ? CommonHelper::getConvertedDateTime($this->created_at) : ''
         ];
     }
 }
