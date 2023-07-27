@@ -2,7 +2,15 @@
 
 use App\Http\Controllers\Admin\CampaignCategoryController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\{HomeController, ProfileController, PaymentGatewaySettingController, SocialPlatformSettingController, UserController, StaticPageController};
+use App\Http\Controllers\Admin\{
+    HomeController,
+    ProfileController,
+    PaymentGatewaySettingController,
+    SocialPlatformSettingController,
+    UserController,
+    StaticPageController,
+    CampaignController
+};
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -36,6 +44,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'revalidate
     Route::get('logout', [HomeController::class, 'logout'])->name('logout');
     Route::resource('setting/payment-gateway', PaymentGatewaySettingController::class)->except(['edit', 'update']);
     Route::resource('campaign-category', CampaignCategoryController::class)->except(['edit', 'update']);
+    Route::resource('campaigns', CampaignController::class);
     Route::resource('users', UserController::class)->except(['edit', 'update']);
     Route::resource('setting/social-media', SocialPlatformSettingController::class)->except(['edit', 'update']);
 

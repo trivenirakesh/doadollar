@@ -46,6 +46,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.campaigns.index')}}" class="nav-link  {{request()->is('admin/campaigns*') ?'active' : ''}}">
+                        <i class="nav-icon fa fa-campground"></i>
+                        <p> Campaigns</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('admin.users.index')}}" class="nav-link  {{request()->is('admin/users*') ?'active' : ''}}">
                         <i class="nav-icon fas fa-users"></i>
                         <p> Users</p>
