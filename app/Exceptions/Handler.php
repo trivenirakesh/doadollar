@@ -7,6 +7,7 @@ use Throwable;
 use Illuminate\Support\Facades\Log;
 use ErrorException;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -59,6 +60,11 @@ class Handler extends ExceptionHandler
                     'status' => 'error',
                     'message' => $message,
                     'errors' => $th->errors(),
+                ], 404);
+            } elseif ($th instanceof NotFoundHttpException) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Route'.__('messages.validation.not_found'),
                 ], 404);
             } else {
                 return response()->json([

@@ -90,4 +90,5 @@ Route::middleware('auth:sanctum')->group( function () {
 
     //Donations list
     Route::get('donations',[DonationsController::class,'index']);
+    Route::post('donations',[DonationsController::class,'store']);
 });

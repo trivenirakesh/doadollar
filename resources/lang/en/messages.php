@@ -54,6 +54,13 @@ return [
         'new_password_min' => 'Password must 8 character.'
     ],
 
+    'donation' => [
+        'campaign_id' => 'Please select campaign id',
+        'payment_type_id' => 'Please select payment type',
+        'entity_id' => 'Please enter user id',
+        'donation_amount' => 'Please enter donation amount'
+    ],
+
     'auth' => [
         'login_failed' => 'These credentials do not match our records.',
         'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
