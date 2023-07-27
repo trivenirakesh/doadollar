@@ -21,7 +21,7 @@
                 </li>
                 <li class="nav-item ">
                     <a href="#" class="nav-link {{request()->is('admin/setting*') ?'active' : ''}}">
-                    <i class="nav-icon fas fa-tools"></i>
+                        <i class="nav-icon fas fa-tools"></i>
                         <p>Setting <i class="right fas fa-angle-left"></i></p>
                     </a>
                     <ul class="nav nav-treeview" style="display: {{request()->is('admin/setting*') ? 'block' : 'none'}}">
@@ -32,9 +32,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{route('admin.static_page',['privacy_policy'])}}" class="nav-link {{request()->is('admin/setting/social_platform*') ?'active' : ''}}">
-                                <i class="fas fa-share-alt nav-icon"></i>
-                                <p>Social Platform </p>
+                            <a href="{{ route('admin.social-media.index')}}" class="nav-link  {{request()->is('admin/setting/social-media*') ?'active' : ''}}">
+                                <i class="nav-icon fas fa-share-alt"></i>
+                                <p>Social Platform Setting</p>
                             </a>
                         </li>
                     </ul>
@@ -43,6 +43,12 @@
                     <a href="{{ route('admin.campaign-category.index')}}" class="nav-link  {{request()->is('admin/campaign-category*') ?'active' : ''}}">
                         <i class="nav-icon fas fa-shapes"></i>
                         <p> Campaign Category</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.campaigns.index')}}" class="nav-link  {{request()->is('admin/campaigns*') ?'active' : ''}}">
+                        <i class="nav-icon fa fa-campground"></i>
+                        <p> Campaigns</p>
                     </a>
                 </li>
                 <li class="nav-item">

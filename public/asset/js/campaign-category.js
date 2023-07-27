@@ -208,7 +208,7 @@ $(document).ready(function () {
                 name: "created_at",
             },
             {
-                data: "status",
+                data: "status_text",
                 name: "status",
             },
             {

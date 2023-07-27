@@ -19,16 +19,21 @@ class CampaignCategory extends Model
     public function getImageAttribute($val)
     {
         $linkPath = CommonHelper::getConfigValue('link_path');
-        return $val == null ? asset('public/dist/img/no-image.png') : asset($linkPath.self::FOLDERNAME . $val);
+        return $val == null ? asset('public/dist/img/no-image.png') : asset($linkPath . self::FOLDERNAME . $val);
     }
 
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+        $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));
     }
 
     public function entitymst()
     {
         return $this->hasOne(Entitymst::class, 'id', 'created_by');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
     }
 }
