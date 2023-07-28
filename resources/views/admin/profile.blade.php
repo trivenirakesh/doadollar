@@ -135,11 +135,9 @@
         rules: {
             first_name: {
                 required: true,
-                lettersonly: true,
             },
             last_name: {
                 required: true,
-                lettersonly: true,
             },
             mobile: {
                 required: true,
@@ -151,18 +149,13 @@
                 required: true,
                 email: true,
             },
-            password: {
-                minlength: 6,
-            },
         },
         messages: {
             first_name: {
                 required: "Please enter firstname",
-                lettersonly: "Please enter valid firstname",
             },
             last_name: {
                 required: "Please enter lastname",
-                lettersonly: "Please enter valid lastname",
             },
             email: {
                 required: "Please enter email",
@@ -173,9 +166,6 @@
                 digits: "Please enter a valid mobile number.",
                 minlength: "Mobile number must be at least 10 digits.",
                 maxlength: "Mobile number must not exceed 10 digits.",
-            },
-            password: {
-                minlength: "Please enter password atleast 6 character!",
             },
         },
         submitHandler: function(form, e) {

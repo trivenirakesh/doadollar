@@ -39,7 +39,7 @@ class UsersCreateUpdateRequest extends FormRequest
             'entity_type' => 'required|digits:1|lte:2',
             'status' => 'required|numeric|lte:1',
             'role_id' => [
-                'required',
+                'nullable',
                 Rule::exists('roles','id')->where(function ($query) {
                     $query->where('status', CommonHelper::getConfigValue('status.active'));
                 }),

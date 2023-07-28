@@ -22,9 +22,12 @@
                                         <th class="text-center"></th>
                                         <th>Image</th>
                                         <th>Name</th>
-                                        <th>Unique Code</th>
+                                        <th>Donation Target</th>
                                         <th>Created By</th>
+                                        <th>Start Datetime</th>
+                                        <th>End Datetime</th>
                                         <th>Created At</th>
+                                        <th>Unique Url</th>
                                         <th>Status</th>
                                         <th></th>
                                     </tr>
@@ -44,71 +47,5 @@
 
 @endsection
 @push('script')
-<script>
-    let module = $("#page_module").val();
-    let module_index_url = $("#module_index_url").val();
-    var table = $("#data_table_main").DataTable({
-        processing: true,
-        serverSide: true,
-        dom: '<f<t><"cm-dataTables-footer d-flex align-items-center float-right"lip>>',
-        oLanguage: {
-            "sInfo": "_START_-_END_ of _TOTAL_", // text you want show for info section
-            "sLengthMenu": "_MENU_"
-        },
-        buttons: [],
-        ajax: module_index_url,
-        order: [],
-        select: {
-            style: "multi",
-        },
-        columns: [{
-                data: "action_edit",
-                name: "action_edit",
-                searchable: false,
-                orderable: false,
-            },
-            {
-                data: "image",
-                name: "image",
-                searchable: false,
-                orderable: false,
-            },
-            {
-                data: "name",
-                name: "name",
-            },
-            {
-                data: "unique_code",
-                name: "unique_code",
-            },
-            {
-                data: "entitymst.first_name",
-                name: "entitymst.first_name",
-                searchable: true,
-                orderable: false,
-            },
-            {
-                data: "created_at",
-                name: "created_at",
-            },
-            {
-                data: "status_text",
-                name: "status",
-            },
-            {
-                data: "action_delete",
-                name: "action_delete",
-                searchable: false,
-                orderable: false,
-            },
-        ],
-    });
-
-    // delete resource
-    $(document).on("click", ".module_delete_record", function() {
-        const id = $(this).parent().data("id");
-        const url = $(this).parent().data("url");
-        deleteRecordModule(id, `${url}/${id}`);
-    });
-</script>
+<script src="{{asset('public/asset/js/campaign/index.js')}}"></script>
 @endpush

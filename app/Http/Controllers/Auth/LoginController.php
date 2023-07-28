@@ -89,11 +89,14 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        if($request->remember){
+        if ($request->remember) {
             Cookie::queue(Cookie::make('login_email', $request->email));
             Cookie::queue(Cookie::make('login_password', $request->password));
             Cookie::queue(Cookie::make('remember', 1));
+        } else {
+            Cookie::queue(Cookie::forget('login_email'));
+            Cookie::queue(Cookie::forget('login_password'));
+            Cookie::queue(Cookie::forget('remember'));
         }
     }
-    
 }
