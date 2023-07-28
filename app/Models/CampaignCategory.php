@@ -24,11 +24,16 @@ class CampaignCategory extends Model
 
     public function setNameAttribute($value)
     {
-        $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+        $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));
     }
 
     public function entitymst()
     {
         return $this->hasOne(Entitymst::class, 'id', 'created_by');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
     }
 }

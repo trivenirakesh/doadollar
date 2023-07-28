@@ -45,10 +45,10 @@ class UserController extends Controller
                 ->addColumn('action_delete', function ($row) use ($baseurl) {
                     return $this->actionHtml($baseurl, $row->id, true);
                 })
-                ->addColumn('status', function ($row) {
+                ->addColumn('status_text', function ($row) {
                     return $this->statusHtml($row);
                 })
-                ->rawColumns(['action_edit', 'action_delete', 'status'])
+                ->rawColumns(['action_edit', 'action_delete', 'status_text'])
                 ->make(true);
         }
         $title =  'Users';

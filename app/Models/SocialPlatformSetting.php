@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SocialPlatformSetting extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
     const FOLDERNAME = "socialplatform/";
 
     public function getImageAttribute($val)
@@ -21,5 +21,10 @@ class SocialPlatformSetting extends Model
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));
+    }
+
+    public function entitymst()
+    {
+        return $this->hasOne(Entitymst::class, 'id', 'created_by');
     }
 }

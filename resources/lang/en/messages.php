@@ -53,6 +53,30 @@ return [
         'old_password_incorrect' => 'The old password is incorrect.',
         'new_password_min' => 'Password must 8 character.'
     ],
+    'campaigns' => [
+        'files_uplaod_array' => 'The files field must be an array.',
+        'files_uplaod_title_required' => 'Please enter a title for each file.',
+        'files_uplaod_title_max' => 'The title must not exceed 255 characters.',
+        'files_uplaod_description_max' => 'The description must not exceed 2500 characters.',
+        'files_uplaod_file_required' => 'Please upload a file.',
+        'files_uplaod_file_image' => 'The uploaded image is invalid.',
+        'files_uplaod_file_mimes' => 'Only JPEG, PNG, and JPG files are allowed.',
+        'files_uplaod_file_max' => 'The file size should not exceed 2 MB.',
+        'video.array' => 'The video url field must be an array.',
+        'video_title_required' => 'Please enter a video title for each video url.',
+        'video_title_max' => 'The video title must not exceed 255 characters.',
+        'video_description_max' => 'The video description must not exceed 2500 characters.',
+        'video_link_required' => 'Please enter video link.',
+        'video_link_regex' => 'The video link is invalid.',
+        'video_link_max' => 'The video link must not exceed 255 characters.',
+
+        'start_datetime_required' => 'The start date is required.',
+        'start_datetime_date_format' => 'The start date must be in the format Y-m-d H:i:s.',
+        'start_datetime_before_or_equal' => 'The start date must be before or equal to the end date.',
+        'end_datetime_required' => 'The end date is required.',
+        'end_datetime_date_format' => 'The end date must be in the format Y-m-d H:i:s.',
+        'end_datetime_after_or_equal' => 'The end date must be after or equal to the start date.',
+    ],
 
     'donation' => [
         'campaign_id' => 'Please select campaign id',
@@ -81,5 +105,8 @@ return [
         'user_logout' => 'User logout successfully',
         'user_login' => 'User successfully logged in',
         'list' => ' list fetch successfully',
+    ],
+    'failed' => [
+        'general' => 'Something went wrong!!',
     ]
 ];

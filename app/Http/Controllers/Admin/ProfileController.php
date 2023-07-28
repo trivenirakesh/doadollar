@@ -8,6 +8,7 @@ use App\Http\Requests\V1\ChangePasswordRequest;
 use App\Models\Entitymst;
 use App\Services\V1\UserService;
 use App\Traits\CommonTrait;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 

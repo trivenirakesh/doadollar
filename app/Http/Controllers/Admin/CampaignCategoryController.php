@@ -48,10 +48,10 @@ class CampaignCategoryController extends Controller
                     $image = '<img src="' . $row->image . '" class="img-fluid img-radius" width="40px" height="40px">';
                     return $image;
                 })
-                ->addColumn('status', function ($row) {
+                ->addColumn('status_text', function ($row) {
                     return $this->statusHtml($row);
                 })
-                ->rawColumns(['action_edit', 'action_delete', 'image', 'status'])
+                ->rawColumns(['action_edit', 'action_delete', 'image', 'status_text'])
                 ->make(true);
         }
         $title =  'Campaign Category';
