@@ -81,3 +81,14 @@ function deleteRecordModule(id, url) {
         }
     });
 }
+
+function Copy(element) {
+    var urlToCopy = element.getAttribute("data-content");
+    var tempInput = document.createElement("input");
+    tempInput.value = urlToCopy;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    toastr.info("info", "copied to clipboard!");
+}

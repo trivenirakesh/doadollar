@@ -25,6 +25,7 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('public/plugins/toastr/toastr.css') }}">
 <link rel="stylesheet" href="{{ asset('public/dist/css/custom.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.18/sweetalert2.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.7/css/responsive.dataTables.min.css">
 <style>
     .theme_primary_text {
         color: var(--primary-color);

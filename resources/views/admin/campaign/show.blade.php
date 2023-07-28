@@ -16,14 +16,14 @@
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-body py-4 px-2">
-                            <div class="card-header px-4 py-2">
-                                <ul class="nav nav-pills">
+                        <div class="card-body">
+                            <div class="border-0 card-header px-4 py-2">
+                                <ul class="nav nav-tabs">
                                     <li class="nav-item"><a class="nav-link active" href="#campaigns_detail" data-toggle="tab">Campaigns Detail</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#campaigns_transaction" data-toggle="tab">Campaigns Transaction</a></li>
                                 </ul>
-                                <div class="card-body">
-                                    <div class="tab-content">
+                                <div class="card-body border-bottom border-left border-right">
+                                    <div class="m-3 tab-content">
                                         <div class="tab-pane active" id="campaigns_detail">
                                             <div class="card">
                                                 <div class="row">
@@ -86,7 +86,7 @@
                                                             <div class="row">
                                                                 @foreach ($campaign->uploads as $upload)
                                                                 @if($upload->upload_type != 'Links')
-                                                                <div class="col-md-4 col-12 col-sm-2">
+                                                                <div class="col-md-4 col-12 col-sm-6">
                                                                     <div class="card" style="width:100%">
                                                                         <img class="card-img-top" src="{{$upload->image}}" alt="Card image cap">
                                                                         <div class="card-body">
@@ -97,12 +97,19 @@
                                                                 </div>
                                                                 @endif
                                                                 @endforeach
+                                                                @if(empty($campaign->uploads->toArray()??[]))
+                                                                <div class="col-md-12 col-12 col-sm-12">
+                                                                    <div class="card text-center mt-5" style="width:100%">
+                                                                        <h2 class="text-secondary">No Media Found</h2>
+                                                                    </div>
+                                                                </div>
+                                                                @endif
 
                                                             </div>
                                                             <div class="row">
                                                                 @foreach ($campaign->uploads as $upload)
                                                                 @if($upload->upload_type == 'Links')
-                                                                <div class="col-md-4 col-12 col-sm-2">
+                                                                <div class="col-md-4 col-12 col-sm-6">
                                                                     <div class="card" style="width:100%">
                                                                         <video poster="placeholder.png" width="400" height="200" controls src="{{$upload->link}}">
                                                                             Browser not supported

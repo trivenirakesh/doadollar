@@ -43,25 +43,32 @@ class CampaignCreateUpdateRequest extends FormRequest
             ],
             'start_datetime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:end_datetime',
             'end_datetime' => 'required|date_format:Y-m-d H:i:s|after_or_equal:start_datetime',
-            'donation_target' => 'required',
-            'status' => 'required|numeric|lte:1',
+            'donation_target' => ['required', 'numeric', 'between:0,999999.99'],
+            'status' => 'required|numeric|in:0,1',
 
             'files_uplaod' => 'nullable|array',
             'files_uplaod.*.title' => 'required|max:255',
             'files_uplaod.*.description' => 'nullable|max:2500',
             // 'files_uplaod.*.file' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'files_uplaod.*.file' => [
+            'files_uplaod.*.image' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
-                    $idKey = str_replace('*', '0', $attribute); // Get the key for files_uplaod.0.id
-                    // Check if the corresponding id field is null
-                    if (request()->input($idKey) === null && !$value) {
-                        $fail('The ' . $attribute . ' field is required when ' . $idKey . ' is null.');
+                    if (is_file($value)) {
+                        // Validate file extension and size
+                        $allowedExtensions = ['jpg', 'jpeg', 'png'];
+                        $extension = strtolower($value->getClientOriginalExtension());
+                        $fileSizeKB = $value->getSize() / 1024;
+                        if (!in_array($extension, $allowedExtensions) || $fileSizeKB > 2048) {
+                            $fail(__('messages.campaigns.files_uplaod_file_image_invalid_file'));
+                        }
+                    } else {
+                        // Check if the value is a valid URL
+                        if (!filter_var($value, FILTER_VALIDATE_URL)) {
+                            $fail(__('messages.campaigns.files_uplaod_file_image_invalid'));
+                            $fail("The image must be a valid input.");
+                        }
                     }
                 },
-                'image',
-                'mimes:jpeg,png,jpg',
-                'max:2048',
             ],
 
             'video' => 'nullable|array',
@@ -73,9 +80,9 @@ class CampaignCreateUpdateRequest extends FormRequest
             $rules['image'] = 'required|max:2048|mimes:jpg,png,jpeg';
         }
         if ($this->id != null) {
-            $rules['unique_code'] = 'required|max:200|unique:campaigns,unique_code,' . $this->id . ',id,deleted_at,NULL';            
+            $rules['unique_code'] = 'required|max:200|alpha_dash|unique:campaigns,unique_code,' . $this->id . ',id,deleted_at,NULL';
         } else {
-            $rules['unique_code'] = 'required|max:200|unique:campaigns,unique_code,NULL,id,deleted_at,NULL';
+            $rules['unique_code'] = 'required|max:200|alpha_dash|unique:campaigns,unique_code,NULL,id,deleted_at,NULL';
         }
         return $rules;
     }
@@ -92,12 +99,14 @@ class CampaignCreateUpdateRequest extends FormRequest
             'end_datetime.required' => __('messages.validation.end_datetime'),
             'donation_target.required' => __('messages.validation.donation_target'),
             'donation_target.numeric' => 'Donation target' . __('messages.validation.must_numeric'),
+            'donation_target.between' =>   __('messages.validation.donation_target_between'),
             'unique_code.required' => __('messages.validation.unique_code'),
             'unique_code.max' => __('messages.validation.max'),
             'unique_code.unique' => __('messages.validation.unique_code_unique'),
+            'unique_code.alpha_dash' => __('messages.validation.unique_code_alpha_dash'),
             'status.required' => __('messages.validation.status'),
             'status.numeric' => 'Status' . __('messages.validation.must_numeric'),
-            'status.lte' => __('messages.validation.status_lte'),
+            'status.in' => __('messages.validation.status_in'),
 
             'files_uplaod.array' => __('messages.campaigns.files_uplaod_array'),
             'files_uplaod.*.title.required' =>  __('messages.campaigns.files_uplaod_title_required'),

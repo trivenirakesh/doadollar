@@ -247,25 +247,25 @@ class CampaignService
     {
         DB::beginTransaction();
         try {
-            $updateCampaign = Campaign::with('uploads')->where('id', $id)->first();
-            $updateCampaignAttachment = $updateCampaign->uploads;
-            $updateCampaignAttachmentIds =  $updateCampaignAttachment->pluck('id')->toArray();
-            $updateAttachment = [];
+            $updateCampaign = Campaign::where('id', $id)->first();
             if (empty($updateCampaign)) {
                 return $this->errorResponseArr('Campaign' . __('messages.validation.not_found'));
             }
+            $updateCampaignAttachment = $updateCampaign->uploads;
+            $updateCampaignAttachmentIds =  $updateCampaignAttachment->pluck('id')->toArray();
+            $updateAttachment = [];
             // save details
             $campaignCategoryId = $request->campaign_category_id;
             $updateCampaign->campaign_category_id = $campaignCategoryId;
             $updateCampaign->name = $request->name;
             $updateCampaign->description = $request->description;
-            $updateCampaign->unique_code = $request->unique_code;
             $updateCampaign->start_datetime = CommonHelper::getUTCDateTime($request->start_datetime);
             $updateCampaign->end_datetime = CommonHelper::getUTCDateTime($request->end_datetime);
             $updateCampaign->donation_target = $request->donation_target;
-            if (!empty($request->status)) {
+            if (isset($request->status) && in_array($request->status, [0, 1])) {
                 $updateCampaign->status = (int)$request->status;
             }
+
 
             // upload file
             $uploadPath = Campaign::FOLDERNAME;
@@ -297,8 +297,9 @@ class CampaignService
                 $qrFileNameWithPath = $uploadPath . $qrFileName;
                 Storage::disk('public')->put($qrFileNameWithPath, $qrFile);
                 $updateCampaign->qr_image = $qrFileName;
-                $updateCampaign->qr_path = 'public/storage/' . $uploadPath;
+                // $updateCampaign->qr_path = 'public/storage/' . $uploadPath;
             }
+            $updateCampaign->unique_code = $request->unique_code;
             $updateCampaign->updated_by = auth()->user()->id;
             $updateCampaign->updated_ip = CommonHelper::getUserIp();
             $updateCampaign->update();
@@ -436,18 +437,13 @@ class CampaignService
      */
     public function show($id)
     {
-        $getCampaignDetails = Campaign::with([
-            'uploads' => function ($query) {
-                $query->select('id', 'upload_type', 'link', 'campaign_id', 'title', 'description', 'link', 'created_at', 'image');
-            },
-            'category' => function ($query) {
-                $query->select('id', 'name', 'image');
-            },
-        ])->where('id', $id)->first();
+        $getCampaignDetails = Campaign::where('id', $id)->orWhere('unique_code', $id)->first();
         if ($getCampaignDetails == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
-        $getCampaignDetails = new CampaignDetailResource($getCampaignDetails);
+        $getCampaignDetails->campaign_status_text = Campaign::CAMPAIGNSTATUSARR[$getCampaignDetails->campaign_status];
+        $getCampaignDetails->status_text = $getCampaignDetails->status == 1 ? 'Active' : 'Deactive';
+        $getCampaignDetails = CampaignDetailResource::make($getCampaignDetails);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getCampaignDetails);
     }
 

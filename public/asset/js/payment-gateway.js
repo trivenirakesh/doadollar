@@ -1,11 +1,10 @@
 let module = $("#page_module").val();
 let module_index_url = $("#module_index_url").val();
 
-function refreshModelForm(){
+function refreshModelForm() {
     var alertas = $("#module_form");
     alertas.validate().resetForm();
     alertas.find(".error").removeClass("error");
-
 }
 function addModel() {
     refreshModelForm();
@@ -177,10 +176,17 @@ $(document).ready(function () {
     var table = $("#data_table_main").DataTable({
         processing: true,
         serverSide: true,
+        responsive: true,
+        columnDefs: [
+            {
+                className: "align-middle",
+                targets: "_all",
+            },
+        ],
         dom: '<f<t><"cm-dataTables-footer d-flex align-items-center float-right"lip>>',
         oLanguage: {
-            "sInfo": "_START_-_END_ of _TOTAL_",// text you want show for info section
-            "sLengthMenu": "_MENU_"
+            sInfo: "_START_-_END_ of _TOTAL_", // text you want show for info section
+            sLengthMenu: "_MENU_",
         },
         buttons: [],
         ajax: module_index_url,

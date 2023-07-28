@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\CampaignCategoryCreateUpdateRequest;
 use App\Http\Requests\V1\CampaignCreateUpdateRequest;
 use App\Models\Campaign;
 use App\Models\CampaignCategory;
-use App\Services\V1\CampaignCategoryService;
 use App\Services\V1\CampaignService;
 use App\Traits\CommonTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Request as FacadesRequest;
 use Yajra\DataTables\Facades\DataTables;
 
 class CampaignController extends Controller
@@ -52,6 +49,17 @@ class CampaignController extends Controller
                 ->addColumn('action_delete', function ($row) use ($baseurl) {
                     return $this->actionHtml($baseurl, $row->id, true);
                 })
+                ->addColumn('donation_target', function ($row) use ($baseurl) {
+                    return '<div><div class="progress rounded-pill">
+                    <div class="theme_primary_btn  progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <div class="w-100 d-flex justify-content-between align-items-center"><span>' . $row->donation_target . '</span><span>30%</span></div>
+                  </div>';
+                })
+                ->addColumn('unique_code', function ($row) use ($baseurl) {
+                    $url = $baseurl . "/" . $row->unique_code;
+                    return "<span style='cursor:pointer' data-content='$url' onclick='Copy(this);'>Copy url <i class='far fa-copy'></i></span>";
+                })
                 ->addColumn('image', function ($row) {
                     $image = '<img src="' . $row->image . '" class="img-fluid img-radius" width="40px" height="40px">';
                     return $image;
@@ -59,7 +67,7 @@ class CampaignController extends Controller
                 ->addColumn('status_text', function ($row) {
                     return $this->statusHtml($row);
                 })
-                ->rawColumns(['action_edit', 'action_delete', 'image', 'status_text'])
+                ->rawColumns(['action_edit', 'action_delete', 'image', 'status_text', 'unique_code', 'donation_target'])
                 ->make(true);
         }
 
@@ -149,7 +157,7 @@ class CampaignController extends Controller
         }
         $campaign = $campaign['data'];
         $title =  $campaign->name;
-        return view('admin.campaign.show', compact('title','campaign'));
+        return view('admin.campaign.show', compact('title', 'campaign'));
     }
 
     /**
