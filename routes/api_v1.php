@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\AuthController;
 use App\Http\Controllers\Api\V1\CampaignCategoryController;
 use App\Http\Controllers\Api\V1\CampaignController;
+use App\Http\Controllers\Api\V1\DonationsController;
 use App\Http\Controllers\Api\V1\InquiryController;
 use App\Http\Controllers\Api\V1\PaymentGatewaySettingController;
 use App\Http\Controllers\Api\V1\SocialPlatformSettingController;
@@ -86,4 +87,8 @@ Route::middleware('auth:sanctum')->group( function () {
 
     // Inquiry list
     Route::get('inquiry',[InquiryController::class,'index']);
+
+    //Donations list
+    Route::get('donations',[DonationsController::class,'index']);
+    Route::post('donations',[DonationsController::class,'store']);
 });

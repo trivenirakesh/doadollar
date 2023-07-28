@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\PaymentGatewayCreateUpdateRequest;
 use App\Models\PaymentGatewaySetting;
@@ -42,6 +43,12 @@ class PaymentGatewaySettingController extends Controller
                 ->addColumn('image', function ($row) {
                     $image = '<img src="' . $row->image . '" class="img-fluid img-radius" width="40px" height="40px">';
                     return $image;
+                })
+                ->editColumn('api_key', function($row){
+                    return CommonHelper::shortString($row->api_key,30);
+                })
+                ->editColumn('secret_key', function($row){
+                    return CommonHelper::shortString($row->secret_key,30);
                 })
                 ->addColumn('status', function ($row) {
                     return $this->statusHtml($row);

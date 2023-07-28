@@ -51,4 +51,7 @@
  <!-- Toaster message -->
  <script src="{{ asset('public/plugins/toastr/toastr.min.js') }}"></script>
  <script src="{{ asset('public/dist/js/pages/backoffice/common.js') }}"></script>
+ <script>
+  $('input, :input').attr('autocomplete', 'off');
+ </script>
  @stack('script')

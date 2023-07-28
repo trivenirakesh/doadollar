@@ -24,4 +24,10 @@
     </div>
 </body>
 
+<script src="{{ asset('public/plugins/jquery/jquery.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+<script src="{{asset('public/asset/js/auth.js')}}"></script>
+<script>
+    $('input, :input').attr('autocomplete', 'off');
+</script>
 </html>

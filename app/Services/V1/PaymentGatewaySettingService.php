@@ -113,7 +113,7 @@ class PaymentGatewaySettingService
         }
         $paymentGatewaySetting->update();
         $getSettingDetails = new PaymentGatewaySettingResource($paymentGatewaySetting);
-        return $this->successResponseArr($getSettingDetails, self::module . __('messages.success.update'));
+        return $this->successResponseArr(self::module . __('messages.success.update'),$getSettingDetails);
     }
 
     /**
