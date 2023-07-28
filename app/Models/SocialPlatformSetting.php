@@ -15,7 +15,7 @@ class SocialPlatformSetting extends Model
     public function getImageAttribute($val)
     {
         $linkPath = CommonHelper::getConfigValue('link_path');
-        return $val == null ? asset('public/dist/img/no-image.png') : asset($linkPath . self::FOLDERNAME . $val);
+        return ($val != null && CommonHelper::checkFileExists($val,self::FOLDERNAME) ? asset($linkPath.self::FOLDERNAME . $val)  : asset('public/dist/img/no-image.png'));
     }
 
     public function setNameAttribute($value)

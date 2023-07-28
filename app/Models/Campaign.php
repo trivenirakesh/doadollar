@@ -42,6 +42,7 @@ class Campaign extends Model
     {
         $perPageData = CommonHelper::getConfigValue('per_page');
         $campaignId = 0;
+        $entityId = 0;
         $searchValue = '';
         $orderColumn = 'cam.id';
         $orderBy = 'DESC';
@@ -61,16 +62,18 @@ class Campaign extends Model
         if (!empty($request->offset)) {
             $offset = $request->offset;
         }
-        $campaignListQuery = "CALL sp_get_campaigns_list('$perPageData','$offset','$searchValue','$orderColumn','$orderBy','$campaignId')";
+        if (!empty($request->entity_id)) {
+            $entityId = $request->entity_id;
+        }
+        $campaignListQuery = "CALL sp_get_campaigns_list('$perPageData','$offset','$searchValue','$orderColumn','$orderBy','$entityId','$campaignId')";
         $getCampaignListDetails = DB::select($campaignListQuery);
         $returnArr['count'] = count($getCampaignListDetails);
         $returnArr['data'] = $getCampaignListDetails;
         return $returnArr;
     }
 
-    public function getCampaignsListCount()
-    {
-        $totalRecordsData = DB::select("CALL sp_get_campaigns_list('0','0','','','','0')");
+    public function getCampaignsListCount(){
+        $totalRecordsData = DB::select("CALL sp_get_campaigns_list('0','0','','','','0','0')");
         return count($totalRecordsData);
     }
 

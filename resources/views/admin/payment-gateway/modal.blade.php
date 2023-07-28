@@ -22,11 +22,11 @@
                                             <p id="info_name"></p>
                                         </div>
                                         <div class="col-md-12">
-                                            <label class="col-form-label"><b>Description</b></label><br>
+                                            <label class="col-form-label"><b>Api Key</b></label><br>
                                             <p id="info_api_key"></p>
                                         </div>
                                         <div class="col-md-12">
-                                            <label class="col-form-label"><b>Description</b></label><br>
+                                            <label class="col-form-label"><b>Secret Key</b></label><br>
                                             <p id="info_secret_key"></p>
                                         </div>
                                         <div class="col-md-12">

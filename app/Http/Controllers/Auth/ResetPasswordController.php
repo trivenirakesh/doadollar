@@ -70,9 +70,11 @@ class ResetPasswordController extends Controller
         if ($request->wantsJson()) {
             return new JsonResponse(['message' => trans($response)], 200);
         }
-
-        return redirect($this->redirectPath())
-            ->with('status', trans($response));
+        return redirect()->back()
+            ->with(array(
+                'status' => trans($response),
+                'url' => route('admin/login'),
+            ));
     }
 
     /**

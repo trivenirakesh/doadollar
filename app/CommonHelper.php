@@ -85,6 +85,14 @@ class CommonHelper{
         }
     }
 
+    public static function checkFileExists($file_name,$path){
+        $fileFullPath = self::getConfigValue('storage_path').$path;
+        $filePath = storage_path($fileFullPath . $file_name);
+        if (file_exists($filePath)) {
+            return true;
+        }
+    }
+
     public static function getConfigValue($key){
         $configValue = Config::get('constants.'.$key);
         if(!empty($configValue)){

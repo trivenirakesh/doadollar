@@ -33,8 +33,8 @@ class PaymentGatewayCreateUpdateRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|max:200',
-            'api_key' => 'required|alpha_num',
-            'secret_key' => 'required|alpha_num',
+            'api_key' => 'required',
+            'secret_key' => 'required',
             'status' => 'required|numeric|lte:1',
         ];
         if (request()->hasFile('image')) {
@@ -49,9 +49,7 @@ class PaymentGatewayCreateUpdateRequest extends FormRequest
             'name.required' => __('messages.validation.name'),
             'name.max' => __('messages.validation.max_name'),
             'api_key.required' => __('messages.validation.api_key'),
-            'api_key.alpha_num' => __('messages.validation.alpha_num'),
             'secret_key.required' => __('messages.validation.secret_key'),
-            'secret_key.alpha_num' => __('messages.validation.alpha_num'),
             'status.required' => __('messages.validation.status'),
             'status.numeric' => 'Status' . __('messages.validation.must_numeric'),
             'status.lte' => __('messages.validation.status_lte'),

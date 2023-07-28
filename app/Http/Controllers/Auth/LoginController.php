@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -84,6 +85,15 @@ class LoginController extends Controller
         throw ValidationException::withMessages([
             $this->username() =>  __('messages.auth.login_failed'),
         ]);
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if($request->remember){
+            Cookie::queue(Cookie::make('login_email', $request->email));
+            Cookie::queue(Cookie::make('login_password', $request->password));
+            Cookie::queue(Cookie::make('remember', 1));
+        }
     }
     
 }
