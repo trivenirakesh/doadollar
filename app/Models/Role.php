@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     const ROLEUSER = 3;
+    const ROLEMANGER = 2;
 
-    public function entitymst(){
+    public function entitymst()
+    {
         return $this->hasOne(Entitymst::class);
     }
 

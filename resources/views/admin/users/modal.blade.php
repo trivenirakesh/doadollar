@@ -129,7 +129,6 @@
                                     <label id="entity_type-error" class="error" for="entity_type"></label>
                                 </div>
                             </div>
-
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Password</label>

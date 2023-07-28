@@ -65,13 +65,20 @@ class UserController extends Controller
     public function store(UsersCreateUpdateRequest $request)
     {
 
+        $requestAddon = [
+            'entity_type' => Entitymst::ENTITYUSER,
+            'role_id' => Role::ROLEUSER,
+        ];
+        if (!empty($request->entity_type) && $request->entity_type == 1) {
+            $requestAddon = [
+                'entity_type' => Entitymst::ENTITYMANAGER,
+                'role_id' => Role::ROLEMANGER,
+            ];
+        }
+        $request->request->add($requestAddon);
         if (isset($request->id) && $request->id > 0) { //update data
             $user = $this->userService->update($request, $request->id);
         } else { //add data
-            $request->request->add([
-                'entity_type' => Entitymst::ENTITYUSER,
-                'role_id' => Role::ROLEUSER,
-            ]);
             $user  = $this->userService->store($request);
         }
         if (!$user['status']) {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\ChangePasswordRequest;
 use App\Http\Requests\V1\UsersCreateUpdateRequest;
 use App\Models\Entitymst;
+use App\Models\Role;
 use App\Services\V1\UserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -58,6 +59,11 @@ class UsersController extends Controller
      */
     public function store(UsersCreateUpdateRequest $request)
     {
+        $requestAddon = [
+            'entity_type' => Entitymst::ENTITYUSER,
+            'role_id' => Role::ROLEUSER,
+        ];
+        $request->request->add($requestAddon);
         $userCreate  = $this->userService->store($request);
         if (!$userCreate['status']) {
             return response()->json($userCreate, 401);
@@ -74,7 +80,8 @@ class UsersController extends Controller
      */
     public function update(UsersCreateUpdateRequest $request, $id)
     {
-
+        $request->request->remove('entity_type');
+        $request->request->remove('role_id');
         $userUpdate = $this->userService->update($request, $id);
         if (!$userUpdate['status']) {
             return response()->json($userUpdate, 401);
