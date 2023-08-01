@@ -43,7 +43,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'revalidate
     Route::get('/', [HomeController::class, 'index'])->name('dashboard');
     Route::get('logout', [HomeController::class, 'logout'])->name('logout');
     Route::resource('setting/payment-gateway', PaymentGatewaySettingController::class)->except(['edit', 'update']);
-    Route::resource('campaign-category', CampaignCategoryController::class)->except(['edit', 'update']);
+    Route::resource('campaign/category', CampaignCategoryController::class, ['names' => 'campaign-category'])->except(['edit', 'update']);
     Route::resource('campaigns', CampaignController::class);
     Route::resource('users', UserController::class)->except(['edit', 'update']);
     Route::resource('setting/social-media', SocialPlatformSettingController::class)->except(['edit', 'update']);

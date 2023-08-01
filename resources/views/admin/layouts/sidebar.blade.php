@@ -24,7 +24,7 @@
                         <i class="nav-icon fas fa-tools"></i>
                         <p>Setting <i class="right fas fa-angle-left"></i></p>
                     </a>
-                    <ul class="nav nav-treeview" style="display: {{request()->is('admin/setting*') ? 'block' : 'none'}}">
+                    <ul class="pl-2 nav nav-treeview" style="display: {{request()->is('admin/setting*') ? 'block' : 'none'}}">
                         <li class="nav-item">
                             <a href="{{ route('admin.payment-gateway.index')}}" class="nav-link {{request()->is('admin/setting/payment-gateway*') ?'active' : ''}}">
                                 <i class="fas fa-shopping-cart nav-icon"></i>
@@ -39,18 +39,27 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.campaign-category.index')}}" class="nav-link  {{request()->is('admin/campaign-category*') ?'active' : ''}}">
-                        <i class="nav-icon fas fa-shapes"></i>
-                        <p> Campaign Category</p>
+                <li class="nav-item ">
+                    <a href="#" class="nav-link {{request()->is('admin/campaign*') ?'active' : ''}}">
+                        <i class="nav-icon fas  fa-vector-square"></i>
+                        <p>Campaign<i class="right fas fa-angle-left"></i></p>
                     </a>
+                    <ul class="pl-2 nav nav-treeview" style="display: {{request()->is('admin/campaign*') ? 'block' : 'none'}}">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.campaign-category.index')}}" class="nav-link  {{request()->is('admin/campaign/category*') ?'active' : ''}}">
+                                <i class="nav-icon fas fa-shapes"></i>
+                                <p>Category</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.campaigns.index')}}" class="nav-link  {{request()->is('admin/campaigns*') ?'active' : ''}}">
+                                <i class="nav-icon fa fa-campground"></i>
+                                <p> Campaigns</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.campaigns.index')}}" class="nav-link  {{request()->is('admin/campaigns*') ?'active' : ''}}">
-                        <i class="nav-icon fa fa-campground"></i>
-                        <p> Campaigns</p>
-                    </a>
-                </li>
+
                 <li class="nav-item">
                     <a href="{{ route('admin.users.index')}}" class="nav-link  {{request()->is('admin/users*') ?'active' : ''}}">
                         <i class="nav-icon fas fa-users"></i>
