@@ -190,10 +190,17 @@ $(document).ready(function () {
                         console.log(field, messages);
                         var inputField = $('[name="' + field + '"]');
                         $(".form-group .error").css("display", "block");
-                        inputField
-                            .closest(".form-group")
-                            .find(".error")
-                            .text(messages[0]);
+                        if (field == "password") {
+                            $("#password-error")
+                                .text(messages[0])
+                                .addClass("error")
+                                .css("display", "block");
+                        } else {
+                            inputField
+                                .closest(".form-group")
+                                .find(".error")
+                                .text(messages[0]);
+                        }
                     });
                     // toastr.error("Please Reload Page.");
                     formloader.hide();
