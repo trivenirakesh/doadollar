@@ -22,7 +22,7 @@ class EntitymstSeeder extends Seeder
             'mobile' => '',
             'password' => Hash::make('123456789'),
             'entity_type' => 0,
-            'status' => 1
+            'status' => 1,
         ]);
     }
 }

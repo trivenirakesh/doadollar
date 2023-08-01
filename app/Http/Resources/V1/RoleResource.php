@@ -3,6 +3,7 @@
 namespace App\Http\Resources\V1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Helpers\CommonHelper;
 
 class RoleResource extends JsonResource
 {
@@ -18,7 +19,7 @@ class RoleResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'status' => ($this->status == 1 ? 'Active' : 'Deactive'),
-            'created_at' => date('d-m-Y h:i A',strtotime($this->created_at))
+            'created_at' => CommonHelper::getConvertedDateTime($this->created_at)
         ];
     }
 }

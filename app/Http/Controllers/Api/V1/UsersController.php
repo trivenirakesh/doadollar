@@ -3,85 +3,119 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\V1\ChangePasswordRequest;
+use App\Http\Requests\V1\UsersCreateUpdateRequest;
 use App\Models\Entitymst;
+use App\Models\Role;
+use App\Services\V1\UserService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Traits\CommonTrait;
-use App\Http\Resources\V1\EntityResource;
 
 class UsersController extends Controller
 {
     use CommonTrait;
+    private $userService;
 
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-
-        // get logged in user details 
-        $getAuthDetails = auth('sanctum')->user();
-
-        // get super admin & managers list
-        $getEntityDetails = Entitymst::whereIn('entity_type', [0, 1]);
-
-        if (!empty($getAuthDetails)) {
-            $loggedAuthId = $getAuthDetails->id;
-            $getEntityDetails = $getEntityDetails->whereNotIn('id', [$loggedAuthId]);
+        $usersList =  $this->userService->index() ?? [];
+        if (!$usersList['status']) {
+            return response()->json($usersList, 401);
         }
-
-        $getEntityDetails = $getEntityDetails->paginate(10);
-
-        return EntityResource::collection($getEntityDetails);
+        return response()->json($usersList, 200);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
-        $getEntityDetails = Entitymst::where('id', $id)->get();
-        if (count($getEntityDetails) > 0) {
-            return EntityResource::collection($getEntityDetails);
-        } else {
-            return $this->errorResponse('User not found', 404);
+        $getUser  = $this->userService->show($id);
+        if (!$getUser['status']) {
+            return response()->json($getUser, 401);
         }
+        return response()->json($getUser, 200);
     }
 
-    public function create(Request $request)
+    /**
+     * Store a newly created entity in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(UsersCreateUpdateRequest $request)
     {
-
-        // Validation section
-        $rules = [];
-        $messages = [];
-        $rules = [
-            'entity_type' => 'required|digits:1|lte:3',
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'mobile' => 'required|numeric|digits:10|unique:entitymst,mobile,NULL,id,deleted_at,NULL',
-            'email' => 'required|email|unique:entitymst,email,NULL,id,deleted_at,NULL',
-            'password' => 'required'
+        $requestAddon = [
+            'entity_type' => Entitymst::ENTITYUSER,
+            'role_id' => Role::ROLEUSER,
         ];
-
-        $messages = [
-            'entity_type.required' => 'Please enter entity type',
-            'entity_type.digits' => 'Entity type value must be numeric',
-            'entity_type.lte' => 'Entity type value must between 0 and 3',
-            'first_name.required' => 'Please enter first name',
-            'last_name.required' => 'Please enter last name',
-            'email.required' => 'Please enter email',
-            'email.email' => 'Invaild email address',
-            'email.unique' => 'Email address is already registered. Please, use a different email',
-            'mobile.required' => 'Please enter mobile',
-            'mobile.numeric' => 'Mobile must be numeric',
-            'mobile.digits' => 'Mobile should be 10 digit number',
-            'mobile.unique' => 'Mobile number is already registered. Please, use a different mobile',
-            'password.required' => 'Please enter password',
-        ];
-
-        if ($request->has('role_id')) {
-            $rules['role_id'] = 'required|numeric';
-            $messages['role_id.required'] = 'Please enter role';
-            $messages['role_id.numeric'] = 'Role value must be numeric';
+        $request->request->add($requestAddon);
+        $userCreate  = $this->userService->store($request);
+        if (!$userCreate['status']) {
+            return response()->json($userCreate, 401);
         }
-        $validateUser = Validator::make($request->all(), $rules, $messages);
+        return response()->json($userCreate, 200);
+    }
 
-        if ($validateUser->fails()) {
-            return $this->errorResponse($validateUser->errors(), 400);
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UsersCreateUpdateRequest $request, $id)
+    {
+        $request->request->remove('entity_type');
+        $request->request->remove('role_id');
+        $userUpdate = $this->userService->update($request, $id);
+        if (!$userUpdate['status']) {
+            return response()->json($userUpdate, 401);
         }
+        return response()->json($userUpdate, 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $userDelete = $this->userService->destroy($id);
+        if (!$userDelete['status']) {
+            return response()->json($userDelete, 401);
+        }
+        return response()->json($userDelete, 200);
+    }
+
+    /**
+     * Changed password for entity.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $userId = Auth::user()->id;
+        $user = Entitymst::where('id', $userId)->first();
+        $validatedData['password'] = Hash::make($request->password);
+        $user->update($validatedData);
+        return $this->successResponse([], __('messages.success.password_reset'), 200);
     }
 }

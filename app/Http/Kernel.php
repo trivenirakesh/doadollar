@@ -13,8 +13,9 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $middleware = [
+    protected $middlewarePriority = [
         // \App\Http\Middleware\TrustHosts::class,
+        \App\Http\Middleware\SetHeadersTokenWeb::class,
         \App\Http\Middleware\TrustProxies::class,
         \Fruitcake\Cors\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
@@ -29,6 +30,9 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
+        'setHeaders.token.web' => [
+            \App\Http\Middleware\SetHeadersTokenWeb::class
+        ],
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -64,5 +68,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'api_version' => \App\Http\Middleware\APIversion::class,
+        'admin' => \App\Http\Middleware\AdminAuth::class,
+        'revalidate' => \App\Http\Middleware\RevalidateBackHistory::class,
     ];
 }

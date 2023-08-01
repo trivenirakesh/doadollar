@@ -8,9 +8,18 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Notifications\ResetPasswordNotification;
 
 class Entitymst extends Authenticatable
 {
+    const ENTITYADMIN = 0;
+    const ENTITYMANAGER = 1;
+    const ENTITYUSER = 2;
+    const ENTITYTYPES = [
+        2 => 'User',
+        1 => 'Manager',
+    ];
+
     protected $table = 'entitymst';
     use HasFactory, Notifiable, HasApiTokens, SoftDeletes;
 
@@ -20,7 +29,7 @@ class Entitymst extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name','mobile', 'email', 'password',
+        'first_name', 'last_name', 'mobile', 'email', 'password',
     ];
 
     /**
@@ -40,4 +49,33 @@ class Entitymst extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'id')->where('status', 1);
+    }
+
+    public function scopeNotAdmin($query)
+    {
+        return $query->where('entity_type', '!=', self::ENTITYADMIN);
+    }
+    public function scopeRoleUser($query)
+    {
+        return $query->where('entity_type', self::ENTITYUSER);
+    }
+
+    public function setFirstNameAttribute($value)
+    {
+        $this->attributes['first_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+    }
+
+    public function setLastNameAttribute($value)
+    {
+        $this->attributes['last_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+    }
+    
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
 }
