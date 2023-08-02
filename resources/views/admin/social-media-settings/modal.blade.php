@@ -64,14 +64,6 @@
                     <div class="card-body">
                         <input type="hidden" name="id" id="id" value="">
                         <div class="row">
-                            <div class="form-group d-flex align-items:center">
-                                <select class="form-control form-control-sm" name="status" id="status">
-                                    <option value="1" selected>Active</option>
-                                    <option value="0">InActive</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Name <span class="red">*</span></label>
@@ -92,13 +84,12 @@
                                     <label>Secret Key <span class="red">*</span></label>
                                     <input type="text" class="form-control" placeholder="Please enter secret key" id="secret_key" name="secret_key" value="">
                                     <label id="secret_key-error" class="error" style="display: none;" for="secret_key"></label>
-
                                 </div>
                             </div>
                             <div class="col-sm-7">
                                 <div class="form-group">
                                     <label>Image</label>
-                                    <input type="file" name="image" id="image" class="form-control" style="padding: 0.200rem 0.75rem;" placeholder="Enter Select Image" onchange="load_preview_image(this);" accept="image/x-png,image/jpg,image/jpeg">
+                                    <input type="file" name="image" id="image" class="form-control" placeholder="Enter Select Image" onchange="load_preview_image(this);" accept="image/x-png,image/jpg,image/jpeg"  title="Invalid file format. Only JPG, PNG, and JPEG images are allowed" >
                                     <label id="image-error" class="error" style="display: none;" for="image"></label>
                                 </div>
                             </div>
@@ -107,12 +98,22 @@
                                     <img id="image_preview" width="70" height="70" class="profile-user-img img-fluid" src="">
                                 </div>
                             </div>
+                            <div class="col-sm-12 d-none" id="status_input">
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-3 col-md-4 form-group d-flex align-items:center">
+                                        <select class="form-control form-control-sm" name="status" id="status">
+                                            <option value="1" selected>Active</option>
+                                            <option value="0">InActive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" id="module_form_btn">Save<span style="display: none" id="module_form_loader"><i class="fa fa-spinner fa-spin"></i></span></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>

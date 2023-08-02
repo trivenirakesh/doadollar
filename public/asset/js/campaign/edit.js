@@ -76,7 +76,7 @@ $(document).ready(function () {
         }
 
         if (!title.trim()) {
-            errorMessages.push("Please enter a title.");
+            errorMessages.push("Please enter title.");
         }
 
         // if (!description.trim()) {
@@ -90,8 +90,8 @@ $(document).ready(function () {
                 : ""
         );
         $("#file_uplaod_section  #title_error").text(
-            errorMessages.includes("Please enter a title.")
-                ? "Please enter a title."
+            errorMessages.includes("Please enter title.")
+                ? "Please enter title."
                 : ""
         );
         // $("#file_uplaod_section  #image_description_error").text(errorMessages.includes("Please enter a description.") ? "Please enter a description." : "");
@@ -233,7 +233,7 @@ $(document).ready(function () {
         }
 
         if (!v_title) {
-            v_errorMessages.push("Please enter a title.");
+            v_errorMessages.push("Please enter title.");
         }
 
         // Show or hide error messages below the fields
@@ -244,8 +244,8 @@ $(document).ready(function () {
                 : ""
         );
         $("#video_add_section  #video_title-error").text(
-            v_errorMessages.includes("Please enter a title.")
-                ? "Please enter a title."
+            v_errorMessages.includes("Please enter title.")
+                ? "Please enter title."
                 : ""
         );
 
@@ -311,6 +311,7 @@ $(document).ready(function () {
             },
             image: {
                 required: false,
+                // accept: "jpg|jpeg|png",
             },
             campaign_category_id: {
                 required: true,
@@ -338,6 +339,7 @@ $(document).ready(function () {
             },
             image: {
                 required: "Please select image",
+                accept: "Invalid file format. Only JPG, PNG, and JPEG images are allowed",
             },
             campaign_category_id: {
                 required: "Please select campaign category.",

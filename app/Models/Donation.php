@@ -11,7 +11,13 @@ class Donation extends Model
 {
     use HasFactory;
 
-    public function getDonation($request){
+    public function getCreatedAtAttribute($val)
+    {
+        return  date('d-m-Y H:i A', strtotime($val));
+    }
+
+    public function getDonation($request)
+    {
         $perPageData = CommonHelper::getConfigValue('per_page');
         $entityId = 0;
         $donationId = 0;

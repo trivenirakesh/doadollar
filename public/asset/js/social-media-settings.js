@@ -3,6 +3,7 @@ let module_index_url = $("#module_index_url").val();
 
 function addModel() {
     var $alertas = $("#module_form");
+    $("#status_input").addClass("d-none");
     $alertas.validate().resetForm();
     $alertas.find(".error").removeClass("error");
     $("#module_form")[0].reset();
@@ -61,6 +62,7 @@ $(document).ready(function () {
 
     // edit resource
     $(document).on("click", ".module_edit_record", function () {
+        $("#status_input").removeClass("d-none");
         const id = $(this).parent().data("id");
         const url = $(this).parent().data("url");
         $("#modal_title").text(`Edit ${module}`);
@@ -120,7 +122,7 @@ $(document).ready(function () {
             },
             image: {
                 required: "Please select image",
-                accept: "Only allow image!",
+                accept: "Invalid file format. Only JPG, PNG, and JPEG images are allowed",
             },
             secret_key: {
                 required: "Please enter secret key",
@@ -160,8 +162,20 @@ $(document).ready(function () {
                         toastr.error(result.message);
                     }
                 },
-                error: function () {
-                    toastr.error("Please Reload Page.");
+                error: function (result) {
+                    var errors = result.responseJSON.errors;
+                    // Clear previous error messages
+                    // $(".error-message").text("");
+                    // Display validation errors in form fields
+                    // $.each(errors, function (field, messages) {
+                    //     var inputField = $('[name="' + field + '"]');
+                    //     $(".form-group .error").css("display", "block");
+                    //     inputField
+                    //         .closest(".form-group")
+                    //         .find(".error")
+                    //         .text(messages[0]);
+                    // });
+                    toastr.error(result.responseJSON.message);
                     formloader.hide();
                     formbtn.prop("disabled", false);
                 },
@@ -208,12 +222,12 @@ $(document).ready(function () {
                 data: "name",
                 name: "name",
             },
-            {
-                data: "entitymst.first_name",
-                name: "entitymst.first_name",
-                searchable: true,
-                orderable: false,
-            },
+            // {
+            //     data: "entitymst.first_name",
+            //     name: "entitymst.first_name",
+            //     searchable: true,
+            //     orderable: false,
+            // },
             {
                 data: "created_at",
                 name: "created_at",

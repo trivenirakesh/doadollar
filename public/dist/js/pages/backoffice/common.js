@@ -92,3 +92,9 @@ function Copy(element) {
     document.body.removeChild(tempInput);
     toastr.info("info", "copied to clipboard!");
 }
+
+$(document).keydown(function (event) {
+    if (event.keyCode == 27) {
+        $(".modal").modal("hide");
+    }
+});

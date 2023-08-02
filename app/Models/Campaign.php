@@ -16,6 +16,7 @@ class Campaign extends Model
     const FOLDERNAME = "campaigns/";
 
     const CAMPAIGNSTATUSARR = ['Pending', 'OnGoing', 'Completed', 'Cancelled',  'Rejected', 'Approved'];
+    const CAMPAIGNSTATUSCLASSARR = ['text-warning', 'text-info', 'text-success', 'text-danger',  'text-danger', 'text-primary'];
 
     protected $fillable = [
         'name',
@@ -72,7 +73,8 @@ class Campaign extends Model
         return $returnArr;
     }
 
-    public function getCampaignsListCount(){
+    public function getCampaignsListCount()
+    {
         $totalRecordsData = DB::select("CALL sp_get_campaigns_list('0','0','','','','0','0')");
         return count($totalRecordsData);
     }
@@ -98,9 +100,18 @@ class Campaign extends Model
         return $val == null ? asset('public/dist/img/qrcode_dummy.png') : asset($linkPath . self::FOLDERNAME . $val);
     }
 
+    public function getCreatedAtAttribute($val)
+    {
+        return  date('d-m-Y H:i A', strtotime($val));
+    }
+
     public function entitymst()
     {
         return $this->hasOne(Entitymst::class, 'id', 'created_by');
+    }
+    public function donation()
+    {
+        return $this->hasMany(Donation::class, 'campaign_id', 'id');
     }
 
     public function category()

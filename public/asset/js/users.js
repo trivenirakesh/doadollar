@@ -3,6 +3,7 @@ let module_index_url = $("#module_index_url").val();
 
 function addModel() {
     $("#password_note").addClass("d-none");
+    $("#status_input").addClass("d-none");
     var $alertas = $("#module_form");
     $alertas.validate().resetForm();
     $alertas.find(".error").removeClass("error");
@@ -63,6 +64,7 @@ $(document).ready(function () {
     // edit resource
     $(document).on("click", ".module_edit_record", function () {
         $("#password_note").removeClass("d-none");
+        $("#status_input").removeClass("d-none");
         const id = $(this).parent().data("id");
         const url = $(this).parent().data("url");
         $("#modal_title").text(`Edit ${module}`);

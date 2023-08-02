@@ -108,7 +108,7 @@
                                                             <h3 class="theme_primary_text ">Uplaod Images</h3>
                                                         </div>
                                                         <div class="form-group col-md-2 col-lg-3">
-                                                            <input type="file" name="file" id="file" class="form-control image_input" accept="image/*">
+                                                            <input type="file" name="file" id="file" class="form-control image_input" accept="image/png,image/jpg,image/jpeg" title="Invalid file format. Only JPG, PNG, and JPEG images are allowed">
                                                             <label id="file_error" class="error" for=""></label>
                                                         </div>
 

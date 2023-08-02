@@ -50,6 +50,11 @@ class Entitymst extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function getCreatedAtAttribute($val)
+    {
+        return  date('d-m-Y H:i A', strtotime($val));
+    }
+
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id', 'id')->where('status', 1);
@@ -66,14 +71,14 @@ class Entitymst extends Authenticatable
 
     public function setFirstNameAttribute($value)
     {
-        $this->attributes['first_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+        $this->attributes['first_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));
     }
 
     public function setLastNameAttribute($value)
     {
-        $this->attributes['last_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));    
+        $this->attributes['last_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));
     }
-    
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPasswordNotification($token));

@@ -22,7 +22,7 @@
                                         <th class="text-center"></th>
                                         <th>Image</th>
                                         <th>Name</th>
-                                        <th>Created By</th>
+                                        <!-- <th>Created By</th> -->
                                         <th>Created At</th>
                                         <th>Status</th>
                                         <th></th>
