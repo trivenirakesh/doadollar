@@ -36,19 +36,19 @@
                                                     <div class="col-md-5 col-12">
                                                         <div class="text-muted">
                                                             <p class="text-sm">Campaign Name
-                                                                <b class="d-block">{{$campaign->name}}</b>
+                                                                <b class="d-block">{{$campaign->name??'-'}}</b>
                                                             </p>
                                                             <p class="text-sm">Campaign Category
-                                                                <b class="d-block">{{$campaign->category->name}}</b>
+                                                                <b class="d-block">{{$campaign->category->name??'-'}}</b>
                                                             </p>
                                                             <p class="text-sm">Campaign Date
                                                                 <b class="d-block">{{$campaign->start_datetime .' - '.$campaign->end_datetime}}</b>
                                                             </p>
                                                             <p class="text-sm">Donation Target
-                                                                <b class="d-block">{{$campaign->donation_target}}</b>
+                                                                <b class="d-block">{{$campaign->donation_target??'-'}}</b>
                                                             </p>
                                                             <p class="text-sm">Unique Code
-                                                                <b class="d-block">{{$campaign->unique_code}}</b>
+                                                                <b class="d-block">{{$campaign->unique_code??'-'}}</b>
                                                             </p>
                                                             <p class="text-sm">Status
                                                                 <b class="d-block">{{$campaign->status_text??'-'}}</b>
@@ -57,10 +57,18 @@
                                                                 <b class="d-block">{{$campaign->campaign_status_text??'-'}}</b>
                                                             </p>
                                                             <p class="text-sm">Created At
-                                                                <b class="d-block">{{$campaign->created_at}}</b>
+                                                                <b class="d-block">{{$campaign->created_at??'-'}}</b>
                                                             </p>
                                                             <p class="text-sm">Description
-                                                                <b class="d-block">{{$campaign->description}}</b>
+                                                                <b class="d-block">{{$campaign->description??'-'}}</b>
+                                                            </p>
+                                                            <p class="text-sm">Donation Target
+                                                            <div>
+                                                                <div class="progress rounded-pill">
+                                                                    <div class="theme_primary_btn  progress-bar" style="width: {{$campaign->donation_progress}}%;" role="progressbar" aria-valuenow="{{$campaign->donation_progress}}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                </div>
+                                                                <div class="w-100 d-flex justify-content-between align-items-center"><span>${{$campaign->donation_target}}</span><span>{{$campaign->donation_progress}}%</span></div>
+                                                            </div>
                                                             </p>
                                                         </div>
                                                     </div>
@@ -111,7 +119,7 @@
                                                                 @if($upload->upload_type == 'Links')
                                                                 <div class="col-md-4 col-12 col-sm-6">
                                                                     <div class="card" style="width:100%">
-                                                                        <video poster="placeholder.png" width="400" height="200" controls src="{{$upload->link}}">
+                                                                        <video width="400" height="200" controls src="{{$upload->link}}">
                                                                             Browser not supported
                                                                         </video>
                                                                         <div class="card-body">

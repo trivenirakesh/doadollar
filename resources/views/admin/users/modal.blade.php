@@ -73,15 +73,6 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <input type="hidden" name="id" id="id" value="">
-
-                        <div class="row">
-                            <div class="form-group d-flex align-items:center">
-                                <select class="form-control form-control-sm" name="status" id="status">
-                                    <option value="1" selected>Active</option>
-                                    <option value="0">InActive</option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="row">
 
                             <div class="form-group col-md-12 d-none" id="password_note">
@@ -136,12 +127,22 @@
                                     <label id="password-error" class="error" for="password"></label>
                                 </div>
                             </div>
+                            <div class="col-sm-12 d-none" id="status_input">
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-3 col-md-4 form-group d-flex align-items:center">
+                                        <select class="form-control form-control-sm" name="status" id="status">
+                                            <option value="1" selected>Active</option>
+                                            <option value="0">InActive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" id="module_form_btn">Save<span style="display: none" id="users_form_loader"><i class="fa fa-spinner fa-spin"></i></span></button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>

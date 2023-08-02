@@ -34,6 +34,11 @@ class CampaignUploads extends Model
         return $this->belongsTo(UploadType::class, 'upload_type_id')->where('status', $activeStatus);
     }
 
+    public function getCreatedAtAttribute($val)
+    {
+        return  date('d-m-Y H:i A', strtotime($val));
+    }
+
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));

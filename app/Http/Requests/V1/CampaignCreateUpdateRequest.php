@@ -43,7 +43,7 @@ class CampaignCreateUpdateRequest extends FormRequest
             ],
             'start_datetime' => 'required|date_format:Y-m-d H:i:s|before_or_equal:end_datetime',
             'end_datetime' => 'required|date_format:Y-m-d H:i:s|after_or_equal:start_datetime',
-            'donation_target' => ['required', 'numeric', 'between:0,999999.99'],
+            'donation_target' => ['required', 'numeric', 'between:0,9999999999.99'],
             'status' => 'required|numeric|in:0,1',
 
             'files_uplaod' => 'nullable|array',

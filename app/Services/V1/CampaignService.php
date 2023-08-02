@@ -437,12 +437,13 @@ class CampaignService
      */
     public function show($id)
     {
-        $getCampaignDetails = Campaign::where('id', $id)->orWhere('unique_code', $id)->first();
+        $getCampaignDetails = Campaign::withSum('donation', 'donation_amount')->where('id', $id)->orWhere('unique_code', $id)->first();
         if ($getCampaignDetails == null) {
             return $this->errorResponseArr(self::module . __('messages.validation.not_found'));
         }
         $getCampaignDetails->campaign_status_text = Campaign::CAMPAIGNSTATUSARR[$getCampaignDetails->campaign_status];
         $getCampaignDetails->status_text = $getCampaignDetails->status == 1 ? 'Active' : 'Deactive';
+        $getCampaignDetails->donation_progress = empty($getCampaignDetails->donation_sum_donation_amount) ? 0 : number_format((($getCampaignDetails->donation_sum_donation_amount / $getCampaignDetails->donation_target) * 100), 2);
         $getCampaignDetails = CampaignDetailResource::make($getCampaignDetails);
         return $this->successResponseArr(self::module . __('messages.success.details'), $getCampaignDetails);
     }

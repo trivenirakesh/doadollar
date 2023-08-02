@@ -43,10 +43,8 @@ var table = $("#data_table_main").DataTable({
             name: "donation_target",
         },
         {
-            data: "entitymst.first_name",
+            data: "created_by",
             name: "entitymst.first_name",
-            searchable: true,
-            orderable: false,
         },
         {
             data: "start_datetime",
@@ -65,8 +63,8 @@ var table = $("#data_table_main").DataTable({
             name: "unique_code",
         },
         {
-            data: "status_text",
-            name: "status",
+            data: "campaign_status_text",
+            name: "campaign_status",
         },
         {
             data: "action_delete",

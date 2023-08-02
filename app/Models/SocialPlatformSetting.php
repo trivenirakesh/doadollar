@@ -15,7 +15,7 @@ class SocialPlatformSetting extends Model
     public function getImageAttribute($val)
     {
         $linkPath = CommonHelper::getConfigValue('link_path');
-        return ($val != null && CommonHelper::checkFileExists($val,self::FOLDERNAME) ? asset($linkPath.self::FOLDERNAME . $val)  : asset('public/dist/img/no-image.png'));
+        return ($val != null && CommonHelper::checkFileExists($val, self::FOLDERNAME) ? asset($linkPath . self::FOLDERNAME . $val)  : asset('public/dist/img/no-image.png'));
     }
 
     public function setNameAttribute($value)
@@ -26,5 +26,10 @@ class SocialPlatformSetting extends Model
     public function entitymst()
     {
         return $this->hasOne(Entitymst::class, 'id', 'created_by');
+    }
+
+    public function getCreatedAtAttribute($val)
+    {
+        return  date('d-m-Y H:i A', strtotime($val));
     }
 }

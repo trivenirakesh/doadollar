@@ -3,6 +3,7 @@ let module_index_url = $("#module_index_url").val();
 
 function addModel() {
     var $alertas = $("#module_form");
+    $("#status_input").addClass("d-none");
     $alertas.validate().resetForm();
     $alertas.find(".error").removeClass("error");
     $("#module_form")[0].reset();
@@ -61,6 +62,7 @@ $(document).ready(function () {
 
     // edit resource
     $(document).on("click", ".module_edit_record", function () {
+        $("#status_input").removeClass("d-none");
         const id = $(this).parent().data("id");
         const url = $(this).parent().data("url");
         $("#modal_title").text(`Edit ${module}`);
@@ -118,7 +120,7 @@ $(document).ready(function () {
             },
             image: {
                 required: "Please select image",
-                accept: "Only allow image!",
+                accept: "Invalid file format. Only JPG, PNG, and JPEG images are allowed",
             },
             description: {
                 required: "Please enter description",
@@ -156,8 +158,9 @@ $(document).ready(function () {
                         toastr.error(result.message);
                     }
                 },
-                error: function () {
-                    toastr.error("Please Reload Page.");
+                error: function (result) {
+                    toastr.error(result.responseJSON.message);
+                    // toastr.error("Please Reload Page.");
                     formloader.hide();
                     formbtn.prop("disabled", false);
                 },
@@ -205,10 +208,8 @@ $(document).ready(function () {
                 name: "name",
             },
             {
-                data: "entitymst.first_name",
+                data: "created_by",
                 name: "entitymst.first_name",
-                searchable: true,
-                orderable: false,
             },
             {
                 data: "created_at",

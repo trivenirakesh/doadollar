@@ -7,6 +7,7 @@ function refreshModelForm() {
     alertas.find(".error").removeClass("error");
 }
 function addModel() {
+    $("#status_input").addClass("d-none");
     refreshModelForm();
     $("#module_form")[0].reset();
     $("#modal-add-update").modal("show");
@@ -65,6 +66,7 @@ $(document).ready(function () {
     // edit resource
     $(document).on("click", ".module_edit_record", function () {
         refreshModelForm();
+        $("#status_input").removeClass("d-none");
         const id = $(this).parent().data("id");
         const url = $(this).parent().data("url");
         $("#modal_title").text(`Edit ${module}`);
@@ -130,7 +132,7 @@ $(document).ready(function () {
             },
             image: {
                 required: "Please select image",
-                accept: "Only allow image!",
+                accept: "Invalid file format. Only JPG, PNG, and JPEG images are allowed",
             },
         },
         submitHandler: function (form, e) {
@@ -163,8 +165,8 @@ $(document).ready(function () {
                         toastr.error(result.message);
                     }
                 },
-                error: function () {
-                    toastr.error("Please Reload Page.");
+                error: function (result) {
+                    toastr.error(result.responseJSON.message);
                     formLoader.hide();
                     formBtn.prop("disabled", false);
                 },

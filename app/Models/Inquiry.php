@@ -18,4 +18,9 @@ class Inquiry extends Model
     {
         $this->attributes['last_name'] = preg_replace('/\s+/', ' ', ucfirst(strtolower($value)));
     }
+
+    public function getCreatedAtAttribute($val)
+    {
+        return  date('d-m-Y H:i A', strtotime($val));
+    }
 }

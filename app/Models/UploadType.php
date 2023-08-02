@@ -8,9 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UploadType extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
-    public function campaignUploads(){
+    public function campaignUploads()
+    {
         return $this->hasOne(CampaignUploads::class);
+    }
+
+    public function getCreatedAtAttribute($val)
+    {
+        return  date('d-m-Y H:i A', strtotime($val));
     }
 }

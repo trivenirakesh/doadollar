@@ -31,7 +31,8 @@ class CampaignController extends Controller
             $baseurl = route('admin.campaigns.index');
             $data = Campaign::with(['entitymst' => function ($query) {
                 $query->select('id', 'first_name', 'last_name');
-            }]);
+            }])
+                ->withSum('donation', 'donation_amount');
             if ($request->order == null) {
                 $data->orderBy('created_at', 'desc');
             }
@@ -49,11 +50,12 @@ class CampaignController extends Controller
                 ->addColumn('action_delete', function ($row) use ($baseurl) {
                     return $this->actionHtml($baseurl, $row->id, true);
                 })
-                ->addColumn('donation_target', function ($row) use ($baseurl) {
+                ->addColumn('donation_target', function ($row) {
+                    $donation_progress = empty($row->donation_sum_donation_amount) ? 0 : number_format((($row->donation_sum_donation_amount / $row->donation_target) * 100), 2);
                     return '<div><div class="progress rounded-pill">
-                    <div class="theme_primary_btn  progress-bar w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="theme_primary_btn  progress-bar" style="width: ' . $donation_progress . '%;" role="progressbar" aria-valuenow="' . $donation_progress . '" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <div class="w-100 d-flex justify-content-between align-items-center"><span>' . $row->donation_target . '</span><span>30%</span></div>
+                  <div class="w-100 d-flex justify-content-between align-items-center"><span>$' . $row->donation_target . '</span><span>' . $donation_progress . '%</span></div>
                   </div>';
                 })
                 ->addColumn('unique_code', function ($row) use ($baseurl) {
@@ -64,10 +66,15 @@ class CampaignController extends Controller
                     $image = '<img src="' . $row->image . '" class="img-fluid img-radius" width="40px" height="40px">';
                     return $image;
                 })
-                ->addColumn('status_text', function ($row) {
-                    return $this->statusHtml($row);
+                ->addColumn('created_by', function ($row) {
+                    return $row->entitymst->first_name . ' ' . $row->entitymst->last_name;
                 })
-                ->rawColumns(['action_edit', 'action_delete', 'image', 'status_text', 'unique_code', 'donation_target'])
+                ->addColumn('campaign_status_text', function ($row) {
+                    $statusText = Campaign::CAMPAIGNSTATUSARR[$row->campaign_status] ?? -'';
+                    $statusClass = Campaign::CAMPAIGNSTATUSCLASSARR[$row->campaign_status] ?? -'';
+                    return '<div class="d-flex justify-content-center align-items-center"><span class="' . $statusClass . ' h3 px-2">&#9679</span>' . $statusText . '</div>';
+                })
+                ->rawColumns(['action_edit', 'action_delete', 'image', 'campaign_status_text', 'unique_code', 'donation_target', 'created_by'])
                 ->make(true);
         }
 
